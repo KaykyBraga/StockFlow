@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <Folder Include="DAL\" />
-    <Folder Include="Modelo\" />
   </ItemGroup>
 
   <ItemGroup>
