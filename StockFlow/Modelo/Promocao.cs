@@ -8,13 +8,13 @@ namespace StockFlow.Modelo
 {
     public class Promocao
     {
-        private int PromocaoId { get; set; }
-        private string NomePromocao { get; set; }
-        private string TipoDesconto { get; set; }
-        private double ValorDesconto { get; set; }
-        private DateTime DataInicio { get; set; }
-        private DateTime DataFim { get; set; }
-        private bool Ativo { get; set; }
+         public int PromocaoId { get; set; }
+         public string NomePromocao { get; set; }
+         public string TipoDesconto { get; set; }
+         public double ValorDesconto { get; set; }
+         public DateTime DataInicio { get; set; }
+         public DateTime DataFim { get; set; }
+         public bool Ativo { get; set; }
 
 
     }

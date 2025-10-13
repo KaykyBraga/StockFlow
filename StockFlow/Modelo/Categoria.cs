@@ -8,7 +8,7 @@ namespace StockFlow.Modelo
 {
     public class Categoria
     {
-        private int CategoriaId { get; set; }
-        private string NomeCategoria { get; set; }
+         public int CategoriaId { get; set; }
+         public string NomeCategoria { get; set; }
     }
 }

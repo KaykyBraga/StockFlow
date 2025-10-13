@@ -8,15 +8,15 @@ namespace StockFlow.Modelo
 {
     public class Movimentacao
     {
-        private int MovimentacaoId { get; set; }
-        private int ProdutoId { get; set; }
-        private int UsuarioId { get; set; }
-        private string TipoMovimentacao { get; set; }
-        private DateTime Data { get; set; }
-        private int Quantidade { get; set; }
-        private string Observacao { get; set; }
+         public int MovimentacaoId { get; set; }
+         public int ProdutoId { get; set; }
+         public int UsuarioId { get; set; }
+         public string TipoMovimentacao { get; set; }
+         public DateTime Data { get; set; }
+         public int Quantidade { get; set; }
+         public string Observacao { get; set; }
 
-        private Produto Produto { get; set; }
-        private Usuario Usuario { get; set; }
+         public Produto Produto { get; set; }
+         public Usuario Usuario { get; set; }
     }
 }

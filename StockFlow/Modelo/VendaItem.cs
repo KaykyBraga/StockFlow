@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media.Animation;
 
 namespace StockFlow.Modelo
 {
-    public class Venda
+    public class VendaItem
     {
+         public int VendaItemId { get; set; }
          public int VendaId { get; set; }
          public int ProdutoId { get; set; }
-         public double ValorTotal { get; set; }
-         public double DescontoTotal { get; set; }
-         public String MetodoPagamento { get; set; }
+         public int Quantidade { get; set; }
+         public double PrecoUnitarioMomento { get; set; }
+         public double DescontoItem { get; set; }
+         public Venda venda { get; set; }
          public Produto produto { get; set; }
     }
 }

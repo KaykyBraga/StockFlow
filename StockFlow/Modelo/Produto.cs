@@ -8,21 +8,21 @@ namespace StockFlow.Modelo
 {
     public class Produto
     {
-        private int ProdutoId { get; set; }
-        private String Sku { get; set; }
-        private String NomeCompleto { get; set; }
-        private double PrecoVenda { get; set; }
-        private double PrecoCusto { get; set; }
-        private bool Ativo { get; set; }
-        private int EstoqueAtual { get; set; } 
-        private int EstoqueMinimo { get; set; }
-        private DateTime DataCadastro { get; set; }
-        private int MarcaId { get; set; }
-        private int CategoriaId { get; set; }
-        private int FornecedorId { get; set; }
-        private Marca Marca { get; set; }
-        private Categoria Categoria { get; set; }
-        private Fornecedor Fornecedor { get; set; }
+        public int ProdutoId { get; set; }
+        public String Sku { get; set; }
+        public String NomeCompleto { get; set; }
+        public double PrecoVenda { get; set; }
+        public double PrecoCusto { get; set; }
+        public bool Ativo { get; set; }
+        public int EstoqueAtual { get; set; } 
+        public int EstoqueMinimo { get; set; }
+        public DateTime DataCadastro { get; set; }
+        public int MarcaId { get; set; }
+        public int CategoriaId { get; set; }
+        public int FornecedorId { get; set; }
+        public Marca Marca { get; set; }
+        public Categoria Categoria { get; set; }
+        public Fornecedor Fornecedor { get; set; }
 
     }
 }

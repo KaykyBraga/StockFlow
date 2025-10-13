@@ -8,7 +8,7 @@ namespace StockFlow.Modelo
 {
     public class Marca
     {
-        private int MarcaId { get; set; }
-        private string NomeMarca { get; set; }
+         public int MarcaId { get; set; }
+         public string NomeMarca { get; set; }
     }
 }

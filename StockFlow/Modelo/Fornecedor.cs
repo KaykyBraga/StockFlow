@@ -8,13 +8,13 @@ namespace StockFlow.Modelo
 {
     public class Fornecedor
     {
-        private int FornecedorId { get; set; }
-        private string NomeFantasia { get; set; }
-        private string RazaoSocial { get; set; }
-        private string Cnpj { get; set; }
-        private string EmailPrincipal { get; set; }
-        private string TelefonePrincipal { get; set; }
-        private bool Ativo { get; set; }
-        private DateTime DataCadastro { get; set; }
+         public int FornecedorId { get; set; }
+         public string NomeFantasia { get; set; }
+         public string RazaoSocial { get; set; }
+         public string Cnpj { get; set; }
+         public string EmailPrincipal { get; set; }
+         public string TelefonePrincipal { get; set; }
+         public bool Ativo { get; set; }
+         public DateTime DataCadastro { get; set; }
     }
 }
