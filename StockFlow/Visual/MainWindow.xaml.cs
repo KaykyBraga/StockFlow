@@ -19,7 +19,7 @@ namespace StockFlow
     {
         public MainWindow()
         {
-            InitializeComponent();
+          
 
             
 
