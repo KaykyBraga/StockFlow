@@ -1,0 +1,51 @@
+﻿<Page x:Class="StockFlow.Visual.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d">
+
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
+
+        <TextBlock Text="Login" 
+                   FontSize="28" 
+                   FontWeight="SemiBold" 
+                   HorizontalAlignment="Center" 
+                   Margin="0,0,0,30" 
+                   Foreground="#333333"/>
+
+        <TextBlock Text="Nome de Usuário" Margin="0,0,0,5" Foreground="#555555"/>
+        <TextBox x:Name="TxtUsuario" Height="35" BorderBrush="#AAAAAA" BorderThickness="1" Margin="0,0,0,20"/>
+
+        <Grid Margin="0,0,0,30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Senha" Margin="0,0,0,5" Foreground="#555555"/>
+                <PasswordBox x:Name="TxtSenha" Height="35" BorderBrush="#AAAAAA" BorderThickness="1"/>
+            </StackPanel>
+
+            <CheckBox Grid.Column="1" VerticalAlignment="Bottom" Margin="10,0,0,5"/>
+        </Grid>
+
+        <Button Content="Entrar" 
+                Height="40" 
+                Background="#99CCFF" 
+                BorderBrush="#66B2FF" 
+                BorderThickness="1"
+                Foreground="#333333"
+                FontSize="16"
+                FontWeight="SemiBold"
+                Cursor="Hand"/>
+
+        <TextBlock HorizontalAlignment="Center" Margin="0,25,0,0">
+            <Hyperlink Click="Hyperlink_Forgot_Click">
+                <Run Text="Esqueceu a senha ?"/>
+            </Hyperlink>
+        </TextBlock>
+
+    </StackPanel>
+</Page>
