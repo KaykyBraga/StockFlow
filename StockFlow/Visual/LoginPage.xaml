@@ -3,35 +3,48 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      mc:Ignorable="d">
+      mc:Ignorable="d" 
+      Title="LoginPage">
 
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="322" Height="446">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-        <TextBlock Text="Login" 
+        <TextBlock Grid.Row="0"
+                   Text="Login" 
                    FontSize="28" 
                    FontWeight="SemiBold" 
                    HorizontalAlignment="Center" 
-                   Margin="0,0,0,30" 
-                   Foreground="#333333"/>
+                   Foreground="#333333" Margin="0,37,0,39" Grid.RowSpan="4"/>
 
-        <TextBlock Text="Nome de Usuário" Margin="0,0,0,5" Foreground="#555555"/>
-        <TextBox x:Name="TxtUsuario" Height="35" BorderBrush="#AAAAAA" BorderThickness="1" Margin="0,0,0,20"/>
+        <TextBlock Grid.Row="2" Text="Nome de Usuário" Margin="0,42,0,18" Foreground="#555555" Grid.RowSpan="3"/>
 
-        <Grid Margin="0,0,0,30">
+        <TextBox x:Name="TxtUsuario" Grid.Row="4" Height="35" BorderBrush="#AAAAAA" BorderThickness="1" Margin="0,8,0,2" Grid.RowSpan="3" HorizontalAlignment="Left" Width="312"/>
+
+        <Grid Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0">
-                <TextBlock Text="Senha" Margin="0,0,0,5" Foreground="#555555"/>
-                <PasswordBox x:Name="TxtSenha" Height="35" BorderBrush="#AAAAAA" BorderThickness="1"/>
-            </StackPanel>
+            <StackPanel Grid.Column="0"/>
 
-            <CheckBox Grid.Column="1" VerticalAlignment="Bottom" Margin="10,0,0,5"/>
+            <CheckBox Grid.Column="1" VerticalAlignment="Bottom" Margin="7,0,3,-80"/>
         </Grid>
 
-        <Button Content="Entrar" 
+        <Button Grid.Row="10"
+                Content="Entrar" 
                 Height="40" 
                 Background="#99CCFF" 
                 BorderBrush="#66B2FF" 
@@ -39,13 +52,16 @@
                 Foreground="#333333"
                 FontSize="16"
                 FontWeight="SemiBold"
-                Cursor="Hand"/>
+                Cursor="Hand" Margin="0,70,0,119" HorizontalAlignment="Center" Width="302"/>
 
-        <TextBlock HorizontalAlignment="Center" Margin="0,25,0,0">
-            <Hyperlink Click="Hyperlink_Forgot_Click">
+        <TextBlock Grid.Row="10" HorizontalAlignment="Center" Margin="0,136,0,77">
+            <Hyperlink Click="Hyperlink_Click">
                 <Run Text="Esqueceu a senha ?"/>
             </Hyperlink>
         </TextBlock>
+        <PasswordBox x:Name="TxtSenha" BorderBrush="#AAAAAA" BorderThickness="1" Margin="0,30,26,0" Grid.RowSpan="2" Grid.Row="7"/>
+        <TextBlock
+            Text="Senha" Margin="0,12,26,12" Foreground="#555555" Grid.Row="7"/>
 
-    </StackPanel>
+    </Grid>
 </Page>

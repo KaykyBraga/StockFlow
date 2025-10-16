@@ -25,9 +25,9 @@ namespace StockFlow.Visual
             InitializeComponent();
         }
 
-        private void Hyperlink_Forgot_Click(object sender, RoutedEventArgs e)
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
-            // Navega para a RecoveryPage
+            // Lógica para recuperação de senha
             NavigationService.GetNavigationService(this)?.Navigate(new RecoveryPage());
         }
     }
