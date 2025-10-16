@@ -37,12 +37,14 @@ namespace StockFlow.DAL
         public Usuario BuscarUsuarioPorEmail(string email)
         {
             this.mensagem = "";
-            string emailMinusculo = email.Trim().ToLower();          
+                    
 
             try
             {
+                var termoBusca = email.Trim().ToLower();
+
                 var context = new AppDbContext();
-                var usuario = context.Usuarios.FirstOrDefault(u => u.Email.ToLower() == emailMinusculo);
+                var usuario = context.Usuarios.FirstOrDefault(u => u.Email.ToLower() == termoBusca);
                 return usuario;
             }
             catch (Exception)
