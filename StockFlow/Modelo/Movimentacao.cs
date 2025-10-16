@@ -16,7 +16,7 @@ namespace StockFlow.Modelo
          public int Quantidade { get; set; }
          public string Observacao { get; set; }
 
-         public Produto Produto { get; set; }
-         public Usuario Usuario { get; set; }
+         public virtual Produto Produto { get; set; }
+         public virtual Usuario Usuario { get; set; }       
     }
 }

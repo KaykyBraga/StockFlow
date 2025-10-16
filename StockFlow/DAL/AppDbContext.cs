@@ -12,9 +12,9 @@ namespace StockFlow.DAL
     {
        
         public DbSet<Categoria> Categorias { get; set; }
-        public DbSet<Fornecedor> Forcedores { get; set; }
+        public DbSet<Fornecedor> Fornecedores { get; set; }
         public DbSet<Marca> Marcas { get; set; }
-        public DbSet<Movimentacao> movimentacaos { get; set; }
+        public DbSet<Movimentacao> movimentacoes { get; set; }
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Promocao> promocaos { get; set; }
         public DbSet<PromocaoProduto> PromocaoProdutos { get; set; }

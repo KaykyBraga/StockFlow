@@ -10,9 +10,10 @@ namespace StockFlow.Modelo
     {
         public int ProdutoId { get; set; }
         public String Sku { get; set; }
+        public string Ean { get; set; }
         public String NomeCompleto { get; set; }
-        public double PrecoVenda { get; set; }
-        public double PrecoCusto { get; set; }
+        public decimal PrecoVenda { get; set; }
+        public decimal PrecoCusto { get; set; }
         public bool Ativo { get; set; }
         public int EstoqueAtual { get; set; } 
         public int EstoqueMinimo { get; set; }
@@ -23,6 +24,14 @@ namespace StockFlow.Modelo
         public Marca Marca { get; set; }
         public Categoria Categoria { get; set; }
         public Fornecedor Fornecedor { get; set; }
+
+        public virtual ICollection<Movimentacao> Movimentacaos { get; set; }
+
+        public Produto()
+        {
+            
+            Movimentacaos = new HashSet<Movimentacao>();
+        }
 
     }
 }

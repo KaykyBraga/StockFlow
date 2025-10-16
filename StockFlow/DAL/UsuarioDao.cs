@@ -37,10 +37,12 @@ namespace StockFlow.DAL
         public Usuario BuscarUsuarioPorEmail(string email)
         {
             this.mensagem = "";
+            string emailMinusculo = email.Trim().ToLower();          
+
             try
             {
                 var context = new AppDbContext();
-                var usuario = context.Usuarios.FirstOrDefault(u => u.Email == email);
+                var usuario = context.Usuarios.FirstOrDefault(u => u.Email.ToLower() == emailMinusculo);
                 return usuario;
             }
             catch (Exception)
@@ -53,10 +55,13 @@ namespace StockFlow.DAL
         public Usuario BuscarUsuarioPorIdentificador(string indentificador)
         {
             this.mensagem = "";
+            
+
             try
             {
+                var termoBusca = indentificador.Trim().ToLower();
                 var context = new AppDbContext();
-                var usuario = context.Usuarios.FirstOrDefault(u => u.IdentificadorFuncionario == indentificador);
+                var usuario = context.Usuarios.FirstOrDefault(u => u.IdentificadorFuncionario.ToLower() == termoBusca);
                 return usuario;
             }
             catch (Exception)
@@ -69,16 +74,22 @@ namespace StockFlow.DAL
         public List<Usuario> BuscarUsuarioPorNome(string nome)
         {
             this.mensagem = "";
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                return new List<Usuario>();
+            }
             try
             {
                 var context = new AppDbContext();
-                return context.Usuarios.Where(u => u.NomeCompleto == nome).ToList();
+                var termoBusca = nome.Trim().ToLower();
+                var Usuarios =  context.Usuarios.Where(u => u.NomeCompleto.ToLower().Contains(termoBusca)).ToList();
+                return Usuarios;
             }
             catch (Exception)
             {
 
                 this.mensagem = "Erro ao buscar usuário por nome!";
-                return null;
+                return new List<Usuario>();
             }
         }
 
