@@ -73,6 +73,25 @@ namespace StockFlow.DAL
             }
         }
 
+        public Usuario BuscarUsuarioPorId( int id)
+        {
+            this.mensagem = "";
+
+
+            try
+            {
+                
+                var context = new AppDbContext();
+                var usuario = context.Usuarios.FirstOrDefault(u => u.UsuarioId == id);
+                return usuario;
+            }
+            catch (Exception)
+            {
+                this.mensagem = "Erro ao buscar usuário por esse Id!";
+                return null;
+            }
+        }
+
         public List<Usuario> BuscarUsuarioPorNome(string nome)
         {
             this.mensagem = "";
@@ -104,44 +123,59 @@ namespace StockFlow.DAL
                 context.Usuarios.Update(usuario);
                 context.SaveChanges();
             }
-            catch (DbUpdateException ex)
+            catch (Exception)
             {
-                var innerException = ex.InnerException;
-                //this.mensagem = "Erro ao editar usuário!" + ex.Message;
-                MessageBox.Show($"Erro detalhado do banco de dados:\n\n{innerException?.Message}",
-                    "Erro ao Salvar",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                this.mensagem = "Erro ao editar usuário!";
                 return;
             }
             this.mensagem = "Usuário editado com sucesso!";
         }
 
-        public void DeletarUsuario(Usuario usuario)
+        public void DesativarUsuario(Usuario usuario)
         {
             this.mensagem = "";
+            usuario = BuscarUsuarioPorId(usuario.UsuarioId);
+            if (usuario == null)
+            {
+                this.mensagem = "Usuário não encontrado para deletar!";
+                return;
+            }
+            usuario.Ativo = false;
             try
             {
                 var context = new AppDbContext();
-                context.Usuarios.Remove(usuario);
+                context.Usuarios.Update(usuario);
                 context.SaveChanges();
             }
             catch (Exception)
             {
-                this.mensagem = "Erro ao deletar usuário!";
+                this.mensagem = "Erro ao desativar usuário!";
                 return;
             }
-            this.mensagem = "Usuário deletado com sucesso!";
+            this.mensagem = "Usuário desativado com sucesso!";
         }
 
         public async Task<List<Usuario>> ObterTodosOsUsuariosAsync()
         {
             await using (var context = new AppDbContext())
             {
-                // Esta é a linha que faz a mágica:
+                
                 List<Usuario> todosOsUsuarios = await context.Usuarios.ToListAsync();
 
                 return todosOsUsuarios;
+            }
+        }
+
+
+        public async Task<List<Usuario>> ObterUsuariosAtivosAsync()
+        {
+            
+            await using (var context = new AppDbContext())
+            {
+                
+                List<Usuario> usuariosAtivos = await context.Usuarios.Where(u => u.Ativo == true).ToListAsync();
+
+                return usuariosAtivos;
             }
         }
     }

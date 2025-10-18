@@ -21,9 +21,9 @@ namespace StockFlow.Modelo
         public int MarcaId { get; set; }
         public int CategoriaId { get; set; }
         public int FornecedorId { get; set; }
-        public Marca Marca { get; set; }
-        public Categoria Categoria { get; set; }
-        public Fornecedor Fornecedor { get; set; }
+        public virtual Marca Marca { get; set; }
+        public virtual Categoria Categoria { get; set; }
+        public virtual Fornecedor Fornecedor { get; set; }
 
         public virtual ICollection<Movimentacao> Movimentacaos { get; set; }
 

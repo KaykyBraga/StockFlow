@@ -159,27 +159,22 @@ namespace StockFlow.Controles
             return usuario;
         }
 
-        public void DeletarUsuario(List<string> listaUsuario)
+        public void DesativarUsuario(string id)
         {
             Usuario usuario = new Usuario();
             ValidacaoUsuario validacao = new ValidacaoUsuario();
             UsuarioDao usuarioDao = new UsuarioDao();
 
-            usuario.NomeCompleto = listaUsuario[0]; // [0]
-            usuario.Email = listaUsuario[1]; // [1]
-            usuario.PerfilAcesso = listaUsuario[2]; // [2]
-            usuario.IdentificadorFuncionario = listaUsuario[3]; // [3]
-            usuario.Ativo = validacao.ValidarAtivo(listaUsuario[4]); // [4]
-            usuario.UsuarioId = validacao.ValidarId(listaUsuario[5]); // [5]
-            usuario.DataCadastro = Convert.ToDateTime(listaUsuario[6]); // [6]
-            usuario.SenhaHash = listaUsuario[7];
+            
+            usuario.UsuarioId = validacao.ValidarId(id);
+            
             if (validacao.mensagem != "")
             {
                 this.mensagem = validacao.mensagem;
                 return;
             }
 
-            usuarioDao.DeletarUsuario(usuario);
+            usuarioDao.DesativarUsuario(usuario);
             this.mensagem = usuarioDao.mensagem;
             return;
         }
@@ -237,6 +232,14 @@ namespace StockFlow.Controles
             UsuarioDao usuarioDao = new UsuarioDao();
             List<Usuario> listaUsuarios = new List<Usuario>();
             listaUsuarios = await usuarioDao.ObterTodosOsUsuariosAsync();
+            return listaUsuarios;
+        }
+
+        public async Task<List<Usuario>> ObterTodosOsUsuariosAtivosAsync()
+        {
+            UsuarioDao usuarioDao = new UsuarioDao();
+            List<Usuario> listaUsuarios = new List<Usuario>();
+            listaUsuarios = await usuarioDao.ObterUsuariosAtivosAsync();
             return listaUsuarios;
         }
     }

@@ -10,5 +10,7 @@ namespace StockFlow.Modelo
     {
          public int CategoriaId { get; set; }
          public string NomeCategoria { get; set; }
+        public bool Ativo { get; set; }
+        public virtual Produto Produto { get; set; }
     }
 }
