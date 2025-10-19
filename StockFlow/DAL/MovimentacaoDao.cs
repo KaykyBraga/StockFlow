@@ -31,7 +31,7 @@ namespace StockFlow.DAL
             await using (var context = new AppDbContext())
             {
 
-                List<Movimentacao> todosAsMovimentacoes = await context.movimentacoes.ToListAsync();
+                List<Movimentacao> todosAsMovimentacoes = await context.movimentacoes.Include(m => m.Usuario).Include(m => m.Produto).ToListAsync();
 
                 return todosAsMovimentacoes;
             }

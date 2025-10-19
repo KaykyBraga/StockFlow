@@ -16,11 +16,15 @@ namespace StockFlow.DAL
         public DbSet<Marca> Marcas { get; set; }
         public DbSet<Movimentacao> movimentacoes { get; set; }
         public DbSet<Produto> Produtos { get; set; }
-        public DbSet<Promocao> promocaos { get; set; }
+        public DbSet<Promocao> Promocoes { get; set; }
         public DbSet<PromocaoProduto> PromocaoProdutos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Venda> Vendas { get; set; }
         public DbSet<VendaItem> VendaItens { get; set; }
+        public DbSet<Caixa> Caixas { get; set; }
+        public DbSet<MovimentacaoCaixa> MovimentacaoCaixas { get; set; }
+
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

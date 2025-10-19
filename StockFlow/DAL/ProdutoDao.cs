@@ -20,15 +20,33 @@ namespace StockFlow.DAL
 
             try
             {
+
                 var contexto = new AppDbContext();
+                bool ProduotoJaCadastrado = contexto.Produtos.Any(p => p.Ean == produto.Ean);
+                if (ProduotoJaCadastrado)
+                {
+                    this.mensagem = "Produto já cadastrado!";
+                    return false;
+                }
                 contexto.Produtos.Add(produto);
                 contexto.SaveChanges();
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                this.mensagem = "Erro ao cadastrar o produto. Causa: ";
+                // Para depuração, esta linha imprime TUDO no console de saída (muito útil)
+                Console.WriteLine(ex.ToString());
+
+                // Pega a exceção mais interna, que é a que realmente importa
+                Exception innerEx = ex;
+                while (innerEx.InnerException != null)
+                {
+                    innerEx = innerEx.InnerException;
+                }
+
+                // Sua variável 'mensagem' agora terá a mensagem de erro específica do banco
+                this.mensagem = "Erro ao cadastrar o produto. Causa: " + innerEx.Message;
                 return false;
             }
             return true;
