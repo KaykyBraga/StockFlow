@@ -11,7 +11,10 @@ namespace StockFlow.Modelo
         public int PromocaoProdutoId { get; set; }
         public int PromocaoId { get; set; }
         public int ProdutoId { get; set; }
-        public Produto Produto { get; set; }
-        public Promocao Promocao { get; set; }
+        public virtual Produto Produto { get; set; }
+        public virtual Promocao Promocao { get; set; }
+
+
+        
     }
 }

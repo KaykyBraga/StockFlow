@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockFlow.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,11 +27,13 @@ namespace StockFlow.Modelo
         public virtual Fornecedor Fornecedor { get; set; }
 
         public virtual ICollection<Movimentacao> Movimentacaos { get; set; }
+        public virtual ICollection<PromocaoProduto> PromocaoProdutos { get; set; }
+
 
         public Produto()
-        {
-            
-            Movimentacaos = new HashSet<Movimentacao>();
+        {           
+            Movimentacaos = new HashSet<Movimentacao>();           
+
         }
 
     }
