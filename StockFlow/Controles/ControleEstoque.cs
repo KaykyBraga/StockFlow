@@ -18,6 +18,7 @@ namespace StockFlow.Controles
             MarcaDao marcaDao = new MarcaDao();
             Marca marca = new Marca();
             marca.NomeMarca = nome;
+            marca.Ativo = true;
             marcaDao.CadastrarMarca(marca);
             this.mensagem = marcaDao.mensagem;
         }
@@ -28,6 +29,7 @@ namespace StockFlow.Controles
             CategoriaDao categoriaDao = new CategoriaDao();
             Categoria categoria = new Categoria();
             categoria.NomeCategoria = nome;
+            categoria.Ativo = true;
             categoriaDao.CadastrarCategoria(categoria);
             mensagem = categoriaDao.mensagem;
         }
