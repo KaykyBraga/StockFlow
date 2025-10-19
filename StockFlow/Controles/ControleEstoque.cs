@@ -46,7 +46,7 @@ namespace StockFlow.Controles
             fornecedor.EmailPrincipal = ListaDados[3];
             fornecedor.TelefonePrincipal = ListaDados[4];
             fornecedor.Ativo = true;
-            DateTime? horaAtual;
+            
 
             dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
             {
@@ -80,7 +80,7 @@ namespace StockFlow.Controles
             validacao.TentarConverterParaDecimal(listaDados[3], out precoVenda);
             decimal precoCusto;
             validacao.TentarConverterParaDecimal(listaDados[4], out precoCusto);
-            int estoqueAtual;
+            
 
             produto.Sku = listaDados[0];
             produto.Ean = listaDados[1];

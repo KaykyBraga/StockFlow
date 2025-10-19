@@ -28,7 +28,7 @@ namespace StockFlow.Controles
             usuario1.Email = listaDadosUsuario[3];
             usuario1.PerfilAcesso = listaDadosUsuario[4];
             usuario1.Ativo = true;
-            DateTime? horaRecebida;
+            
             dataHoraCorreta.ObterHoraCorretaComCallback(horaRecebida =>
             {
 
