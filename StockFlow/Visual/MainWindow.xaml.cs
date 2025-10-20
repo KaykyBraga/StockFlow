@@ -17,14 +17,25 @@ namespace StockFlow
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
+
         {
             InitializeComponent();
 
-            
+
+
 
         }
+        private void btnResumoEstoque_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new ResumoEstoquePage());
+        }
 
-        
+        private void btnAlertas_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new AlertasPage());
+        }
+
     }
 }
