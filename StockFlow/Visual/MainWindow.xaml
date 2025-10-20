@@ -214,11 +214,18 @@
                                 <Button Name="btnRelatMoviment" Content="Movimentação" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0"/>
                             </StackPanel>
                         </Expander>
+                        <Expander Header="Funcionários" FontSize="22" FontWeight="Bold" TextBlock.Foreground="Black" Cursor="">
+                            <StackPanel Width="219">
+                                <Button x:Name="btnListFun" Content="Listagem de Funcionários" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0"/>
+                                <Button x:Name="btnAddFun" Content="Adicionar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="218"/>
+                                <Button x:Name="btnEditFun" Content="Editar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="216"/>
+                            </StackPanel>
+                        </Expander>
                     </StackPanel>
                 </DockPanel>
             </Border>
 
-            <Grid Grid.Column="1" Background="White">
+            <Grid Name="gridMain" Grid.Column="1" Background="White">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="229*"/>
                     <RowDefinition Height="401*"/>

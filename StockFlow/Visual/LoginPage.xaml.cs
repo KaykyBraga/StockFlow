@@ -10,20 +10,25 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace StockFlow.Visual
 {
     /// <summary>
-    /// Lógica interna para Tela_Login.xaml
+    /// Interação lógica para LoginPage.xam
     /// </summary>
-    public partial class Tela_Login : Window
+    public partial class LoginPage : Page
     {
-        public Tela_Login()
+        public LoginPage()
         {
             InitializeComponent();
+        }
 
-            ContentFrame.Navigate(new LoginPage());
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            // Lógica para recuperação de senha
+            NavigationService.GetNavigationService(this)?.Navigate(new RecoveryPage());
         }
     }
 }
