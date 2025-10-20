@@ -1,4 +1,5 @@
 ﻿using StockFlow.DAL;
+using StockFlow.Visual;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,12 +20,18 @@ namespace StockFlow
     {
         public MainWindow()
         {
-            InitializeComponent();
-
-            
+            InitializeComponent();            
 
         }
+        private void btnResumoEstoque_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new ResumoEstoquePage());
+        }
 
-        
+        private void btnAlertas_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new AlertasPage());
+        }
+
     }
 }
