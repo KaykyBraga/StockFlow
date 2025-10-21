@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="StockFlow - Menu" Height="720" Width="1280"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="CanMinimize"  Background="WhiteSmoke">
+        ResizeMode="CanMinimize" 
+        Background="WhiteSmoke">
 
     <Window.Resources>
         <Color x:Key="ColorAccent" >#007ACC</Color>
@@ -188,9 +189,9 @@
 
                         <Expander Header="Funcionários" FontSize="22" FontWeight="Bold" TextBlock.Foreground="Black" Cursor="">
                             <StackPanel Width="219">
-                                <Button x:Name="btnListFun" Content="Listagem de Funcionários" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0"/>
+                                <Button x:Name="btnListFun" Content="Listagem de Funcionários" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Click="btnListFun_Click"/>
                                 <Button x:Name="btnAddFun" Content="Adicionar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="218" Click="btnAddFun_Click"/>
-                                <Button x:Name="btnEditFun" Content="Editar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="216"/>
+                                <Button x:Name="btnEditFun" Content="Editar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="216" Click="btnEditFun_Click"/>
                             </StackPanel>
                         </Expander>
                     </StackPanel>

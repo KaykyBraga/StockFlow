@@ -34,10 +34,23 @@ namespace StockFlow
             ContentFrame.Navigate(new AlertasPage());
         }
 
-        // ✅ MÉTODO ADICIONADO PARA O BOTÃO "ADICIONAR FUNCIONÁRIO"
         private void btnAddFun_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new Tela_AddFuncionario());
+        }
+
+        private void btnEditFun_Click(object sender, RoutedEventArgs e)
+        {
+           
+            string idDoFuncionarioParaEditar = "FUNC-123";
+
+            ContentFrame.Navigate(new Tela_EditarFuncionario(idDoFuncionarioParaEditar));
+        }
+
+        // ✅ METHOD ADDED FOR THE "LISTAGEM DE FUNCIONÁRIOS" BUTTON
+        private void btnListFun_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new Tela_ListarFuncionarios());
         }
     }
 }

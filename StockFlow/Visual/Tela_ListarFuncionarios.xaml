@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="StockFlow.Visual.Tela_ListarFuncionarios"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000"
+             Background="#F0F0F0">
+    <Grid Margin="20">
+        <StackPanel>
+            <TextBlock Text="Listagem de Funcionários" 
+                       FontSize="28" 
+                       FontWeight="Bold" 
+                       Margin="0,0,0,20"/>
+
+            <DataGrid x:Name="DgFuncionarios" 
+                      AutoGenerateColumns="False" 
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      FontSize="14"
+                      ColumnWidth="*">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID Funcionário" Binding="{Binding Id}" Width="150"/>
+                    <DataGridTextColumn Header="Nome Completo" Binding="{Binding Nome}" Width="*"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="250"/>
+
+                    <DataGridTemplateColumn Header="Ações" Width="180">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Editar" Margin="5" Width="80" Click="Button_Click_Editar"/>
+                                    <Button Content="Remover" Margin="5" Width="80" Click="Button_Click_Remover" Background="#DC3545"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</UserControl>
