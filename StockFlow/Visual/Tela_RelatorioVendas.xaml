@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="StockFlow.Visual.Tela_RelatorioVendas"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000"
+             Background="#F0F0F0">
+    <Grid Margin="20">
+        <StackPanel>
+            <TextBlock Text="Relatório de Vendas" 
+                       FontSize="28" 
+                       FontWeight="Bold" 
+                       Margin="0,0,0,20"/>
+
+            <Border Background="White" Padding="15" CornerRadius="5" BorderBrush="#CCCCCC" BorderThickness="1" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="Filtros" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Data Início:" VerticalAlignment="Center" Margin="5"/>
+                        <DatePicker Grid.Column="1" x:Name="DpDataInicio" VerticalAlignment="Center" Margin="5" FontSize="14"/>
+                        <TextBlock Grid.Column="2" Text="Data Fim:" VerticalAlignment="Center" Margin="5"/>
+                        <DatePicker Grid.Column="3" x:Name="DpDataFim" VerticalAlignment="Center" Margin="5" FontSize="14"/>
+
+                        <TextBlock Grid.Column="4" Text="Funcionário:" VerticalAlignment="Center" Margin="15,5,5,5"/>
+                        <ComboBox Grid.Column="5" x:Name="CboFuncionarios" VerticalAlignment="Center" Margin="5" FontSize="14"/>
+
+                        <Button Grid.Column="6" x:Name="BtnFiltrar" Content="Filtrar" Width="120" Height="35" Margin="20,5,5,5" Click="BtnFiltrar_Click"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <DataGrid x:Name="DgVendas" 
+                      AutoGenerateColumns="False" 
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      FontSize="14"
+                      ColumnWidth="*">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID Venda" Binding="{Binding IdVenda}" Width="120"/>
+                    <DataGridTextColumn Header="Data" Binding="{Binding Data, StringFormat='dd/MM/yyyy HH:mm'}" Width="150"/>
+                    <DataGridTextColumn Header="Funcionário" Binding="{Binding NomeFuncionario}" Width="*"/>
+                    <DataGridTextColumn Header="Cliente" Binding="{Binding NomeCliente}" Width="*"/>
+                    <DataGridTextColumn Header="Itens" Binding="{Binding QuantidadeItens}" Width="100"/>
+                    <DataGridTextColumn Header="Valor Total" Binding="{Binding ValorTotal, StringFormat=C, ConverterCulture=pt-BR}" Width="150"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</UserControl>

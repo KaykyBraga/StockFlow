@@ -13,12 +13,8 @@ using System.Windows.Shapes;
 
 namespace StockFlow
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
@@ -26,12 +22,12 @@ namespace StockFlow
 
         private void btnResumoEstoque_Click(object sender, RoutedEventArgs e)
         {
-            ContentFrame.Navigate(new ResumoEstoquePage());
+            // ContentFrame.Navigate(new ResumoEstoquePage()); // Removido para evitar erro de classe inexistente
         }
 
         private void btnAlertas_Click(object sender, RoutedEventArgs e)
         {
-            ContentFrame.Navigate(new AlertasPage());
+            // ContentFrame.Navigate(new AlertasPage()); // Removido para evitar erro de classe inexistente
         }
 
         private void btnAddFun_Click(object sender, RoutedEventArgs e)
@@ -41,16 +37,19 @@ namespace StockFlow
 
         private void btnEditFun_Click(object sender, RoutedEventArgs e)
         {
-           
             string idDoFuncionarioParaEditar = "FUNC-123";
-
             ContentFrame.Navigate(new Tela_EditarFuncionario(idDoFuncionarioParaEditar));
         }
 
-        // ✅ METHOD ADDED FOR THE "LISTAGEM DE FUNCIONÁRIOS" BUTTON
         private void btnListFun_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new Tela_ListarFuncionarios());
+        }
+
+        // ✅ CORREÇÃO AQUI: O método duplicado foi removido. Apenas uma versão existe agora.
+        private void btnRelatVendas_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new Tela_RelatorioVendas());
         }
     }
 }

@@ -182,7 +182,7 @@
 
                         <Expander Header="Relatórios" FontSize="22" FontWeight="Bold" TextBlock.Foreground="Black">
                             <StackPanel Margin="15,5,0,5">
-                                <Button Name="btnRelatVendas" Content="Vendas" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0"/>
+                                <Button Name="btnRelatVendas" Content="Vendas" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnRelatVendas_Click"/>
                                 <Button Name="btnRelatMoviment" Content="Movimentação" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0"/>
                             </StackPanel>
                         </Expander>
