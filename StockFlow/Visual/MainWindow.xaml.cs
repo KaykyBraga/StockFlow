@@ -46,10 +46,15 @@ namespace StockFlow
             ContentFrame.Navigate(new Tela_ListarFuncionarios());
         }
 
-        // ✅ CORREÇÃO AQUI: O método duplicado foi removido. Apenas uma versão existe agora.
         private void btnRelatVendas_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new Tela_RelatorioVendas());
+        }
+
+        // ✅ MÉTODO ADICIONADO PARA O BOTÃO "MOVIMENTAÇÃO" DO RELATÓRIO
+        private void btnRelatMoviment_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new Tela_RelatorioMovimentacao());
         }
     }
 }
