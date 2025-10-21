@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace StockFlow.Modelo
         public decimal? ValorFechamentoCaixa { get; set; }
         public decimal? Diferenca { get; set; }
         public string Status { get; set; } // "Aberto" ou "Fechado"
+        
+        [ForeignKey("UsuarioAberturaId")]
         public virtual Usuario UsuarioAbertura { get; set; }
 
         public virtual ICollection<MovimentacaoCaixa> MovimentacaoCaixa { get; set; }

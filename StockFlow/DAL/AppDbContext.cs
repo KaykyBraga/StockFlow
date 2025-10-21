@@ -10,7 +10,16 @@ namespace StockFlow.DAL
 {
     public class AppDbContext : DbContext
     {
-       
+
+
+        public AppDbContext()
+        {
+        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
+
+        
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Fornecedor> Fornecedores { get; set; }
         public DbSet<Marca> Marcas { get; set; }
@@ -28,7 +37,12 @@ namespace StockFlow.DAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source = KAYKY; Initial Catalog = Db_StockFlow; User ID = sa; Password = 21122005; Encrypt = False");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(@"Data Source = KAYKY; Initial Catalog = Db_StockFlow; User ID = sa; Password = 21122005; Encrypt = False");
+            }
         }
+
+        
     }
 }

@@ -17,6 +17,9 @@ namespace StockFlow.Modelo
          public bool Ativo { get; set; }
         public virtual ICollection<PromocaoProduto> PromocaoProdutos { get; set; }
 
-
+        public Promocao()
+        {
+            PromocaoProdutos = new HashSet<PromocaoProduto>();
+        }
     }
 }

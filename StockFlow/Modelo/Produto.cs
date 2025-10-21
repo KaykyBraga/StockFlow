@@ -32,8 +32,8 @@ namespace StockFlow.Modelo
 
         public Produto()
         {           
-            Movimentacaos = new HashSet<Movimentacao>();           
-
+            Movimentacaos = new HashSet<Movimentacao>();
+            PromocaoProdutos = new HashSet<PromocaoProduto>();
         }
 
     }

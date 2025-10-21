@@ -14,7 +14,7 @@ namespace StockFlow.Modelo
          public int Quantidade { get; set; }
          public decimal PrecoUnitarioMomento { get; set; }
          public decimal DescontoItem { get; set; }
-         public Venda venda { get; set; }
-         public Produto produto { get; set; }
+         public Venda Venda { get; set; }
+         public Produto Produto { get; set; }
     }
 }
