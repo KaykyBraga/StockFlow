@@ -1,4 +1,5 @@
 ﻿using StockFlow.DAL;
+using StockFlow.Visual;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,14 +20,10 @@ namespace StockFlow
     {
 
         public MainWindow()
-
         {
             InitializeComponent();
-
-
-
-
         }
+
         private void btnResumoEstoque_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new ResumoEstoquePage());
@@ -37,5 +34,10 @@ namespace StockFlow
             ContentFrame.Navigate(new AlertasPage());
         }
 
+        // ✅ MÉTODO ADICIONADO PARA O BOTÃO "ADICIONAR FUNCIONÁRIO"
+        private void btnAddFun_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new Tela_AddFuncionario());
+        }
     }
 }

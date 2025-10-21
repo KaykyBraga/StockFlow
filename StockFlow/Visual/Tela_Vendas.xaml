@@ -87,19 +87,84 @@
                         <StackPanel>
                             <TextBlock Text="Buscar Produto" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
 
-                            <ComboBox FontSize="14" Padding="10" Margin="0,0,0,20">
+                            <ComboBox x:Name="ComboProdutos" FontSize="14" Padding="10" Margin="0,0,0,20">
                                 <ComboBoxItem Content="selecione o produto..." IsSelected="True"/>
                             </ComboBox>
 
-                            <Button Content="Adicionar" 
+                            <Button x:Name="BtnAdicionar" Content="Adicionar" 
                                     Background="#5DADE2" Foreground="White" 
-                                    Style="{StaticResource ButtonStyle}" BorderBrush="#3498DB"/>
+                                    Style="{StaticResource ButtonStyle}" BorderBrush="#3498DB"
+                                    Click="BtnAdicionar_Click"/>
                         </StackPanel>
                     </Border>
 
                     <!-- Seção Itens da Venda -->
                     <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="2" 
-                            CornerRadius="8" Padding="20" Margin="0,0,15,0"/>
+                            CornerRadius="8" Padding="20" Margin="0,0,15,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="179*"/>
+                                <ColumnDefinition Width="233*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="Itens da Venda" FontSize="18" FontWeight="SemiBold" 
+                                       Margin="0,0,0,15" Grid.Row="0" Grid.ColumnSpan="2"/>
+
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2">
+                                <StackPanel x:Name="PainelItensVenda">
+                                    <!-- Os itens serão adicionados aqui dinamicamente -->
+
+                                    <!-- Exemplo de Item (este será criado dinamicamente no código) -->
+                                    <!--
+                                    <Border BorderBrush="#E0E0E0" BorderThickness="1" 
+                                            CornerRadius="5" Padding="15" Margin="0,0,0,10"
+                                            Background="#F9F9F9">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Text="Nome do Produto" FontSize="16" 
+                                                       FontWeight="SemiBold" Grid.Row="0" Margin="0,0,0,10"/>
+
+                                            <Grid Grid.Row="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                                                    <Button Content="-" Width="35" Height="35" 
+                                                            FontSize="18" FontWeight="Bold"
+                                                            Background="#E74C3C" Foreground="White"
+                                                            BorderBrush="#C0392B" Cursor="Hand"/>
+                                                    <TextBlock Text="1" FontSize="16" FontWeight="Bold"
+                                                               VerticalAlignment="Center" 
+                                                               Margin="15,0,15,0" MinWidth="30"
+                                                               TextAlignment="Center"/>
+                                                    <Button Content="+" Width="35" Height="35" 
+                                                            FontSize="18" FontWeight="Bold"
+                                                            Background="#27AE60" Foreground="White"
+                                                            BorderBrush="#229954" Cursor="Hand"/>
+                                                </StackPanel>
+
+                                                <TextBlock Text="R$ 00,00" FontSize="16" 
+                                                           FontWeight="Bold" Foreground="#27AE60"
+                                                           Grid.Column="2" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                    -->
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
 
                     <!-- Seção Conclusão da Venda -->
                     <Border Grid.Column="2" BorderBrush="#CCCCCC" BorderThickness="2" 
@@ -110,7 +175,7 @@
 
                             <TextBlock Text="Total da Venda" FontSize="16" Foreground="#27AE60" 
                                        FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,20,0,10"/>
-                            <TextBox Text="R$ 00,00" FontSize="28" FontWeight="Bold" 
+                            <TextBox x:Name="TxtTotalVenda" Text="R$ 00,00" FontSize="28" FontWeight="Bold" 
                                      HorizontalAlignment="Center" Margin="0,0,0,30"
                                      IsReadOnly="True" BorderThickness="0" Background="Transparent"
                                      TextAlignment="Center" Cursor="IBeam" IsReadOnlyCaretVisible="True"/>

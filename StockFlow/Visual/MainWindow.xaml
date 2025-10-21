@@ -6,9 +6,8 @@
         xmlns:local="clr-namespace:StockFlow"
         mc:Ignorable="d"
         Title="StockFlow - Menu" Height="720" Width="1280"
-        WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
-        Background="WhiteSmoke">
+        ResizeMode="CanMinimize"  Background="WhiteSmoke">
 
     <Window.Resources>
         <Color x:Key="ColorAccent" >#007ACC</Color>
@@ -22,7 +21,6 @@
         <SolidColorBrush x:Key="MenuTextColor" Color="{StaticResource ColorText}"/>
         <SolidColorBrush x:Key="ExitRedColorBrush" Color="{StaticResource ColorExitRed}"/>
         <SolidColorBrush x:Key="ExitNormalBackground" Color="Transparent"/>
-
         <SolidColorBrush x:Key="SubMenuHoverBackground" Color="#FF5F5F5F"/>
         <SolidColorBrush x:Key="SubMenuHoverForeground" Color="{StaticResource ColorExitWhite}"/>
 
@@ -36,19 +34,12 @@
             <Setter Property="Foreground" Value="{StaticResource MenuTextColor}"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="Cursor" Value="Hand"/>
-
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" 
-                                Padding="15,5,5,5"  
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}">
-
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" Padding="15,5,5,5" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
-
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource SubMenuHoverBackground}"/>
@@ -69,11 +60,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Expander">
                         <DockPanel>
-                            <ToggleButton DockPanel.Dock="Top"
-                                          IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                                          OverridesDefaultStyle="True"
-                                          Content="{TemplateBinding Header}">
-
+                            <ToggleButton DockPanel.Dock="Top" IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" OverridesDefaultStyle="True" Content="{TemplateBinding Header}">
                                 <ToggleButton.Template>
                                     <ControlTemplate TargetType="ToggleButton">
                                         <Border Padding="10">
@@ -82,21 +69,13 @@
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-
                                                 <ContentPresenter Grid.Column="0" ContentSource="Content" VerticalAlignment="Center"/>
-
-                                                <Path x:Name="Arrow" Grid.Column="1"
-                                                      Data="M 0 0 L 4 4 L 8 0 Z"
-                                                      Stroke="#555"
-                                                      StrokeThickness="2"
-                                                      VerticalAlignment="Center"
-                                                      HorizontalAlignment="Center"/>
+                                                <Path x:Name="Arrow" Grid.Column="1" Data="M 0 0 L 4 4 L 8 0 Z" Stroke="#555" StrokeThickness="2" VerticalAlignment="Center" HorizontalAlignment="center"/>
                                             </Grid>
                                         </Border>
                                     </ControlTemplate>
                                 </ToggleButton.Template>
                             </ToggleButton>
-
                             <ContentPresenter x:Name="ExpandSite" DockPanel.Dock="Bottom" Visibility="Collapsed"/>
                         </DockPanel>
                         <ControlTemplate.Triggers>
@@ -115,14 +94,10 @@
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Padding" Value="10"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
-
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                Padding="{TemplateBinding Padding}">
+                        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -161,13 +136,9 @@
                     <Border DockPanel.Dock="Bottom" BorderBrush="#DDDDDD" BorderThickness="0,1,0,0" Padding="10">
                         <Button x:Name="BtnSair" Style="{StaticResource ExitButtonStyle}">
                             <StackPanel Orientation="Horizontal">
-                                <Path x:Name="ExitIcon" Fill="{StaticResource ExitRedColorBrush}" Width="20" Height="20" Margin="0,0,10,0"
-                                      Data="M13 1.01L13 0H3C2.448 0 2 0.448 2 1v14c0 0.552 0.448 1 1 1h10c0.552 0 1-0.448 1-1V9.99h-1V15H3V1h10v0.01zM11 8H5V7h6V8zM14 7L11 4v2H5v1h6v2L14 7z"/>
-
-                                <TextBlock x:Name="ExitText" Text="Sair" Foreground="{StaticResource ExitRedColorBrush}" 
-                                           FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                                <Path x:Name="ExitIcon" Fill="{StaticResource ExitRedColorBrush}" Width="20" Height="20" Margin="0,0,10,0" Data="M13 1.01L13 0H3C2.448 0 2 0.448 2 1v14c0 0.552 0.448 1 1 1h10c0.552 0 1-0.448 1-1V9.99h-1V15H3V1h10v0.01zM11 8H5V7h6V8zM14 7L11 4v2H5v1h6v2L14 7z"/>
+                                <TextBlock x:Name="ExitText" Text="Sair" Foreground="{StaticResource ExitRedColorBrush}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
                             </StackPanel>
-
                             <Button.Triggers>
                                 <EventTrigger RoutedEvent="MouseEnter">
                                     <BeginStoryboard>
@@ -214,10 +185,11 @@
                                 <Button Name="btnRelatMoviment" Content="Movimentação" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0"/>
                             </StackPanel>
                         </Expander>
+
                         <Expander Header="Funcionários" FontSize="22" FontWeight="Bold" TextBlock.Foreground="Black" Cursor="">
                             <StackPanel Width="219">
                                 <Button x:Name="btnListFun" Content="Listagem de Funcionários" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0"/>
-                                <Button x:Name="btnAddFun" Content="Adicionar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="218"/>
+                                <Button x:Name="btnAddFun" Content="Adicionar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="218" Click="btnAddFun_Click"/>
                                 <Button x:Name="btnEditFun" Content="Editar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="216"/>
                             </StackPanel>
                         </Expander>
@@ -226,9 +198,9 @@
             </Border>
 
             <Frame x:Name="ContentFrame" 
-               Grid.Column="1" 
-               Background="White"
-               NavigationUIVisibility="Hidden"/>
+                   Grid.Column="1" 
+                   Background="White"
+                   NavigationUIVisibility="Hidden"/>
 
         </Grid>
     </Grid>
