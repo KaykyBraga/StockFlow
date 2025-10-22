@@ -22,12 +22,12 @@ namespace StockFlow
 
         private void btnResumoEstoque_Click(object sender, RoutedEventArgs e)
         {
-            // ContentFrame.Navigate(new ResumoEstoquePage()); // Removido para evitar erro de classe inexistente
+
         }
 
         private void btnAlertas_Click(object sender, RoutedEventArgs e)
         {
-            // ContentFrame.Navigate(new AlertasPage()); // Removido para evitar erro de classe inexistente
+
         }
 
         private void btnAddFun_Click(object sender, RoutedEventArgs e)
@@ -51,10 +51,15 @@ namespace StockFlow
             ContentFrame.Navigate(new Tela_RelatorioVendas());
         }
 
-        // ✅ MÉTODO ADICIONADO PARA O BOTÃO "MOVIMENTAÇÃO" DO RELATÓRIO
         private void btnRelatMoviment_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new Tela_RelatorioMovimentacao());
+        }
+
+        // ✅ MÉTODO ADICIONADO PARA O BOTÃO "PROMOÇÕES"
+        private void btnPromocoes_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new Tela_Promocoes());
         }
     }
 }
