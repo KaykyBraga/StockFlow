@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36408.4 d17.14
+VisualStudioVersion = 17.14.36408.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockFlow", "StockFlow\StockFlow.csproj", "{AF12EDFF-3449-45AA-9D13-AF2C1FF18311}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockFlow.Tests", "StockFlow.Tests\StockFlow.Tests.csproj", "{3E3DF7CD-5DA0-4D1B-BF20-4855C9020AAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{AF12EDFF-3449-45AA-9D13-AF2C1FF18311}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF12EDFF-3449-45AA-9D13-AF2C1FF18311}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF12EDFF-3449-45AA-9D13-AF2C1FF18311}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E3DF7CD-5DA0-4D1B-BF20-4855C9020AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E3DF7CD-5DA0-4D1B-BF20-4855C9020AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E3DF7CD-5DA0-4D1B-BF20-4855C9020AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E3DF7CD-5DA0-4D1B-BF20-4855C9020AAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

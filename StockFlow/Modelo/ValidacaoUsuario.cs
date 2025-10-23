@@ -14,7 +14,8 @@ namespace StockFlow.Modelo
         public void EmailExistenteOuIdentificadorExistente(string email, string identificador)
         {
             this.mensagem = "";
-            UsuarioDao usuarioDao = new UsuarioDao();
+            var contexto = new AppDbContext();
+            UsuarioDao usuarioDao = new UsuarioDao(contexto);
             Usuario usuario = new Usuario();
             Usuario usuario2 = new Usuario();
 

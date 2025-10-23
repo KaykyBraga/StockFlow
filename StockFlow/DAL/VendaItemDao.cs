@@ -15,7 +15,7 @@ namespace StockFlow.DAL
             await using (var context = new AppDbContext())
             {
 
-                List<VendaItem> todasAsVendaItens = await context.VendaItens.Include(vi => vi.venda).ToListAsync();
+                List<VendaItem> todasAsVendaItens = await context.VendaItens.Include(vi => vi.Venda).ToListAsync();
 
                 return todasAsVendaItens;
             }

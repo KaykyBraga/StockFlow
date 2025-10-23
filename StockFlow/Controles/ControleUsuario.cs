@@ -18,7 +18,8 @@ namespace StockFlow.Controles
         {
             this.mensagem = "";
             Usuario usuario1 = new Usuario();
-            UsuarioDao usuarioDao = new UsuarioDao();
+            var context = new AppDbContext();
+            UsuarioDao usuarioDao = new UsuarioDao(context);
             ValidacaoUsuario validacao = new ValidacaoUsuario();
             DataHoraCorreta dataHoraCorreta = new DataHoraCorreta();
             LoginCadastro loginCadastro = new LoginCadastro();
@@ -80,7 +81,8 @@ namespace StockFlow.Controles
             this.mensagem = "";
             this.usuarioAcesso = "";
             Usuario usuario = new Usuario();
-            UsuarioDao usuarioDao = new UsuarioDao();
+            var context = new AppDbContext();
+            UsuarioDao usuarioDao = new UsuarioDao(context);
             LoginCadastro loginCadastro = new LoginCadastro();
 
             // Busca o usuario pelo email
@@ -108,7 +110,8 @@ namespace StockFlow.Controles
         {
             Usuario usuario = new Usuario();
             ValidacaoUsuario validacao = new ValidacaoUsuario();
-            UsuarioDao usuarioDao = new UsuarioDao();
+            var context = new AppDbContext();
+            UsuarioDao usuarioDao = new UsuarioDao(context);
 
             usuario.NomeCompleto = listaUsuario[0]; // [0]
             usuario.Email = listaUsuario[1]; // [1]
@@ -133,7 +136,8 @@ namespace StockFlow.Controles
         {
             this.mensagem = "";
             List<Usuario> listaDeUsuarios = new List<Usuario>();
-            UsuarioDao usuarioDao = new UsuarioDao();
+            var context = new AppDbContext();
+            UsuarioDao usuarioDao = new UsuarioDao(context);
             listaDeUsuarios = usuarioDao.BuscarUsuarioPorNome(nome);
             if (usuarioDao.mensagem != "")
             {
@@ -149,7 +153,8 @@ namespace StockFlow.Controles
         {
             this.mensagem = "";
             Usuario usuario = new Usuario();
-            UsuarioDao usuarioDao = new UsuarioDao();
+            var context = new AppDbContext();
+            UsuarioDao usuarioDao = new UsuarioDao(context);
             usuario = usuarioDao.BuscarUsuarioPorIdentificador(indentificador);
             if (usuarioDao.mensagem != "")
             {
@@ -163,7 +168,8 @@ namespace StockFlow.Controles
         {
             Usuario usuario = new Usuario();
             ValidacaoUsuario validacao = new ValidacaoUsuario();
-            UsuarioDao usuarioDao = new UsuarioDao();
+            var context = new AppDbContext();
+            UsuarioDao usuarioDao = new UsuarioDao(context);
 
             
             usuario.UsuarioId = validacao.ValidarId(id);
@@ -174,7 +180,7 @@ namespace StockFlow.Controles
                 return;
             }
 
-            usuarioDao.DesativarUsuario(usuario);
+            usuarioDao.DesativarUsuario(usuario.UsuarioId);
             this.mensagem = usuarioDao.mensagem;
             return;
         }
@@ -183,8 +189,8 @@ namespace StockFlow.Controles
         {
             this.mensagem = "";
             this.usuarioAcesso = "";
-            //Usuario usuario = new Usuario();
-            UsuarioDao usuarioDao = new UsuarioDao();
+            var context = new AppDbContext();
+            UsuarioDao usuarioDao = new UsuarioDao(context);
             ValidacaoUsuario validacao = new ValidacaoUsuario();
             LoginCadastro loginCadastro = new LoginCadastro();
             string senha = loginCadastro.Hash(novaSenha);
@@ -229,7 +235,8 @@ namespace StockFlow.Controles
 
         public async Task<List<Usuario>> ObterTodosOsUsuariosAsync()
         {
-            UsuarioDao usuarioDao = new UsuarioDao();
+            var context = new AppDbContext();
+            UsuarioDao usuarioDao = new UsuarioDao(context);
             List<Usuario> listaUsuarios = new List<Usuario>();
             listaUsuarios = await usuarioDao.ObterTodosOsUsuariosAsync();
             return listaUsuarios;
@@ -237,7 +244,8 @@ namespace StockFlow.Controles
 
         public async Task<List<Usuario>> ObterTodosOsUsuariosAtivosAsync()
         {
-            UsuarioDao usuarioDao = new UsuarioDao();
+            var context = new AppDbContext();
+            UsuarioDao usuarioDao = new UsuarioDao(context);
             List<Usuario> listaUsuarios = new List<Usuario>();
             listaUsuarios = await usuarioDao.ObterUsuariosAtivosAsync();
             return listaUsuarios;

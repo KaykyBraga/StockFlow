@@ -71,7 +71,8 @@ namespace StockFlow.Controles
         public void CadastrarProduto(List<string> listaDados)
         {
             this.mensagem = "";
-            ProdutoDao produtoDao = new ProdutoDao();
+            var context = new AppDbContext();
+            ProdutoDao produtoDao = new ProdutoDao(context);
             Produto produto = new Produto();
             MovimentacaoDao movimentacaoDao = new MovimentacaoDao();
             Movimentacao movimentacao = new Movimentacao();
@@ -95,8 +96,7 @@ namespace StockFlow.Controles
             produto.MarcaId = validacao.CoverterParaInt(listaDados[7]);
             produto.FornecedorId = validacao.CoverterParaInt(listaDados[8]);
             produto.CategoriaId = validacao.CoverterParaInt(listaDados[9]);
-
-            DateTime? horaAtual;
+           
             dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
             {
                 if (horaAtual.HasValue)
@@ -134,7 +134,8 @@ namespace StockFlow.Controles
         public void AdicionarProduto(List<string> listaDados)
         {
             this.mensagem = "";
-            ProdutoDao produtoDao = new ProdutoDao();           
+            var context = new AppDbContext();
+            ProdutoDao produtoDao = new ProdutoDao(context);           
             MovimentacaoDao movimentacaoDao = new MovimentacaoDao();
             Movimentacao movimentacao = new Movimentacao();
             DataHoraCorreta dataHoraCorreta = new DataHoraCorreta();
@@ -142,7 +143,6 @@ namespace StockFlow.Controles
 
             int id = validacao.CoverterParaInt(listaDados[0]);
             int quantidadeAdicionar = validacao.CoverterParaInt(listaDados[1]);
-            DateTime? horaAtual;
 
             dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
             {
@@ -225,9 +225,11 @@ namespace StockFlow.Controles
         //Remover Produto
         public void DesativarProduto(string id)
         {
+            var context = new AppDbContext();
+
             Produto produto = new Produto();
             ValidacaoEstoque validacaoEstoque = new ValidacaoEstoque();
-            ProdutoDao produtoDao = new ProdutoDao();
+            ProdutoDao produtoDao = new ProdutoDao(context);
 
             produto.ProdutoId = validacaoEstoque.CoverterParaInt(id);
             if (produto.ProdutoId == 0)
@@ -240,7 +242,7 @@ namespace StockFlow.Controles
                 this.mensagem = validacaoEstoque.mensagem;
                 return;
             }
-            produtoDao.DesativarProduto(produto);
+            produtoDao.DesativarProduto(produto.ProdutoId);
             this.mensagem = produtoDao.mensagem;
         }
 
@@ -269,11 +271,12 @@ namespace StockFlow.Controles
         public void EditarProduto(List<string> listaProduto)
         {
             this.mensagem = "";
+            var context = new AppDbContext();
             Produto produto = new Produto();
             ValidacaoEstoque validacao = new ValidacaoEstoque();
             MovimentacaoDao movimentacaoDao = new MovimentacaoDao();
             Movimentacao movimentacao = new Movimentacao();
-            ProdutoDao produtoDao = new ProdutoDao();
+            ProdutoDao produtoDao = new ProdutoDao(context);
             DataHoraCorreta dataHoraCorreta = new DataHoraCorreta();
 
 
@@ -341,7 +344,8 @@ namespace StockFlow.Controles
 
         public List<Produto> BuscarProdutoPorNome(string nome)
         {
-            ProdutoDao produtoDao = new ProdutoDao();
+            var context = new AppDbContext();
+            ProdutoDao produtoDao = new ProdutoDao(context);
             var produtos = produtoDao.BuscarProdutoPorNome(nome);
             this.mensagem = produtoDao.mensagem;
             return produtos;
@@ -349,7 +353,8 @@ namespace StockFlow.Controles
 
         public async Task<List<Produto>> ObterTodosOsProdutosAsync()
         {
-            ProdutoDao produtoDao = new ProdutoDao();
+            var context = new AppDbContext();
+            ProdutoDao produtoDao = new ProdutoDao(context);
             List<Produto> listaProdutos = new List<Produto>();
             listaProdutos = await produtoDao.ObterTodosOsProdutosAsync();
             return listaProdutos;
@@ -389,7 +394,8 @@ namespace StockFlow.Controles
 
         public async Task<List<Produto>> ObterTodosOsProdutosAtivosAsync()
         {
-            ProdutoDao produtoDao = new ProdutoDao();
+            var context = new AppDbContext();
+            ProdutoDao produtoDao = new ProdutoDao(context);
             List<Produto> listaProdutos = new List<Produto>();
             listaProdutos = await produtoDao.ObterProdutosAtivosAsync();
             return listaProdutos;
@@ -421,7 +427,8 @@ namespace StockFlow.Controles
 
         public async Task<List<Produto>> ObterTodosOsProdtuosComEstoqueBaixoAsync()
         {
-            ProdutoDao produtoDao = new ProdutoDao();
+            var context = new AppDbContext();
+            ProdutoDao produtoDao = new ProdutoDao(context);
             List<Produto> listaCategorias = new List<Produto>();
             listaCategorias = await produtoDao.ObterProdutosComEstoqueBaixoAsync();
             return listaCategorias;

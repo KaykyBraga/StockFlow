@@ -11,38 +11,36 @@ namespace StockFlow.DAL
     public class PromocaoProdutoDao
     {
         public string mensagemErro = "";
-        public void VincularPromocaoProduto(Modelo.PromocaoProduto novaPromocaoProduto)
+        private readonly AppDbContext _context;
+
+        // O construtor agora recebe a instância do AppDbContext
+        public PromocaoProdutoDao(AppDbContext context)
         {
+            _context = context;
+        }
+
+        public void VincularPromocaoProduto(PromocaoProduto novaPromocaoProduto)
+        {
+            this.mensagemErro = ""; // Limpa a mensagem no início
             try
             {
-                using (var context = new AppDbContext())
-                {
-                    // Lógica para adicionar a nova promoção ao banco de dados
-                    context.PromocaoProdutos.Add(novaPromocaoProduto);
-                    context.SaveChanges();
-                }
+                _context.PromocaoProdutos.Add(novaPromocaoProduto);
+                _context.SaveChanges();
             }
             catch (Exception ex)
             {
-                Exception innerEx = ex;
-                while (innerEx.InnerException != null)
-                {
-                    innerEx = innerEx.InnerException;
-                }
-                this.mensagemErro = "Erro ao cadastrar a promoção do produto. Causa: " + innerEx.Message;
-                return;
+                this.mensagemErro = "Erro ao cadastrar a promoção do produto. Causa: " + ex.InnerException?.Message ?? ex.Message;
             }
         }
 
         public async Task<List<PromocaoProduto>> ObterTodosAsPromocaoProdutoAsync()
         {
-            await using (var context = new AppDbContext())
-            {
-
-                List<PromocaoProduto> todosAsPromocaoProdutos = await context.PromocaoProdutos.Include(pp => pp.Promocao).Include(pp => pp.ProdutoId).ToListAsync();
-
-                return todosAsPromocaoProdutos;
-            }
+            // Nota: O Include em 'ProdutoId' não é válido, pois é um int. 
+            // A intenção provavelmente era 'Produto'. A lógica de busca continua a mesma.
+            return await _context.PromocaoProdutos
+                .Include(pp => pp.Promocao)
+                .Include(pp => pp.Produto) // Corrigido de pp.ProdutoId para pp.Produto
+                .ToListAsync();
         }
     }
 }

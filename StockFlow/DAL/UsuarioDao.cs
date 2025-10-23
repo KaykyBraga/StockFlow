@@ -12,40 +12,36 @@ namespace StockFlow.DAL
     public class UsuarioDao
     {
         public string mensagem;
+        private readonly AppDbContext _context;
+
+        // O construtor agora recebe a instância do AppDbContext
+        public UsuarioDao(AppDbContext context)
+        {
+            _context = context;
+        }
 
         public void AdcionarUsuario(Usuario usuario)
         {
             this.mensagem = "";
             try
             {
-                var context = new AppDbContext();
-                context.Usuarios.Add(usuario);
-                context.SaveChanges();
-
-
+                _context.Usuarios.Add(usuario);
+                _context.SaveChanges();
+                this.mensagem = "Usuário adicionado com sucesso!";
             }
             catch (Exception ex)
             {
-                this.mensagem = "Erro ao adicionar usuário!" + ex;
-
+                this.mensagem = "Erro ao adicionar usuário! " + ex.Message;
             }
-            this.mensagem = "Usuário adicionado com sucesso!";
-
-
         }
 
         public Usuario BuscarUsuarioPorEmail(string email)
         {
             this.mensagem = "";
-                    
-
             try
             {
                 var termoBusca = email.Trim().ToLower();
-
-                var context = new AppDbContext();
-                var usuario = context.Usuarios.FirstOrDefault(u => u.Email.ToLower() == termoBusca);
-                return usuario;
+                return _context.Usuarios.FirstOrDefault(u => u.Email.ToLower() == termoBusca);
             }
             catch (Exception)
             {
@@ -54,17 +50,13 @@ namespace StockFlow.DAL
             }
         }
 
-        public Usuario BuscarUsuarioPorIdentificador(string indentificador)
+        public Usuario BuscarUsuarioPorIdentificador(string identificador)
         {
             this.mensagem = "";
-            
-
             try
             {
-                var termoBusca = indentificador.Trim().ToLower();
-                var context = new AppDbContext();
-                var usuario = context.Usuarios.FirstOrDefault(u => u.IdentificadorFuncionario.ToLower() == termoBusca);
-                return usuario;
+                var termoBusca = identificador.Trim().ToLower();
+                return _context.Usuarios.FirstOrDefault(u => u.IdentificadorFuncionario.ToLower() == termoBusca);
             }
             catch (Exception)
             {
@@ -73,17 +65,13 @@ namespace StockFlow.DAL
             }
         }
 
-        public Usuario BuscarUsuarioPorId( int id)
+        public Usuario BuscarUsuarioPorId(int id)
         {
             this.mensagem = "";
-
-
             try
             {
-                
-                var context = new AppDbContext();
-                var usuario = context.Usuarios.FirstOrDefault(u => u.UsuarioId == id);
-                return usuario;
+                // Usar Find é mais otimizado para busca por chave primária
+                return _context.Usuarios.Find(id);
             }
             catch (Exception)
             {
@@ -101,82 +89,62 @@ namespace StockFlow.DAL
             }
             try
             {
-                var context = new AppDbContext();
                 var termoBusca = nome.Trim().ToLower();
-                var Usuarios =  context.Usuarios.Where(u => u.NomeCompleto.ToLower().Contains(termoBusca)).ToList();
-                return Usuarios;
+                return _context.Usuarios.Where(u => u.NomeCompleto.ToLower().Contains(termoBusca)).ToList();
             }
             catch (Exception)
             {
-
                 this.mensagem = "Erro ao buscar usuário por nome!";
                 return new List<Usuario>();
             }
         }
 
-        public void EditarUsuario(Usuario usuario) 
+        public void EditarUsuario(Usuario usuario)
         {
             this.mensagem = "";
             try
             {
-                var context = new AppDbContext();               
-                context.Usuarios.Update(usuario);
-                context.SaveChanges();
+                _context.Usuarios.Update(usuario);
+                _context.SaveChanges();
+                this.mensagem = "Usuário editado com sucesso!";
             }
             catch (Exception)
             {
                 this.mensagem = "Erro ao editar usuário!";
-                return;
             }
-            this.mensagem = "Usuário editado com sucesso!";
         }
 
-        public void DesativarUsuario(Usuario usuario)
+        // Alterado para receber ID para ser mais testável e robusto
+        public void DesativarUsuario(int usuarioId)
         {
             this.mensagem = "";
-            usuario = BuscarUsuarioPorId(usuario.UsuarioId);
-            if (usuario == null)
-            {
-                this.mensagem = "Usuário não encontrado para deletar!";
-                return;
-            }
-            usuario.Ativo = false;
             try
             {
-                var context = new AppDbContext();
-                context.Usuarios.Update(usuario);
-                context.SaveChanges();
+                var usuario = _context.Usuarios.Find(usuarioId);
+                if (usuario == null)
+                {
+                    this.mensagem = "Usuário não encontrado para desativar!";
+                    return;
+                }
+                usuario.Ativo = false;
+                _context.Usuarios.Update(usuario);
+                _context.SaveChanges();
+                this.mensagem = "Usuário desativado com sucesso!";
             }
             catch (Exception)
             {
                 this.mensagem = "Erro ao desativar usuário!";
-                return;
             }
-            this.mensagem = "Usuário desativado com sucesso!";
         }
 
         public async Task<List<Usuario>> ObterTodosOsUsuariosAsync()
         {
-            await using (var context = new AppDbContext())
-            {
-                
-                List<Usuario> todosOsUsuarios = await context.Usuarios.ToListAsync();
-
-                return todosOsUsuarios;
-            }
+            return await _context.Usuarios.ToListAsync();
         }
-
 
         public async Task<List<Usuario>> ObterUsuariosAtivosAsync()
         {
-            
-            await using (var context = new AppDbContext())
-            {
-                
-                List<Usuario> usuariosAtivos = await context.Usuarios.Where(u => u.Ativo == true).ToListAsync();
-
-                return usuariosAtivos;
-            }
+            return await _context.Usuarios.Where(u => u.Ativo).ToListAsync();
         }
     }
 }

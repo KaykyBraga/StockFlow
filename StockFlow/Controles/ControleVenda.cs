@@ -53,8 +53,8 @@ namespace StockFlow.Controles
             });
 
             novoCaixa.MovimentacaoCaixa.Add(movimentacao);
-
-            CaixaDao caixaDao = new CaixaDao();
+            var context = new AppDbContext();
+            CaixaDao caixaDao = new CaixaDao(context);
             caixaDao.AbrirCaixa(novoCaixa);
 
             if (caixaDao.mensagemErro != "")
@@ -75,7 +75,8 @@ namespace StockFlow.Controles
                 this.mensagem = "Valor de fechamento inválido.";
                 return null;
             }
-            CaixaDao caixaDao = new CaixaDao();
+            var context = new AppDbContext();
+            CaixaDao caixaDao = new CaixaDao(context);
             var caixaFechado = caixaDao.FecharCaixa(SessaoUsuario.UsuarioId, valorFechamento);
             if (caixaDao.mensagemErro != "")
             {
@@ -88,7 +89,8 @@ namespace StockFlow.Controles
 
         public void RegistrarVenda( List<VendaItem> itensDto, string metodoPagamento)
         {
-            VendaDao vendaDao = new VendaDao();
+            var context = new AppDbContext();
+            VendaDao vendaDao = new VendaDao(context);
             vendaDao.RegistrarVenda(SessaoUsuario.UsuarioId, itensDto, metodoPagamento);
             if (vendaDao.mensagemErro != "")
             {
@@ -101,8 +103,9 @@ namespace StockFlow.Controles
         public void CriarPromocao(List<string> listaDados)
         {
             Promocao novaPromocao = new Promocao();
-            ValidacaoEstoque validacao = new ValidacaoEstoque();            
-            PromocaoDao promocaoDao = new PromocaoDao();
+            ValidacaoEstoque validacao = new ValidacaoEstoque();  
+            var context = new AppDbContext();
+            PromocaoDao promocaoDao = new PromocaoDao(context);
 
 
             validacao.TentarConverterParaDecimal(listaDados[2], out decimal valorDesconto);
@@ -128,7 +131,8 @@ namespace StockFlow.Controles
 
         public void VincularPromocaoProduto(int promocaoId, int produtoId)
         {
-            PromocaoProdutoDao promocaoProdutoDao = new PromocaoProdutoDao();
+            var context = new AppDbContext();
+            PromocaoProdutoDao promocaoProdutoDao = new PromocaoProdutoDao(context);
             PromocaoProduto novaPromocaoProduto = new PromocaoProduto();
             novaPromocaoProduto.PromocaoId = promocaoId;
             novaPromocaoProduto.ProdutoId = produtoId;
@@ -145,7 +149,8 @@ namespace StockFlow.Controles
 
         public void DesativarPromocoesExpiradas()
         {
-            PromocaoDao promocaoDao = new PromocaoDao();
+            var context = new AppDbContext();
+            PromocaoDao promocaoDao = new PromocaoDao(context);
             promocaoDao.DesativarPromocoesExpiradas();
             if (promocaoDao.mensagemErro != "")
             {
@@ -165,8 +170,9 @@ namespace StockFlow.Controles
                 this.mensagem = validacaoEstoque.mensagem;
                 return;
             }
-            CaixaDao caixaDao = new CaixaDao();
-            caixaDao.FazerSangria(valorSangria,motivo);
+            var context = new AppDbContext();
+            CaixaDao caixaDao = new CaixaDao(context);
+            caixaDao.FazerSangria(SessaoUsuario.UsuarioId,valorSangria,motivo);
             if (caixaDao.mensagemErro != "")
             {
                 this.mensagem = caixaDao.mensagemErro;
@@ -185,8 +191,9 @@ namespace StockFlow.Controles
                 this.mensagem = validacaoEstoque.mensagem;
                 return;
             }
-            CaixaDao caixaDao = new CaixaDao();
-            caixaDao.AdicionarReforco(valorReforco, motivo);
+            var context = new AppDbContext();
+            CaixaDao caixaDao = new CaixaDao(context);
+            caixaDao.AdicionarReforco(SessaoUsuario.UsuarioId, valorReforco, motivo);
             if (caixaDao.mensagemErro != "")
             {
                 this.mensagem = caixaDao.mensagemErro;
@@ -197,7 +204,8 @@ namespace StockFlow.Controles
 
         public async Task<List<Venda>> ObterTodasAsVendasAsync()
         {
-            VendaDao vendaDao = new VendaDao();
+            var context = new AppDbContext();
+            VendaDao vendaDao = new VendaDao(context);
             List<Venda> listaVendas = new List<Venda>();
             listaVendas = await vendaDao.ObterTodaAsVendasAsync();
             return listaVendas;
@@ -213,7 +221,8 @@ namespace StockFlow.Controles
 
         public async Task<List<Promocao>> ObterTodasAsPromocoesAsync()
         {
-            PromocaoDao promocaoDao = new PromocaoDao();
+            var context = new AppDbContext();
+            PromocaoDao promocaoDao = new PromocaoDao(context);
             List<Promocao> listaPromocoes = new List<Promocao>();
             listaPromocoes = await promocaoDao.ObterTodosAsPromocoesAsync();
             return listaPromocoes;
@@ -221,7 +230,8 @@ namespace StockFlow.Controles
 
         public async Task<List<Promocao>> ObterTodasAsPromocoesAtivasAsync()
         {
-            PromocaoDao promocaoDao = new PromocaoDao();
+            var context = new AppDbContext();
+            PromocaoDao promocaoDao = new PromocaoDao(context);
             List<Promocao> listaPromocoes = new List<Promocao>();
             listaPromocoes = await promocaoDao.ObterPromocoesAtivasAsync();
             return listaPromocoes;
@@ -229,7 +239,8 @@ namespace StockFlow.Controles
 
         public async Task<List<PromocaoProduto>> ObterTodasAsPromocaoProdutosAsync()
         {
-            PromocaoProdutoDao promocaoProdutoDao = new PromocaoProdutoDao();
+            var context = new AppDbContext();
+            PromocaoProdutoDao promocaoProdutoDao = new PromocaoProdutoDao(context);
             List<PromocaoProduto> listaPromocaoProdutos = new List<PromocaoProduto>();
             listaPromocaoProdutos = await promocaoProdutoDao.ObterTodosAsPromocaoProdutoAsync();
             return listaPromocaoProdutos;
@@ -237,7 +248,8 @@ namespace StockFlow.Controles
 
         public async Task<List<Caixa>> ObterTodosOsCaixasAsync()
         {
-            CaixaDao caixaDao = new CaixaDao();
+            var context = new AppDbContext();
+            CaixaDao caixaDao = new CaixaDao(context);
             List<Caixa> listaCaixas = new List<Caixa>();
             listaCaixas = await caixaDao.ObterTodosOsCaixasAsync();
             return listaCaixas;
@@ -245,7 +257,8 @@ namespace StockFlow.Controles
 
         public async Task<List<MovimentacaoCaixa>> ObterTodasAsMovimentacaoCaixasAsync()
         {
-            MovimetacaoCaixaDao movimetacaoCaixaDao = new MovimetacaoCaixaDao();
+            var context = new AppDbContext();
+            MovimentacaoCaixaDao movimetacaoCaixaDao = new MovimentacaoCaixaDao(context);
             List<MovimentacaoCaixa> listaMovimentacaoCaixas = new List<MovimentacaoCaixa>();
             listaMovimentacaoCaixas = await movimetacaoCaixaDao.ObterTodosAsMovimentacoesDoCaixaAsync();
             return listaMovimentacaoCaixas;

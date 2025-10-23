@@ -20,18 +20,18 @@ namespace StockFlow.DAL
         }
 
         
-        public DbSet<Categoria> Categorias { get; set; }
-        public DbSet<Fornecedor> Fornecedores { get; set; }
-        public DbSet<Marca> Marcas { get; set; }
-        public DbSet<Movimentacao> movimentacoes { get; set; }
-        public DbSet<Produto> Produtos { get; set; }
-        public DbSet<Promocao> Promocoes { get; set; }
-        public DbSet<PromocaoProduto> PromocaoProdutos { get; set; }
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Venda> Vendas { get; set; }
-        public DbSet<VendaItem> VendaItens { get; set; }
-        public DbSet<Caixa> Caixas { get; set; }
-        public DbSet<MovimentacaoCaixa> MovimentacaoCaixas { get; set; }
+        public virtual DbSet<Categoria> Categorias { get; set; }
+        public virtual DbSet<Fornecedor> Fornecedores { get; set; }
+        public virtual DbSet<Marca> Marcas { get; set; }
+        public virtual DbSet<Movimentacao> movimentacoes { get; set; }
+        public virtual DbSet<Produto> Produtos { get; set; }
+        public virtual DbSet<Promocao> Promocoes { get; set; }
+        public virtual DbSet<PromocaoProduto> PromocaoProdutos { get; set; }
+        public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<Venda> Vendas { get; set; }
+        public virtual DbSet<VendaItem> VendaItens { get; set; }
+        public virtual DbSet<Caixa> Caixas { get; set; }
+        public virtual DbSet<MovimentacaoCaixa> MovimentacaoCaixas { get; set; }
 
 
 

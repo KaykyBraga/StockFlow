@@ -8,17 +8,19 @@ using System.Threading.Tasks;
 
 namespace StockFlow.DAL
 {
-    public class MovimetacaoCaixaDao
+    public class MovimentacaoCaixaDao
     {
+        private readonly AppDbContext _context;
+
+        // O construtor agora recebe a instância do AppDbContext
+        public MovimentacaoCaixaDao(AppDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<List<MovimentacaoCaixa>> ObterTodosAsMovimentacoesDoCaixaAsync()
         {
-            await using (var context = new AppDbContext())
-            {
-
-                List<MovimentacaoCaixa> todosAsMovimentacoesDoCaixa = await context.MovimentacaoCaixas.ToListAsync();
-
-                return todosAsMovimentacoesDoCaixa;
-            }
+            return await _context.MovimentacaoCaixas.ToListAsync();
         }
     }
 }
