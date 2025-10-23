@@ -1,5 +1,6 @@
 ﻿using StockFlow.DAL;
 using StockFlow.Visual;
+using StockFlow.Visual.Produtos;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,12 +23,27 @@ namespace StockFlow
 
         private void btnResumoEstoque_Click(object sender, RoutedEventArgs e)
         {
-
+            ContentFrame.Navigate(new ResumoEstoquePage());
         }
 
         private void btnAlertas_Click(object sender, RoutedEventArgs e)
         {
+            ContentFrame.Navigate(new AlertasPage());
+        }
 
+        private void btnAddProduto_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new CadastrarProduto());
+        }
+
+        private void btnListEstoque_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new ListagemProduto());
+        }
+
+        private void btnEditProduto_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new EditarProduto());
         }
 
         private void btnAddFun_Click(object sender, RoutedEventArgs e)
@@ -61,5 +77,7 @@ namespace StockFlow
         {
             ContentFrame.Navigate(new Tela_Promocoes());
         }
+
+        
     }
 }

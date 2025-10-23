@@ -99,5 +99,10 @@ namespace StockFlow.Visual
                 MessageBox.Show("Promoção removida com sucesso.", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
+
+        private void DgPromocoes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

@@ -31,11 +31,11 @@
                         <DatePicker Grid.Column="1" x:Name="DpDataInicio" VerticalAlignment="Center" Margin="5" FontSize="14"/>
                         <DatePicker Grid.Column="2" x:Name="DpDataFim" VerticalAlignment="Center" Margin="5" FontSize="14"/>
 
-                        <TextBlock Grid.Column="3" Text="Tipo:" VerticalAlignment="Center" Margin="15,5,5,5"/>
-                        <ComboBox Grid.Column="4" x:Name="CboTipoMovimentacao" VerticalAlignment="Center" Margin="5" FontSize="14"/>
+                        <TextBlock Grid.Column="3" Text="Tipo:" VerticalAlignment="Center" Margin="4,0,141,0"/>
+                        <ComboBox Grid.Column="3" x:Name="CboTipoMovimentacao" VerticalAlignment="Center" Margin="36,0,19,0" FontSize="14"/>
 
-                        <TextBlock Grid.Column="5" Text="Funcionário:" VerticalAlignment="Center" Margin="15,5,5,5"/>
-                        <ComboBox Grid.Column="6" x:Name="CboFuncionarios" VerticalAlignment="Center" Margin="5" FontSize="14"/>
+                        <TextBlock Grid.Column="3" Text="Funcionário:" VerticalAlignment="Center" Margin="180,0,132,0" Grid.ColumnSpan="3"/>
+                        <ComboBox Grid.Column="5" x:Name="CboFuncionarios" VerticalAlignment="Center" Margin="61,0,0,0" FontSize="14"/>
 
                         <Button Grid.Column="7" x:Name="BtnFiltrar" Content="Filtrar" Width="120" Height="35" Margin="20,5,5,5" Click="BtnFiltrar_Click"/>
                     </Grid>

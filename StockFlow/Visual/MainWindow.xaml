@@ -6,8 +6,11 @@
         xmlns:local="clr-namespace:StockFlow"
         mc:Ignorable="d"
         Title="StockFlow - Menu" Height="720" Width="1280"
+        MinHeight="720"
+        MinWidth="1280"
+        WindowState="Maximized"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="CanMinimize" 
+         
         Background="WhiteSmoke">
 
     <Window.Resources>
@@ -168,16 +171,15 @@
                             <StackPanel Width="219">
                                 <Button Name="btnResumoEstoque" Content="Resumo de Estoque" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnResumoEstoque_Click"/>
                                 <Button Name="btnAlertas" Content="Alertas" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnAlertas_Click"/>
-                                <Button Name="btnMovimentRecente" Content="Movimentações Recentes" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Width="226"/>
                             </StackPanel>
                         </Expander>
 
                         <Expander Header="Produtos" FontSize="22" FontWeight="Bold" TextBlock.Foreground="Black">
                             <StackPanel Margin="15,5,0,5">
-                                <Button Name="btnListEstoque" Content="Listagem de Estoque" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0"/>
-                                <Button Name="btnAddProduto" Content="Adicionar Produto" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0"/>
-                                <Button Name="btnPromocoes" Content="Promoções" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnPromocoes_Click"/>
-                                <Button Name="btnEditProduto" Content="Editar Produto" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0"/>
+                                <Button x:Name="btnListEstoque" Content="Listagem de Estoque" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Click="btnListEstoque_Click"/>
+                                <Button x:Name="btnAddProduto" Content="Adicionar Produto" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnAddProduto_Click"/>
+                                <Button x:Name="btnPromocoes" Content="Promoções" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnPromocoes_Click"/>
+                                <Button x:Name="btnEditProduto" Content="Editar Produto" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnEditProduto_Click"/>
                             </StackPanel>
                         </Expander>
 

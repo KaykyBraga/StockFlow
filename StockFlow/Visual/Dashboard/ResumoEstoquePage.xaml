@@ -4,11 +4,11 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:StockFlow"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
+      d:DesignHeight="600" d:DesignWidth="1000"
       Title="ResumoEstoquePage" Background="White">
 
     <Page.Resources>
-
         <Style x:Key="DataGridHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Background" Value="#F8F8F8"/>
@@ -17,9 +17,8 @@
             <Setter Property="ContentTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <TextBlock Text="{Binding}" 
-                                   TextWrapping="Wrap"  
-                                   HorizontalAlignment="Center" 
+                        <TextBlock Text="{Binding}"
+                                   TextWrapping="NoWrap"  HorizontalAlignment="Center"
                                    Margin="5,2,5,2"/>
                     </DataTemplate>
                 </Setter.Value>
@@ -65,45 +64,30 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,20">
-
             <Button Style="{StaticResource BackButtonStyle}" Click="BackButton_Click">
                 <ContentControl>
                     <Path Data="M10 0 L0 10 L10 20 Z" Fill="#555" Width="10" Height="20" Stretch="Fill"/>
                 </ContentControl>
             </Button>
 
-            <TextBlock Text="Resumo de Estoque" 
-                       FontSize="28" 
-                       FontWeight="Bold" 
-                       Foreground="#333" 
+            <TextBlock Text="Resumo de Estoque"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Foreground="#333"
                        VerticalAlignment="Center"
                        Margin="15,0,0,0"/>
         </StackPanel>
 
-        <Border Grid.Row="1" BorderBrush="#DDD" BorderThickness="1" CornerRadius="5" Padding="5">
-            <DataGrid x:Name="DataGridResumo" 
-                      AutoGenerateColumns="False"  IsReadOnly="True"
-                      HeadersVisibility="Column"
-                      BorderThickness="0"
-                      GridLinesVisibility="Horizontal"
-                      HorizontalGridLinesBrush="#EEE"
-                      VerticalGridLinesBrush="#EEE"
-                      ColumnHeaderStyle="{StaticResource DataGridHeaderStyle}" FontSize="20">
-
+        <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" Padding="0">
+            <DataGrid x:Name="DgEstoque" 
+                AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                FontSize="14" ColumnWidth="*"  Margin="0,0,-2,0" Height="502" VerticalAlignment="Top">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Produto Nome" 
-                                        Binding="{Binding ProdutoNome}" 
-                                        Width="*"/>
-
-                    <DataGridTextColumn Header="Quantidade no Estoque" 
-                                        Binding="{Binding QuantidadeEstoque}" 
-                                        Width="Auto"/>
-
-                    <DataGridTextColumn Header="Status" 
-                                        Binding="{Binding Status}" 
-                                        Width="Auto"/>
+                    <DataGridTextColumn Header="Produto" Binding="{Binding Produto}" Width="2*"/>
+                    <DataGridTextColumn Header="Localização no estoque" Binding="{Binding Quantidade}" Width="200"/>
+                    <DataGridTextColumn Header="Quantidade no estoque" Binding="{Binding Quantidade}" Width="250"/>             
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100" FontWeight="Bold"/>                    
                 </DataGrid.Columns>
-
             </DataGrid>
         </Border>
     </Grid>
