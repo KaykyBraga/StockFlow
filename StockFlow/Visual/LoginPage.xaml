@@ -52,7 +52,13 @@
                 Foreground="#333333"
                 FontSize="16"
                 FontWeight="SemiBold"
-                Cursor="Hand" Margin="0,70,0,119" HorizontalAlignment="Center" Width="302"/>
+                Cursor="Hand" Margin="0,70,0,119" HorizontalAlignment="Center" Width="302">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="10" />
+                </Style>
+            </Button.Resources>
+        </Button>
 
         <TextBlock Grid.Row="10" HorizontalAlignment="Center" Margin="0,136,0,77">
             <Hyperlink Click="Hyperlink_Click">

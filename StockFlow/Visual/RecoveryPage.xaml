@@ -36,7 +36,13 @@
                 BorderThickness="1"
                 Foreground="White"
                 FontSize="16"
-                FontWeight="SemiBold" Margin="0,181,0,67"/>
+                FontWeight="SemiBold" Margin="0,181,0,67">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="10" />
+                </Style>
+            </Button.Resources>
+        </Button>
 
         <TextBlock Grid.Row="7" HorizontalAlignment="Center" Margin="0,246,0,24">
             <Hyperlink Click="Hyperlink_Login_Click">
