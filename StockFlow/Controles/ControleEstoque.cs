@@ -392,13 +392,23 @@ namespace StockFlow.Controles
             return listaMovimentacoes;
         }
 
-        public async Task<List<Produto>> ObterTodosOsProdutosAtivosAsync()
+        public async Task<List<StockFlow.Visual.Produtos.Produto>> ObterTodosOsProdutosAtivosAsync()
         {
             var context = new AppDbContext();
             ProdutoDao produtoDao = new ProdutoDao(context);
             List<Produto> listaProdutos = new List<Produto>();
             listaProdutos = await produtoDao.ObterProdutosAtivosAsync();
-            return listaProdutos;
+            var listaFinalParaGrid = listaProdutos.Select(produto => new StockFlow.Visual.Produtos.Produto
+            {
+                Id = produto.ProdutoId.ToString(),
+                Nome = produto.NomeCompleto,
+                Quantidade = produto.EstoqueAtual.ToString(),
+
+                // Esta linha agora funciona, porque o 'context' está vivo!
+                Categoria = produto.Categoria?.NomeCategoria ?? "Sem Categoria"
+
+            }).ToList();
+            return listaFinalParaGrid;
         }
 
         public async Task<List<Marca>> ObterTodosAsMarcasAtivasAsync()
