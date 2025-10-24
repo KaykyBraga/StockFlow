@@ -79,7 +79,7 @@
                    Foreground="#333333" Margin="0,0,0,25"/>
 
         <TextBlock Grid.Row="1" Text="ID do Funcionário" Margin="0,0,0,5" Foreground="#555555"/>
-        <TextBox Grid.Row="2" Height="35" Margin="0,0,0,15"/>
+        <TextBox x:Name="txtIdFuncionario" Grid.Row="2" Height="35" Margin="0,0,0,15"/>
 
         <TextBlock Grid.Row="3" Text="Email" Margin="0,0,0,5" Foreground="#555555"/>
         <TextBox Grid.Row="4" x:Name="TxtEmail" Height="35" Margin="0,0,0,15"/>
@@ -89,7 +89,7 @@
 
         <Button Grid.Row="7" 
                 Content="Confirmar" 
-                Style="{StaticResource PrimaryActionButtonStyle}" FontWeight="Bold" FontSize="16"/>
+                Style="{StaticResource PrimaryActionButtonStyle}" FontWeight="Bold" FontSize="16" Click="Button_Click"/>
         <TextBlock Grid.Row="8" HorizontalAlignment="Center" Margin="0,15,0,0">
             <Hyperlink Click="Hyperlink_Login_Click">
                 <Run Text="&lt; Voltar para o Login"/>

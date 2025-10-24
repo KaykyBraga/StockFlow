@@ -75,7 +75,7 @@ namespace StockFlow.Controles
         }
 
 
-        public void LoginUsuario(string email, string senha)
+        public void LoginUsuario(string email, string senha, out string TipoUsuario)
         {
 
             this.mensagem = "";
@@ -94,14 +94,16 @@ namespace StockFlow.Controles
                 // Verifica se a senha esta correta
                 if (loginCadastro.LoginUsuario(senha, usuario))
                 {
-                    this.mensagem = "Login realizado com sucesso!";
+                    this.mensagem = "";
                     this.usuarioAcesso = usuario.PerfilAcesso;
                     SessaoUsuario.IniciarSessao(usuario.UsuarioId);
+                    TipoUsuario = usuario.PerfilAcesso;
                     return;
                 }
 
             }
             this.mensagem = "Erro ao realizar login, email ou senha invalidos ";
+            TipoUsuario = "";
             return;
         }
 
@@ -185,7 +187,7 @@ namespace StockFlow.Controles
             return;
         }
 
-        public void RedefinirSenha(string email, string identificadro, string novaSenha)
+        public void RedefinirSenha(string email, string identificador, string novaSenha)
         {
             this.mensagem = "";
             this.usuarioAcesso = "";
@@ -217,11 +219,11 @@ namespace StockFlow.Controles
                 return;
             }
 
-            if (usuario.IdentificadorFuncionario == identificadro)
+            if (usuario.IdentificadorFuncionario == identificador)
             {
                 usuario.SenhaHash = senha;
                 usuarioDao.EditarUsuario(usuario);
-                this.mensagem = "Senha rededfinida com sucesso";
+                this.mensagem = "";
 
             }
             else
