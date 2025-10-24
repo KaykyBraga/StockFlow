@@ -6,17 +6,54 @@
       mc:Ignorable="d" 
       Title="LoginPage">
 
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="322" Height="446">
+    <Page.Resources>
+        <Style x:Key="BaseInputStyle" TargetType="{x:Type Control}">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="#AAAAAA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource BaseInputStyle}"/>
+        <Style TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource BaseInputStyle}"/>
+
+        <Style x:Key="PrimaryActionButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#1890E0"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="302"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#0368AB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="320">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="35"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="20"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="25"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -26,42 +63,32 @@
                    FontSize="28" 
                    FontWeight="SemiBold" 
                    HorizontalAlignment="Center" 
-                   Foreground="#333333" Margin="0,37,0,39" Grid.RowSpan="4"/>
+                   Foreground="#333333" Margin="0,0,0,25"/>
 
-        <TextBlock Grid.Row="2" Text="Nome de Usuário" Margin="0,42,0,18" Foreground="#555555" Grid.RowSpan="3"/>
+        <TextBlock Grid.Row="1" Text="Nome de Usuário" Margin="0,0,0,5" Foreground="#555555"/>
+        <TextBox x:Name="TxtUsuario" Grid.Row="2" Margin="0,0,0,15"/>
 
-        <TextBox x:Name="TxtUsuario" Grid.Row="4" Height="35" BorderBrush="#AAAAAA" BorderThickness="1" Margin="0,8,0,2" Grid.RowSpan="3" HorizontalAlignment="Left" Width="312"/>
+        <TextBlock Grid.Row="3" Text="Senha" Margin="0,0,0,5" Foreground="#555555"/>
 
-        <Grid Grid.Row="5">
+        <Grid Grid.Row="4" Margin="0,0,0,5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Column="0"/>
-
-            <CheckBox Grid.Column="1" VerticalAlignment="Bottom" Margin="7,0,3,-80"/>
+            <PasswordBox x:Name="TxtSenha" Grid.Column="0"/>            
         </Grid>
 
-        <Button Grid.Row="10"
-                Content="Entrar" 
-                Height="40" 
-                Background="#99CCFF" 
-                BorderBrush="#66B2FF" 
-                BorderThickness="1"
-                Foreground="#333333"
-                FontSize="16"
-                FontWeight="SemiBold"
-                Cursor="Hand" Margin="0,70,0,119" HorizontalAlignment="Center" Width="302"/>
+        <CheckBox Content="Mostrar Senha" Grid.Row="5" Margin="0,0,0,30" HorizontalAlignment="Left"/>
 
-        <TextBlock Grid.Row="10" HorizontalAlignment="Center" Margin="0,136,0,77">
+        <Button Grid.Row="7"
+                Content="Entrar" 
+                Style="{StaticResource PrimaryActionButtonStyle}"/>
+        <TextBlock Grid.Row="8" HorizontalAlignment="Center" Margin="0,15,0,0">
             <Hyperlink Click="Hyperlink_Click">
                 <Run Text="Esqueceu a senha ?"/>
             </Hyperlink>
         </TextBlock>
-        <PasswordBox x:Name="TxtSenha" BorderBrush="#AAAAAA" BorderThickness="1" Margin="0,30,26,0" Grid.RowSpan="2" Grid.Row="7"/>
-        <TextBlock
-            Text="Senha" Margin="0,12,26,12" Foreground="#555555" Grid.Row="7"/>
 
     </Grid>
 </Page>

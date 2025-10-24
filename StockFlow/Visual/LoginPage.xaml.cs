@@ -25,6 +25,8 @@ namespace StockFlow.Visual
             InitializeComponent();
         }
 
+        
+
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
             // Lógica para recuperação de senha
