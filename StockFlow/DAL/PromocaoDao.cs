@@ -47,6 +47,27 @@ namespace StockFlow.DAL
 
 
         //desativa promoções 
+        public void DesativarPromocao(int promocaoId) // Alterado para receber ID para ser mais testável
+        {
+            this.mensagemErro = "";
+            try
+            {
+                var promocao = _context.Promocoes.Find(promocaoId);
+                if (promocao == null)
+                {
+                    this.mensagemErro = "Promocao não encontrado para desativação.";
+                    return;
+                }
+                promocao.Ativo = false;
+                _context.Promocoes.Update(promocao);
+                _context.SaveChanges();
+                this.mensagemErro = "Promocao desativado com sucesso!";
+            }
+            catch (Exception ex)
+            {
+                this.mensagemErro = "Erro ao desativar o produto! " + ex.Message;
+            }
+        }
 
         public void DesativarPromocoesExpiradas()
         {

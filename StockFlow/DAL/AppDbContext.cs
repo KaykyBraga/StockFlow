@@ -39,7 +39,7 @@ namespace StockFlow.DAL
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Data Source = KAYKY; Initial Catalog = Db_StockFlow; User ID = sa; Password = 21122005; Encrypt = False");
+                optionsBuilder.UseSqlServer(@"Data Source = 100.124.148.100; Initial Catalog = Db_StockFlow; User ID = sa; Password = 21122005; Encrypt = False");
             }
         }
 
