@@ -30,6 +30,16 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="AddButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseActionButtonStyle}">
+            <Setter Property="Background" Value="#2ECC71"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF149C4E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
         <Style x:Key="EditButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseActionButtonStyle}">
             <Setter Property="Background" Value="#FFC107"/>
             <Setter Property="Foreground" Value="#333"/>
@@ -109,13 +119,18 @@
                 <DataGridTextColumn Header="Quantidade" Binding="{Binding Quantidade}" Width="100"/>
                 <DataGridTextColumn Header="Categoria" Binding="{Binding Categoria}" Width="150"/>
 
-                <DataGridTemplateColumn Header="Ações" Width="180">
+                <DataGridTemplateColumn Header="Ações" Width="272">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Button Content="Editar" 
                                         Style="{StaticResource EditButtonStyle}" 
                                         Margin="5" Width="80"/>
+
+                                <Button Content="Adicionar" 
+                                        Style="{StaticResource AddButtonStyle}" 
+                                        Margin="5" Width="80"
+                                        Click="Button_Click_Adicionar"/>
 
                                 <Button Content="Remover" 
                                         Style="{StaticResource RemoveButtonStyle}" 

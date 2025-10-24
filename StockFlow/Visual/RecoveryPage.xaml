@@ -6,12 +6,65 @@
       mc:Ignorable="d"
       Title="RecoveryPage" Height="446">
 
-    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="300" Height="446">
+    <Page.Resources>
+        <Style x:Key="BaseActionButtonStyle" TargetType="{x:Type Button}">
+            <Style.Setters>
+                <Setter Property="Background" Value="#FF33ADFF"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Height" Value="35"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF2182C3"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="PrimaryActionButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseActionButtonStyle}">
+            <Style.Setters>
+                <Setter Property="Background" Value="#1890E0"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Width" Value="300"/>
+                <Setter Property="Height" Value="45"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#0368AB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderBrush" Value="#AAAAAA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource {x:Type TextBox}}"/>
+
+    </Page.Resources>
+
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="320">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -20,40 +73,27 @@
 
         <TextBlock Grid.Row="0"
                    Text="Recuperação de Senha" 
-                   FontSize="24" 
+                   FontSize="28" 
                    FontWeight="SemiBold" 
                    HorizontalAlignment="Center" 
-                   Margin="0,5,0,25" 
-                   Foreground="#333333"/>
+                   Foreground="#333333" Margin="0,0,0,25"/>
 
-        <TextBlock Grid.Row="1" Text="ID do Funcionário" Margin="10,0,-10,5" Foreground="#555555"/>
-        <TextBox Grid.Row="2" Height="27" BorderBrush="#AAAAAA" BorderThickness="1" Margin="10,5,10,35" Grid.RowSpan="2"/>
+        <TextBlock Grid.Row="1" Text="ID do Funcionário" Margin="0,0,0,5" Foreground="#555555"/>
+        <TextBox Grid.Row="2" Height="35" Margin="0,0,0,15"/>
 
-        <Button Grid.Row="7" Content="Enviar Link" 
-                Height="40" 
-                Background="#FF9999" 
-                BorderBrush="#FF6666" 
-                BorderThickness="1"
-                Foreground="White"
-                FontSize="16"
-                FontWeight="SemiBold" Margin="0,181,0,67">
-            <Button.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="10" />
-                </Style>
-            </Button.Resources>
-        </Button>
+        <TextBlock Grid.Row="3" Text="Email" Margin="0,0,0,5" Foreground="#555555"/>
+        <TextBox Grid.Row="4" x:Name="TxtEmail" Height="35" Margin="0,0,0,15"/>
 
-        <TextBlock Grid.Row="7" HorizontalAlignment="Center" Margin="0,246,0,24">
+        <TextBlock Grid.Row="5" Text="Nova Senha" Margin="0,0,0,5" Foreground="#555555"/>
+        <TextBox Grid.Row="6" x:Name="TxtNovaSenha" Height="35" Margin="0,0,0,15"/>
+
+        <Button Grid.Row="7" 
+                Content="Confirmar" 
+                Style="{StaticResource PrimaryActionButtonStyle}" FontWeight="Bold" FontSize="16"/>
+        <TextBlock Grid.Row="8" HorizontalAlignment="Center" Margin="0,15,0,0">
             <Hyperlink Click="Hyperlink_Login_Click">
                 <Run Text="&lt; Voltar para o Login"/>
             </Hyperlink>
         </TextBlock>
-        <TextBox Grid.Row="3" BorderBrush="#AAAAAA" BorderThickness="1" Margin="10,28,10,273" Grid.RowSpan="5" Height="27" VerticalAlignment="Bottom"/>
-        <TextBox Grid.Row="7" BorderBrush="#AAAAAA" BorderThickness="1" Margin="10,48,10,213" Height="27"/>
-        <TextBox Grid.Row="7" BorderBrush="#AAAAAA" BorderThickness="1" Margin="0,117,0,144" HorizontalAlignment="Center" Width="280" Height="27"/>
-        <TextBlock Grid.Row="3" Text="Email" Margin="10,42,0,0" Foreground="#555555" HorizontalAlignment="Left" Width="300" Height="16" VerticalAlignment="Top"/>
-        <TextBlock Grid.Row="7" Text="Nome de Usuário" Margin="10,27,-10,245" Foreground="#555555"/>
-        <TextBlock Grid.Row="7" Text="Nova Senha" Margin="10,96,-10,176" Foreground="#555555"/>
     </Grid>
 </Page>

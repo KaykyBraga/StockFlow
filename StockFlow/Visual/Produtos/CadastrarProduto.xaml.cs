@@ -36,5 +36,20 @@ namespace StockFlow.Visual.Produtos
                 // navigationService.RemoveBackEntry();
             }
         }
+
+        private void btnAddMarca_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnAddFornecedor_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnAddCategoria_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

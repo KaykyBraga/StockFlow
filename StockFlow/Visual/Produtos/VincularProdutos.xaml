@@ -3,6 +3,47 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Vincular Produtos à Promoção" Height="450" Width="600"
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <Style x:Key="BaseActionButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModalCancelButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseActionButtonStyle}">
+            <Setter Property="Background" Value="#DC3545"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#C82333"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ModalPrimaryButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseActionButtonStyle}">
+            <Setter Property="Background" Value="#1890E0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#0368AB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -24,8 +65,21 @@
         </DataGrid>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-            <Button x:Name="BtnSalvar" Content="Salvar" Width="100" Height="30" Margin="5" Click="BtnSalvar_Click"/>
-            <Button x:Name="BtnCancelar" Content="Cancelar" Width="100" Height="30" Margin="5" IsCancel="True" Click="BtnCancelar_Click"/>
+
+            <Button x:Name="BtnCancelar" 
+                    Content="Cancelar" 
+                    Style="{StaticResource ModalCancelButtonStyle}"
+                    IsCancel="True" 
+                    Margin="5" 
+                    Click="BtnCancelar_Click"/>
+
+            <Button x:Name="BtnSalvar" 
+                    Content="Salvar" 
+                    Style="{StaticResource ModalPrimaryButtonStyle}"
+                    IsDefault="True" 
+                    Margin="5"
+                    Click="BtnSalvar_Click"/>
+
         </StackPanel>
     </Grid>
 </Window>

@@ -123,7 +123,7 @@
 
         <Border Grid.Row="0" BorderBrush="#CCCCCC" BorderThickness="0,0,0,1" Padding="10">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <Image Source="D:\TRABALHO FACULDADE\Header.png" Height="83" Margin="5,0,10,0" Width="99"/>
+                <Image Source="/Imagens/Armazem.png" Height="83" Margin="5,0,10,0" Width="99"/>
                 <TextBlock Text="StockFlow" FontSize="40" FontWeight="Bold" Foreground="#FF020202" VerticalAlignment="Center" Margin="-12,0,0,0"/>
             </StackPanel>
         </Border>

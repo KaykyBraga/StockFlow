@@ -114,9 +114,9 @@
 
             <StackPanel Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Top">
 
-                <Button Content="Adicionar Marca" Cursor="Hand" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10"/>
-                <Button Content="Adicionar Fornecedor" Cursor="Hand" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10"/>
-                <Button Content="Adicionar Categoria" Cursor="Hand" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,30"/>
+                <Button Content="Adicionar Marca" Cursor="Hand" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnAddMarca_Click"/>
+                <Button Content="Adicionar Fornecedor" Cursor="Hand" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnAddFornecedor_Click"/>
+                <Button Content="Adicionar Categoria" Cursor="Hand" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,30" Click="btnAddCategoria_Click"/>
 
                 <Button Content="Cadastrar" Cursor="Hand" Style="{StaticResource PrimaryButtonStyle}"/>
 

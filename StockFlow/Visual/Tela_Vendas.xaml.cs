@@ -48,6 +48,136 @@ namespace StockFlow.Visual
             ComboProdutos.ItemsSource = listaCompletaProdutos;
         }
 
+        private void BtnAbrirCaixa_Click(object sender, RoutedEventArgs e)
+        {
+            SolidColorBrush verdeConfirmar = (SolidColorBrush)(new BrushConverter().ConvertFrom("#4CAF50")); // Cor verde para Confirmação
+
+            bool caixaConfirmado = CriarPopupConfirmacaoSimples(
+                "Abrir Caixa",
+                "Deseja realmente abrir o caixa?",
+                "Confirmar",
+                verdeConfirmar
+            );
+
+            if (caixaConfirmado)
+            {
+                MessageBox.Show("Caixa aberto com sucesso!", "Abertura de Caixa", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            }
+            else
+            {
+                MessageBox.Show("Abertura de caixa cancelada.");
+            }
+        }
+
+        private bool CriarPopupConfirmacaoSimples(string titulo, string mensagem, string textoBotaoConfirmar, SolidColorBrush corIcone)
+        {
+            // Cria a janela do popup (janela temporária)
+            var popupWindow = new Window
+            {
+                Title = titulo,
+                Width = 400, // Tamanho do PopUp de Confirmação
+                Height = 250,
+                WindowStyle = WindowStyle.ToolWindow,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = this,
+                ResizeMode = ResizeMode.NoResize,
+                Background = Brushes.White
+            };
+
+            var mainGrid = new Grid { Margin = new Thickness(20) };
+            mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // 0: Ícone/Título
+            mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // 1: Mensagem
+            mainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); // 2: Espaço Vazio
+            mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); // 3: Botões
+
+            // --- Ícone e Título ---
+            var iconStack = new StackPanel { Margin = new Thickness(0, 0, 0, 10), HorizontalAlignment = HorizontalAlignment.Center };
+            Grid.SetRow(iconStack, 0);
+
+            // Ícone (Unicode: Caixa de dinheiro)
+            var iconText = new TextBlock
+            {
+                Text = "💵", // Unicode para Caixa de Dinheiro
+                FontSize = 48,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Foreground = corIcone
+            };
+            iconStack.Children.Add(iconText);
+
+            var titleText = new TextBlock
+            {
+                Text = titulo,
+                FontSize = 24,
+                FontWeight = FontWeights.Bold,
+                Margin = new Thickness(0, 5, 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Center
+            };
+            iconStack.Children.Add(titleText);
+            mainGrid.Children.Add(iconStack);
+
+            // --- Mensagem ---
+            var msgText = new TextBlock
+            {
+                Text = mensagem,
+                FontSize = 16,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                Foreground = Brushes.Gray
+            };
+            Grid.SetRow(msgText, 1);
+            mainGrid.Children.Add(msgText);
+
+
+            // --- Botões ---
+            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+            Grid.SetRow(buttonPanel, 3);
+
+            // Estilo dos botões (para cantos arredondados, como no XAML que você forneceu)
+            var buttonStyle = (Style)this.FindResource("ButtonStyle");
+
+
+            var btnCancelar = new Button
+            {
+                Content = "Cancelar",
+                Width = 120,
+                Height = 40,
+                Margin = new Thickness(10, 0, 10, 10),
+                Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FFE0E0E0"),
+                Style = buttonStyle, // Aplica o estilo global de botão
+                BorderBrush = Brushes.Gray,
+                IsCancel = true
+            };
+            // OBS: O estilo ButtonStyle já tem CornerRadius no Border do Template
+            btnCancelar.Click += (s, args) => { popupWindow.DialogResult = false; };
+
+
+            var btnConfirmar = new Button
+            {
+                Content = textoBotaoConfirmar,
+                Width = 120,
+                Height = 40,
+                Margin = new Thickness(10, 0, 10, 10),
+                Foreground = Brushes.White,
+                Background = corIcone, // Usa a cor do ícone
+                Style = buttonStyle, // Aplica o estilo global de botão
+                BorderBrush = corIcone,
+                IsDefault = true
+            };
+            btnConfirmar.Click += (s, args) => { popupWindow.DialogResult = true; };
+
+            buttonPanel.Children.Add(btnCancelar);
+            buttonPanel.Children.Add(btnConfirmar);
+            mainGrid.Children.Add(buttonPanel);
+
+            popupWindow.Content = mainGrid;
+
+            // Mostra o popup e aguarda o resultado
+            bool? resultadoDialog = popupWindow.ShowDialog();
+
+            return resultadoDialog == true;
+        }
+
         private void TxtBuscarProduto_TextChanged(object sender, TextChangedEventArgs e)
         {
             string textoBusca = TxtBuscarProduto.Text.ToLower();
@@ -259,5 +389,7 @@ namespace StockFlow.Visual
         }
 
         #endregion
+
+        
     }
 }

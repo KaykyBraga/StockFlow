@@ -6,17 +6,148 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000"
              Background="#F0F0F0">
+
+    <UserControl.Resources>
+
+        <Style x:Key="BackButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E0E0E0"/>
+                                <Setter TargetName="ButtonBorder" Property="CornerRadius" Value="3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BaseActionButtonStyle" TargetType="{x:Type Button}">
+            <Style.Setters>
+                <Setter Property="Background" Value="#FF33ADFF"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Height" Value="35"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF2182C3"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="PrimaryActionButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseActionButtonStyle}">
+            <Style.Setters>
+                <Setter Property="Background" Value="#1890E0"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Width" Value="140"/>
+                <Setter Property="Height" Value="35"/>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#0368AB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DataGridActionButtonStyle" TargetType="{x:Type Button}">
+            <Style.Setters>
+                <Setter Property="Height" Value="25"/>
+                <Setter Property="Width" Value="80"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Margin" Value="5,2"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" CornerRadius="3">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.85"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DesativarReativarStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource DataGridActionButtonStyle}">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Content" Value="Ajustar"/>
+                <Setter Property="Background" Value="#999999"/>
+            </Style.Setters>
+
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Ativa}" Value="True">
+                    <Setter Property="Content" Value="Desativar"/>
+                    <Setter Property="Background" Value="#FFC107"/>
+                    <Setter Property="Foreground" Value="#333"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Ativa}" Value="False">
+                    <Setter Property="Content" Value="Reativar"/>
+                    <Setter Property="Background" Value="#28A745"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+
     <Grid Margin="20">
         <StackPanel>
-            <TextBlock Text="Gerenciamento de Promoções" 
-                       FontSize="28" FontWeight="Bold" Margin="0,0,0,20"/>
 
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Style="{StaticResource BackButtonStyle}" Click="BackButton_Click">
+                    <ContentControl>
+                        <Path Data="M10 0 L0 10 L10 20 Z" Fill="#555" Width="10" Height="20" Stretch="Fill"/>
+                    </ContentControl>
+                </Button>
+
+                <TextBlock Grid.Column="1" 
+                           Text="Gerenciamento de Promoções" 
+                           FontSize="28" FontWeight="Bold" 
+                           Margin="13,6,2,4"/>
+            </Grid>
             <Border Background="White" Padding="15" CornerRadius="5" BorderBrush="#CCCCCC" BorderThickness="1" Margin="0,0,0,20">
                 <StackPanel>
                     <TextBlock Text="Criar Nova Promoção" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
@@ -39,7 +170,11 @@
                         <TextBlock Grid.Row="0" Grid.Column="3" Text="Data de Fim:" VerticalAlignment="Center" Margin="5"/>
                         <DatePicker Grid.Row="1" Grid.Column="3" x:Name="DpDataFim" Margin="5" Width="140" FontSize="14"/>
 
-                        <Button Grid.Row="1" Grid.Column="4" x:Name="BtnCriar" Content="Criar Promoção" Width="140" Height="35" Margin="20,5,5,5" Click="BtnCriar_Click"/>
+                        <Button Grid.Row="1" Grid.Column="4" x:Name="BtnCriar" Content="Criar Promoção"
+                                Style="{StaticResource PrimaryActionButtonStyle}"
+                                Margin="20,5,5,5" 
+                                Click="BtnCriar_Click"/>
+
                     </Grid>
                 </StackPanel>
             </Border>
@@ -58,28 +193,23 @@
                     <DataGridTemplateColumn Header="Ações" Width="280">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Content="Vincular" Margin="5,2" Width="80" Click="Button_Click_Vincular"/>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 
-                                    <Button Margin="5,2" Width="80" Click="Button_Click_Desativar">
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding Ativa}" Value="True">
-                                                        <Setter Property="Content" Value="Desativar"/>
-                                                        <Setter Property="Background" Value="#FFC107"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding Ativa}" Value="False">
-                                                        <Setter Property="Content" Value="Reativar"/>
-                                                        <Setter Property="Background" Value="#28A745"/>
-                                                        <Setter Property="Foreground" Value="White"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                    <Button Content="Vincular" 
+                                            Style="{StaticResource DataGridActionButtonStyle}"
+                                            Background="#1890E0" Foreground="White"
+                                            Margin="5,2" Width="80"
+                                            Click="Button_Click_Vincular"/>
 
-                                    <Button Content="Remover" Margin="5,2" Width="80" Click="Button_Click_Remover" Background="#DC3545"/>
+                                    <Button Style="{StaticResource DesativarReativarStyle}"
+                                            Margin="5,2" Width="80"
+                                            Click="Button_Click_Desativar"/>
+
+                                    <Button Content="Remover" 
+                                            Style="{StaticResource DataGridActionButtonStyle}"
+                                            Background="#DC3545" Foreground="White"
+                                            Margin="5,2" Width="80"
+                                            Click="Button_Click_Remover"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

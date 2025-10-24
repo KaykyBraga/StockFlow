@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace StockFlow.Visual
 {
@@ -68,6 +69,20 @@ namespace StockFlow.Visual
             }
 
             DgVendas.ItemsSource = vendasFiltradas.ToList();
+        }
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService navigationService = NavigationService.GetNavigationService(this);
+
+            if (navigationService != null)
+            {
+                // Limpa o conteúdo do Frame navegando para um URI nulo.
+                // Isso simula o "fechamento" da página e deixa o Frame vazio.
+                navigationService.Navigate(null as Uri);
+
+                // Opcional: Se você quer ter certeza de que o histórico não guarda essa entrada de 'null':
+                // navigationService.RemoveBackEntry();
+            }
         }
     }
 }

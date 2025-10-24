@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace StockFlow.Visual
 {
@@ -45,20 +46,36 @@ namespace StockFlow.Visual
             }
         }
 
-        private void Button_Click_Remover(object sender, RoutedEventArgs e)
+        private void Button_Click_Inativar(object sender, RoutedEventArgs e)
         {
-            Funcionario funcionarioParaRemover = (sender as Button).DataContext as Funcionario;
-            if (funcionarioParaRemover != null)
+            Funcionario funcionarioParaInativar = (sender as Button).DataContext as Funcionario;
+            if (funcionarioParaInativar != null)
             {
-                MessageBoxResult resultado = MessageBox.Show($"Tem certeza que deseja remover o funcionário '{funcionarioParaRemover.Nome}'?", "Confirmar Remoção", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                MessageBoxResult resultado = MessageBox.Show($"Tem certeza que deseja inativar o funcionário '{funcionarioParaInativar.Nome}'?", "Confirmar Remoção", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (resultado == MessageBoxResult.Yes)
                 {
-                    listaDeFuncionarios.Remove(funcionarioParaRemover);
+                    listaDeFuncionarios.Remove(funcionarioParaInativar);
                     // ✅ CORREÇÃO PARA O AVISO CS8600: Força a atualização da lista de forma segura
                     DgFuncionarios.ItemsSource = new List<Funcionario>(listaDeFuncionarios);
-                    MessageBox.Show("Funcionário removido com sucesso.", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Funcionário inativado com sucesso.", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
         }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService navigationService = NavigationService.GetNavigationService(this);
+
+            if (navigationService != null)
+            {
+                // Limpa o conteúdo do Frame navegando para um URI nulo.
+                // Isso simula o "fechamento" da página e deixa o Frame vazio.
+                navigationService.Navigate(null as Uri);
+
+                // Opcional: Se você quer ter certeza de que o histórico não guarda essa entrada de 'null':
+                // navigationService.RemoveBackEntry();
+            }
+        }
+
     }
 }

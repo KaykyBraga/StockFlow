@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 
 namespace StockFlow.Visual
 {
@@ -71,6 +72,21 @@ namespace StockFlow.Visual
             TxtSenha.Password = TxtSenhaVisivel.Text;
             TxtSenha.Visibility = Visibility.Visible;
             TxtSenhaVisivel.Visibility = Visibility.Collapsed;
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Obtém o NavigationService associado ao controle atual
+            NavigationService navigationService = NavigationService.GetNavigationService(this);
+
+            if (navigationService != null && navigationService.CanGoBack)
+            {
+                navigationService.GoBack();
+            }
+            else
+            {
+                navigationService?.Navigate(null as Uri);
+            }
         }
     }
 }

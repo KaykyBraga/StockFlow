@@ -17,7 +17,7 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="50,0,50,0">
-            <Image Source="E:\Imagem tela Login.png" 
+            <Image Source="/Imagens/Imagem tela Login.png" 
                    Width="300" Height="250" Margin="0,0,0,20"/>
 
             <TextBlock Text="StockFlow" 
