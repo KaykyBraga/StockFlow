@@ -1,6 +1,7 @@
 ﻿using StockFlow.DAL;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,8 @@ namespace StockFlow.Modelo
         public int CategoriaId { get; set; }
         public int FornecedorId { get; set; }
         public virtual Marca Marca { get; set; }
+
+        [ForeignKey("CategoriaId")]
         public virtual Categoria Categoria { get; set; }
         public virtual Fornecedor Fornecedor { get; set; }
 
