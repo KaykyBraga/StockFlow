@@ -1,0 +1,147 @@
+﻿<UserControl x:Class="StockFlow.Visual.Tela_RelatorioMovimentacao"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000"
+             Background="#F0F0F0">
+
+    <UserControl.Resources>
+        <Style x:Key="BaseActionButtonStyle" TargetType="{x:Type Button}">
+            <Style.Setters>
+                <Setter Property="Background" Value="#FF33ADFF"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Height" Value="35"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF2182C3"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="PrimaryActionButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseActionButtonStyle}">
+            <Style.Setters>
+                <Setter Property="Background" Value="#1890E0"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Width" Value="120"/>
+                <Setter Property="Height" Value="35"/>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#0368AB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BackButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E0E0E0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <StackPanel>
+
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Style="{StaticResource BackButtonStyle}" Click="BackButton_Click">
+                    <ContentControl>
+                        <Path Data="M10 0 L0 10 L10 20 Z" Fill="#555" Width="10" Height="20" Stretch="Fill"/>
+                    </ContentControl>
+                </Button>
+
+                <TextBlock Grid.Column="1" 
+                           Text="Relatório de Movimentação de Estoque" 
+                           FontSize="28" 
+                           FontWeight="Bold" 
+                           VerticalAlignment="Center"
+                           Margin="15,0,0,0"/>
+            </Grid>
+            <Border Background="White" Padding="15" CornerRadius="5" BorderBrush="#CCCCCC" BorderThickness="1" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="Filtros" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Período:" VerticalAlignment="Center" Margin="5"/>
+                        <DatePicker Grid.Column="1" x:Name="DpDataInicio" VerticalAlignment="Center" Margin="5" FontSize="14"/>
+                        <DatePicker Grid.Column="2" x:Name="DpDataFim" VerticalAlignment="Center" Margin="5" FontSize="14"/>
+
+                        <TextBlock Grid.Column="3" Text="Tipo:" VerticalAlignment="Center" Margin="5"/>
+                        <ComboBox Grid.Column="3" x:Name="CboTipoMovimentacao" VerticalAlignment="Center" Margin="61,0,5,0" FontSize="14" Grid.ColumnSpan="2"/>
+
+                        <TextBlock Grid.Column="5" Text="Funcionário:" VerticalAlignment="Center" Margin="5"/>
+                        <ComboBox Grid.Column="5" x:Name="CboFuncionarios" VerticalAlignment="Center" Margin="88,0,5,0" FontSize="14" Grid.ColumnSpan="2"/>
+
+                        <Button Grid.Column="7" x:Name="BtnFiltrar" Content="Filtrar" 
+                                Style="{StaticResource PrimaryActionButtonStyle}"
+                                Margin="20,5,5,5" 
+                                Click="BtnFiltrar_Click"/>
+
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <DataGrid x:Name="DgMovimentacoes" 
+                      AutoGenerateColumns="False" 
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      FontSize="14"
+                      ColumnWidth="*">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Data" Binding="{Binding Data, StringFormat='dd/MM/yyyy HH:mm'}" Width="150"/>
+                    <DataGridTextColumn Header="Produto" Binding="{Binding NomeProduto}" Width="*"/>
+                    <DataGridTextColumn Header="Tipo" Binding="{Binding Tipo}" Width="120"/>
+                    <DataGridTextColumn Header="Quantidade" Binding="{Binding Quantidade}" Width="120"/>
+                    <DataGridTextColumn Header="Funcionário" Binding="{Binding NomeFuncionario}" Width="200"/>
+                    <DataGridTextColumn Header="Observação" Binding="{Binding Observacao}" Width="2*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
+</UserControl>

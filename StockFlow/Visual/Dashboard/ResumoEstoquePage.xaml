@@ -1,0 +1,94 @@
+﻿<Page x:Class="StockFlow.Visual.ResumoEstoquePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:StockFlow"
+      mc:Ignorable="d"
+      d:DesignHeight="600" d:DesignWidth="1000"
+      Title="ResumoEstoquePage" Background="White">
+
+    <Page.Resources>
+        <Style x:Key="DataGridHeaderStyle" TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Background" Value="#F8F8F8"/>
+            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"
+                                   TextWrapping="NoWrap"  HorizontalAlignment="Center"
+                                   Margin="5,2,5,2"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BackButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E0E0E0"/>
+                                <Setter TargetName="ButtonBorder" Property="CornerRadius" Value="3"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="False">
+                                <Setter TargetName="ButtonBorder" Property="CornerRadius" Value="0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,20">
+            <Button Style="{StaticResource BackButtonStyle}" Click="BackButton_Click">
+                <ContentControl>
+                    <Path Data="M10 0 L0 10 L10 20 Z" Fill="#555" Width="10" Height="20" Stretch="Fill"/>
+                </ContentControl>
+            </Button>
+
+            <TextBlock Text="Resumo de Estoque"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Foreground="#333"
+                       VerticalAlignment="Center"
+                       Margin="15,0,0,0"/>
+        </StackPanel>
+
+        <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" Padding="0">
+            <DataGrid x:Name="DgEstoque" 
+                AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                FontSize="14" ColumnWidth="*"  Margin="0,0,-2,0" Height="502" VerticalAlignment="Top">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Produto" Binding="{Binding Produto}" Width="2*"/>
+                    <DataGridTextColumn Header="Localização no estoque" Binding="{Binding Quantidade}" Width="200"/>
+                    <DataGridTextColumn Header="Quantidade no estoque" Binding="{Binding Quantidade}" Width="250"/>             
+                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100" FontWeight="Bold"/>                    
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+    </Grid>
+</Page>
