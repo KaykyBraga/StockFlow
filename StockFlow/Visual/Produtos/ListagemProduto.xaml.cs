@@ -18,6 +18,7 @@ using System.IO; // Necessário para StringReader
 using System.Xml; // Necessário para XmlReader
 using System.Windows.Markup;
 using System.Xml;
+using StockFlow.Controles;
 
 namespace StockFlow.Visual.Produtos
 {
@@ -40,28 +41,38 @@ namespace StockFlow.Visual.Produtos
             CarregarProduto();
         }
 
-        private void CarregarProduto()
+        private async void CarregarProduto()
         {
-            listaDeProdutos = new List<Produto>
-            {
-                new Produto { Id = "1", Nome = "Ana Silva", Quantidade = "12", Categoria = "Trator" },
-                new Produto { Id = "1", Nome = "bna Silva", Quantidade = "12", Categoria = "Trator" },
-                new Produto { Id = "1", Nome = "cna Silva", Quantidade = "12", Categoria = "Trator" },
-                new Produto { Id = "1", Nome = "dna Silva", Quantidade = "12", Categoria = "Trator" },
-                new Produto { Id = "1", Nome = "ena Silva", Quantidade = "12", Categoria = "Trator" },
-                new Produto { Id = "1", Nome = "fna Silva", Quantidade = "12", Categoria = "Trator" },
-                new Produto { Id = "1", Nome = "gna Silva", Quantidade = "12", Categoria = "Trator" },
-                new Produto { Id = "1", Nome = "hna Silva", Quantidade = "12", Categoria = "Trator" },
-                new Produto { Id = "1", Nome = "ina Silva", Quantidade = "12", Categoria = "Trator" }
-            };
+            listaDeProdutos = new List<Produto>();
+            ControleEstoque controleEstoque = new ControleEstoque();
+            listaDeProdutos = await controleEstoque.ObterTodosOsProdutosParaOGridAtivosAsync();
+
             DgProdutos.ItemsSource = listaDeProdutos;
         }
 
         private void BtnBuscar_Click(object sender, RoutedEventArgs e)
         {
             // Implemente aqui a lógica de filtragem da tabela.
-            string termoBusca = TxtBusca.Text;
-            MessageBox.Show($"Iniciando busca por: {termoBusca}");
+            string termoBusca = TxtBusca.Text.ToLower();
+            //MessageBox.Show($"Iniciando busca por: {termoBusca}");
+            // Se a barra de pesquisa estiver vazia, mostramos a lista COMPLETA de novo.
+            if (string.IsNullOrWhiteSpace(termoBusca))
+            {
+                DgProdutos.ItemsSource =  listaDeProdutos;
+                return;
+            }
+
+            // Filtra a lista mestra usando o termo da busca.
+            var listaFiltrada = listaDeProdutos.Where(item =>
+
+                // Defina aqui EM QUAIS COLUNAS você quer pesquisar
+                item.Nome.ToLower().Contains(termoBusca)  // Busca no Código
+                
+
+            ).ToList();
+
+            // Atualiza o DataGrid para mostrar APENAS os itens da lista filtrada.
+            DgProdutos.ItemsSource = listaFiltrada;
         }
 
         private void Button_Click_Adicionar(object sender, RoutedEventArgs e)
@@ -91,7 +102,8 @@ namespace StockFlow.Visual.Produtos
                         if (int.TryParse(produtoSelecionado.Quantidade, out int quantidadeAtual))
                         {
                             int novaQuantidade = quantidadeAtual + quantidadeAdicionada.Value;
-
+                            ControleEstoque controleEstoque = new ControleEstoque();
+                            controleEstoque.AdicionarProduto(new List<string> { produtoSelecionado.Id, quantidadeAdicionada.Value.ToString() });
                             // ATUALIZAÇÃO DO MODELO
                             produtoSelecionado.Quantidade = novaQuantidade.ToString();
 
@@ -400,6 +412,8 @@ namespace StockFlow.Visual.Produtos
                 MessageBoxResult resultado = MessageBox.Show($"Tem certeza que deseja remover o Produto? '{ProdutoParaRemover.Nome}'?", "Confirmar Remoção", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (resultado == MessageBoxResult.Yes)
                 {
+                    ControleEstoque controleEstoque = new ControleEstoque();
+                    controleEstoque.DesativarProduto(ProdutoParaRemover.Id);
                     listaDeProdutos.Remove(ProdutoParaRemover);
                     // ✅ CORREÇÃO PARA O AVISO CS8600: Força a atualização da lista de forma segura
                     DgProdutos.ItemsSource = new List<Produto>(listaDeProdutos);

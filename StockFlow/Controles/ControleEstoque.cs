@@ -392,7 +392,7 @@ namespace StockFlow.Controles
             return listaMovimentacoes;
         }
 
-        public async Task<List<StockFlow.Visual.Produtos.Produto>> ObterTodosOsProdutosAtivosAsync()
+        public async Task<List<StockFlow.Visual.Produtos.Produto>> ObterTodosOsProdutosParaOGridAtivosAsync()
         {
             var context = new AppDbContext();
             ProdutoDao produtoDao = new ProdutoDao(context);
@@ -409,6 +409,15 @@ namespace StockFlow.Controles
 
             }).ToList();
             return listaFinalParaGrid;
+        }
+
+        public async Task<List<Produto>> ObterTodosOsProdutosAtivosAsync()
+        {
+            var context = new AppDbContext();
+            ProdutoDao produtoDao = new ProdutoDao(context);
+            List<Produto> listaProdutos = new List<Produto>();
+            listaProdutos = await produtoDao.ObterProdutosAtivosAsync();
+            return listaProdutos;
         }
 
         public async Task<List<Marca>> ObterTodosAsMarcasAtivasAsync()

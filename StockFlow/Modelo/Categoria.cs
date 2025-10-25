@@ -11,6 +11,11 @@ namespace StockFlow.Modelo
          public int CategoriaId { get; set; }
          public string NomeCategoria { get; set; }
         public bool Ativo { get; set; }
-        public virtual Produto Produto { get; set; }
+        public virtual ICollection<Produto> Produtos { get; set; }
+
+        public Categoria()
+        {
+            Produtos = new HashSet<Produto>();
+        }
     }
 }
