@@ -1,4 +1,5 @@
-﻿using StockFlow.Visual.Produtos;
+﻿using StockFlow.Controles;
+using StockFlow.Visual.Produtos;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -25,15 +26,12 @@ namespace StockFlow.Visual
             CarregarFuncionarios();
         }
 
-        private void CarregarFuncionarios()
+        private async void CarregarFuncionarios()
         {
-            listaDeFuncionarios = new List<Funcionario>
-            {
-                new Funcionario { Id = "FUNC-001", Nome = "Ana Silva", Email = "ana.silva@empresa.com" },
-                new Funcionario { Id = "FUNC-002", Nome = "Bruno Costa", Email = "bruno.costa@empresa.com" },
-                new Funcionario { Id = "FUNC-003", Nome = "Carlos Pereira", Email = "carlos.p@empresa.com" },
-                new Funcionario { Id = "FUNC-004", Nome = "Daniela Souza", Email = "daniela.souza@empresa.com" }
-            };
+            ControleUsuario controleUsuario = new ControleUsuario();
+            var listaUsuarios = await controleUsuario.ObterTodosOsUsuariosAtivosDataGridAsync();
+            listaDeFuncionarios = new List<Funcionario>();
+            listaDeFuncionarios = listaUsuarios;      
             DgFuncionarios.ItemsSource = listaDeFuncionarios;
         }
 
@@ -47,11 +45,16 @@ namespace StockFlow.Visual
                 return;
             }
 
+            ControleUsuario controleUsuario = new ControleUsuario();
+            var funcionario = controleUsuario.BuscarUsuarioPorIdentificador(funcionarioSelecionado.Id);
             // 2. Pegar o ID do produto
-            string idDoFuncionario = funcionarioSelecionado.Id;
+            string idDoFuncionario = funcionario.IdentificadorFuncionario;
+            string nomeDoFuncionario = funcionario.NomeCompleto;
+            string emailDoFuncionario = funcionario.Email;
+            string tipoDoFuncionario = funcionario.PerfilAcesso;
 
             // 3. Criar a nova página de edição, passando o ID para o construtor dela
-            Tela_EditarFuncionario paginaEditar = new Tela_EditarFuncionario(idDoFuncionario);
+            Tela_EditarFuncionario paginaEditar = new Tela_EditarFuncionario(idDoFuncionario, nomeDoFuncionario, emailDoFuncionario, tipoDoFuncionario);
 
             // 4. Navegar para a página
             NavigationService navigationService = NavigationService.GetNavigationService(this);
@@ -69,6 +72,9 @@ namespace StockFlow.Visual
                 MessageBoxResult resultado = MessageBox.Show($"Tem certeza que deseja inativar o funcionário '{funcionarioParaInativar.Nome}'?", "Confirmar Remoção", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (resultado == MessageBoxResult.Yes)
                 {
+                    ControleUsuario controleUsuario = new ControleUsuario();
+                    var funcionario = controleUsuario.BuscarUsuarioPorIdentificador(funcionarioParaInativar.Id);
+                    controleUsuario.DesativarUsuario(funcionario.UsuarioId.ToString());
                     listaDeFuncionarios.Remove(funcionarioParaInativar);
                     // ✅ CORREÇÃO PARA O AVISO CS8600: Força a atualização da lista de forma segura
                     DgFuncionarios.ItemsSource = new List<Funcionario>(listaDeFuncionarios);

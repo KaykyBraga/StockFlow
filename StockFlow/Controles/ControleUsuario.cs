@@ -253,22 +253,22 @@ namespace StockFlow.Controles
             return listaUsuarios;
         }
 
-
-        public async Task<List<StockFlow.Visual.Funcionario>> ObterTodosListaDataGridAtivosAsync()
+        public async Task<List<StockFlow.Visual.Funcionario>> ObterTodosOsUsuariosAtivosDataGridAsync()
         {
             var context = new AppDbContext();
             UsuarioDao usuarioDao = new UsuarioDao(context);
             List<Usuario> listaUsuarios = new List<Usuario>();
             listaUsuarios = await usuarioDao.ObterUsuariosAtivosAsync();
-            var listaFinalParaGrid = listaUsuarios.Select(funcionario => new StockFlow.Visual.Funcionario
-            {
-                Id = funcionario.IdentificadorFuncionario,
-                Nome = funcionario.NomeCompleto,
-                Email = funcionario.Email
 
+            var listaFinalParaGrid = listaUsuarios.Select(Usuario => new StockFlow.Visual.Funcionario
+            {                
+                Id = Usuario.IdentificadorFuncionario,
+                Nome = Usuario.NomeCompleto,
+                Email = Usuario.Email
             }).ToList();
             return listaFinalParaGrid;
         }
+       
     }
 
 }

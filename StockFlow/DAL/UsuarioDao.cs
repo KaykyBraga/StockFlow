@@ -41,7 +41,7 @@ namespace StockFlow.DAL
             try
             {
                 var termoBusca = email.Trim().ToLower();
-                return _context.Usuarios.FirstOrDefault(u => u.Email.ToLower() == termoBusca);
+                return _context.Usuarios.FirstOrDefault(u => u.Email.ToLower() == termoBusca && u.Ativo == true);
             }
             catch (Exception)
             {
