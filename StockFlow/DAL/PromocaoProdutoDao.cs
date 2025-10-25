@@ -33,6 +33,29 @@ namespace StockFlow.DAL
             }
         }
 
+        public void DesvincularPromocaoProduto(int promocaoId, int produtoId)
+        {
+            this.mensagemErro = ""; // Limpa a mensagem no início
+            try
+            {
+                var promocaoProduto = _context.PromocaoProdutos
+                    .FirstOrDefault(pp => pp.PromocaoId == promocaoId && pp.ProdutoId == produtoId);
+                if (promocaoProduto != null)
+                {
+                    _context.PromocaoProdutos.Remove(promocaoProduto);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    this.mensagemErro = "Promoção do produto não encontrada para desvinculação.";
+                }
+            }
+            catch (Exception ex)
+            {
+                this.mensagemErro = "Erro ao desvincular a promoção do produto. Causa: " + ex.InnerException?.Message ?? ex.Message;
+            }
+        }
+
         public async Task<List<PromocaoProduto>> ObterTodosAsPromocaoProdutoAsync()
         {
             // Nota: O Include em 'ProdutoId' não é válido, pois é um int. 

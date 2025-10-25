@@ -1,7 +1,9 @@
-﻿using System;
+﻿using StockFlow.Controles;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -12,7 +14,7 @@ namespace StockFlow.Visual
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public double Desconto { get; set; }
+        public decimal Desconto { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }
         public bool Ativa { get; set; }
@@ -33,27 +35,25 @@ namespace StockFlow.Visual
             CarregarPromocoes();
         }
 
-        private void CarregarPromocoes()
+        private async Task CarregarPromocoes()
         {
-            // Simulação de dados
-            listaDePromocoes = new List<Promocao>
-            {
-                new Promocao { Id = proximoId++, Nome = "Queima de Estoque de Notebooks", Desconto = 15, DataInicio = DateTime.Now.AddDays(-5), DataFim = DateTime.Now.AddDays(10), Ativa = true },
-                new Promocao { Id = proximoId++, Nome = "Promoção de Mouses e Teclados", Desconto = 20, DataInicio = DateTime.Now, DataFim = DateTime.Now.AddDays(30), Ativa = true },
-                new Promocao { Id = proximoId++, Nome = "Promoção de Aniversário (Encerrada)", Desconto = 10, DataInicio = DateTime.Now.AddDays(-40), DataFim = DateTime.Now.AddDays(-10), Ativa = false }
-            };
+            ControleVenda controleVenda = new ControleVenda();
+            listaDePromocoes = new List<Promocao>();
+            var listaPromocoes = await controleVenda.ObterTodasAsPromocoesParaDataGridAsync();
+            listaDePromocoes = listaPromocoes;           
 
             DgPromocoes.ItemsSource = listaDePromocoes;
         }
 
         private void BtnCriar_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TxtNomePromocao.Text) || !double.TryParse(TxtDesconto.Text, out double desconto) || !DpDataInicio.SelectedDate.HasValue || !DpDataFim.SelectedDate.HasValue)
+            if (string.IsNullOrWhiteSpace(TxtNomePromocao.Text) || !decimal.TryParse(TxtDesconto.Text, out decimal desconto) || !DpDataInicio.SelectedDate.HasValue || !DpDataFim.SelectedDate.HasValue)
             {
                 MessageBox.Show("Por favor, preencha todos os campos corretamente.", "Erro de Validação", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
+            ControleVenda controleVenda = new ControleVenda(); 
+            controleVenda.CriarPromocao(new List<string> { TxtNomePromocao.Text, desconto.ToString(), DpDataInicio.SelectedDate.Value.ToString("yyyy-MM-dd"), DpDataFim.SelectedDate.Value.ToString("yyyy-MM-dd") });
             var novaPromocao = new Promocao { Id = proximoId++, Nome = TxtNomePromocao.Text, Desconto = desconto, DataInicio = DpDataInicio.SelectedDate.Value, DataFim = DpDataFim.SelectedDate.Value, Ativa = true };
             listaDePromocoes.Add(novaPromocao);
             DgPromocoes.ItemsSource = new List<Promocao>(listaDePromocoes);
@@ -77,9 +77,17 @@ namespace StockFlow.Visual
         private void Button_Click_Desativar(object sender, RoutedEventArgs e)
         {
             Promocao promocaoSelecionada = (sender as Button).DataContext as Promocao;
-
+            ControleVenda controleVenda = new ControleVenda();
             string acao = promocaoSelecionada.Ativa ? "desativar" : "reativar";
-            MessageBoxResult resultado = MessageBox.Show($"Deseja realmente {acao} a promoção '{promocaoSelecionada.Nome}'?", "Confirmar Alteração", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if(acao == "desativar")
+            {
+                controleVenda.DesativarPromocao(promocaoSelecionada.Id);
+            }
+            else
+            {
+                controleVenda.ReativarPromocao(promocaoSelecionada.Id);
+            }
+                MessageBoxResult resultado = MessageBox.Show($"Deseja realmente {acao} a promoção '{promocaoSelecionada.Nome}'?", "Confirmar Alteração", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (resultado == MessageBoxResult.Yes)
             {
@@ -92,12 +100,15 @@ namespace StockFlow.Visual
         private void Button_Click_Remover(object sender, RoutedEventArgs e)
         {
             Promocao promocaoParaRemover = (sender as Button).DataContext as Promocao;
-            MessageBoxResult resultado = MessageBox.Show($"TEM CERTEZA que deseja remover permanentemente a promoção '{promocaoParaRemover.Nome}'?", "Confirmar Remoção", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            ControleVenda controleVenda = new ControleVenda();
+            MessageBoxResult resultado = MessageBox.Show($"TEM CERTEZA que deseja remover permanentemente a promoção '{promocaoParaRemover.Nome}'? " , "Confirmar Remoção", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (resultado == MessageBoxResult.Yes)
             {
+                controleVenda.RemoverPromocao(promocaoParaRemover.Id);
                 listaDePromocoes.Remove(promocaoParaRemover);
+
                 DgPromocoes.ItemsSource = new List<Promocao>(listaDePromocoes);
-                MessageBox.Show("Promoção removida com sucesso.", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Promoção removida com sucesso." + controleVenda.mensagem, "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
