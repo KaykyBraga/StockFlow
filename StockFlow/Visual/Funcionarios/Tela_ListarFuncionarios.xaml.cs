@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using StockFlow.Visual.Produtos;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,10 +40,24 @@ namespace StockFlow.Visual
         private void Button_Click_Editar(object sender, RoutedEventArgs e)
         {
             Funcionario funcionarioSelecionado = (sender as Button).DataContext as Funcionario;
-            if (funcionarioSelecionado != null)
+
+            if (funcionarioSelecionado == null)
             {
-                var mainWindow = (MainWindow)Application.Current.MainWindow;
-                mainWindow.ContentFrame.Navigate(new Tela_EditarFuncionario(funcionarioSelecionado.Id));
+                MessageBox.Show("Não foi possível identificar o funcionário selecionado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // 2. Pegar o ID do produto
+            string idDoFuncionario = funcionarioSelecionado.Id;
+
+            // 3. Criar a nova página de edição, passando o ID para o construtor dela
+            Tela_EditarFuncionario paginaEditar = new Tela_EditarFuncionario(idDoFuncionario);
+
+            // 4. Navegar para a página
+            NavigationService navigationService = NavigationService.GetNavigationService(this);
+            if (navigationService != null)
+            {
+                navigationService.Navigate(paginaEditar);
             }
         }
 

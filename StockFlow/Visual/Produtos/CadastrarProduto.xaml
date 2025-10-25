@@ -29,7 +29,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
         <Style x:Key="PrimaryButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BlueActionButtonStyle}">
             <Setter Property="Background" Value="#FF1890E0"/>
             <Setter Property="Height" Value="40"/>
@@ -39,7 +38,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
         <Style x:Key="BackButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -97,6 +95,41 @@
             </Setter>
         </Style>
 
+        <Style x:Key="FormTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="5,0,0,0"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#8C8C8C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#7EB4EA"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#1C86EE"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FormComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="#8C8C8C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
         <Style x:Key="PopupCancelButtonStyle" TargetType="Button" BasedOn="{StaticResource BlueActionButtonStyle}">
             <Setter Property="Background" Value="#FFAAAAAA"/>
             <Style.Triggers>
@@ -105,7 +138,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
         <Style x:Key="SuccessButtonStyle" TargetType="Button" BasedOn="{StaticResource BlueActionButtonStyle}">
             <Setter Property="Background" Value="#28a745"/>
             <Style.Triggers>
@@ -114,7 +146,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
         <Style x:Key="ErrorButtonStyle" TargetType="Button" BasedOn="{StaticResource BlueActionButtonStyle}">
             <Setter Property="Background" Value="#dc3545"/>
             <Style.Triggers>
@@ -126,6 +157,7 @@
     </Page.Resources>
 
     <Grid>
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -143,16 +175,17 @@
 
             <Grid Grid.Row="1" Margin="30,0,30,30">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0" VerticalAlignment="Top">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -161,38 +194,52 @@
 
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Nome Produto" Margin="0,0,0,5"/>
-                        <TextBox Height="30" x:Name="txtNomeProduto"/>
+                        <TextBox x:Name="txtNomeProduto" Style="{StaticResource FormTextBoxStyle}"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,0,10">
-                        <TextBlock Text="Unidade de Medida" Margin="0,0,0,5"/>
-                        <ComboBox Height="30"/>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="15,0,0,10">
+                        <TextBlock Text="Estoque Inicial" />
+                        <TextBox x:Name="txtEstoqueInicial" Style="{StaticResource FormTextBoxStyle}"/>
                     </StackPanel>
+
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Preço de Custo" Margin="0,0,0,5"/>
-                        <TextBox Height="30"/>
+                        <TextBox x:Name="txtPrecodeCusto" Style="{StaticResource FormTextBoxStyle}"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
-                        <TextBlock Text="Estoque Inicial" Margin="0,0,0,5"/>
-                        <TextBox Height="30"/>
+
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="15,0,0,10">
+                        <TextBlock Text="Estoque Mínimo"/>
+                        <TextBox x:Name="txtEstoqueMinimo" Style="{StaticResource FormTextBoxStyle}"/>
                     </StackPanel>
+
                     <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Preço de Venda" Margin="0,0,0,5"/>
-                        <TextBox Height="30"/>
+                        <TextBox x:Name="txtPrecodeVenda" Style="{StaticResource FormTextBoxStyle}"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
-                        <TextBlock Text="Estoque Mínimo" Margin="0,0,0,5"/>
-                        <TextBox Height="30"/>
+
+                    <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,15,10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,5,0"/>
+
+                            <StackPanel Grid.Column="1" Margin="5,0,5,0"/>
+
+                            <StackPanel Grid.Column="2" Margin="5,0,0,0"/>
+                        </Grid>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,0,0,0">
-                        <TextBlock Text="Descrição do Produto" Margin="0,0,0,5"/>
-                        <TextBox AcceptsReturn="True" Height="100" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
-                    </StackPanel>
+
                 </Grid>
 
                 <StackPanel Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Top">
                     <Button Content="Adicionar Marca" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnAddMarca_Click"/>
                     <Button Content="Adicionar Fornecedor" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnAddFornecedor_Click"/>
                     <Button Content="Adicionar Categoria" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,30" Click="btnAddCategoria_Click"/>
+
                     <Button Content="Cadastrar" Style="{StaticResource PrimaryButtonStyle}" Click="CadastrarButton_Click"/>
                 </StackPanel>
             </Grid>
@@ -280,5 +327,6 @@
             </Border>
 
         </Grid>
+
     </Grid>
 </Page>
