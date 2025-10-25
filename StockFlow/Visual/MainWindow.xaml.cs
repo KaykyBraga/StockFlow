@@ -1,6 +1,7 @@
 ﻿using StockFlow.DAL;
 using StockFlow.Visual;
 using StockFlow.Visual.Produtos;
+using StockFlow.Visual.Relatorio; // Adicionado para a nova tela de Caixa
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -39,12 +40,12 @@ namespace StockFlow
         private void btnListEstoque_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new ListagemProduto());
-        }        
+        }
 
         private void btnAddFun_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new Tela_AddFuncionario());
-        }         
+        }
 
         private void btnListFun_Click(object sender, RoutedEventArgs e)
         {
@@ -61,12 +62,15 @@ namespace StockFlow
             ContentFrame.Navigate(new Tela_RelatorioMovimentacao());
         }
 
-        // ✅ MÉTODO ADICIONADO PARA O BOTÃO "PROMOÇÕES"
         private void btnPromocoes_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new Tela_Promocoes());
         }
 
-        
+        // ✅ MÉTODO ADICIONADO PARA O RELATÓRIO DE CAIXA
+        private void btnRelatCaixa_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(new Caixa());
+        }
     }
 }
