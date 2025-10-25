@@ -47,24 +47,58 @@ namespace StockFlow.Visual
             }
 
             ControleUsuario controleUsuario = new ControleUsuario();
-            controleUsuario.LoginUsuario(email, senha, out string TipoFuncionario);
+
+            // Aqui o 'tipoFuncionario' receberá "Vendedor", "Gerente" ou "Estoquista"
+            controleUsuario.LoginUsuario(email, senha, out string tipoFuncionario);
+
             if (controleUsuario.mensagem == "")
             {
-                if (TipoFuncionario == "Caixa")
+                // ===============================================
+                // CENÁRIO 1: VENDEDOR (Mudei de "Caixa" para "Vendedor")
+                // ===============================================
+                if (tipoFuncionario == "Vendedor")
                 {
-                    // Navegar para a tela de vendas
+                    // Navega para a Tela_Vendas (que é uma Page)
+                    Tela_Vendas tela_Vendas = new Tela_Vendas();
+                    tela_Vendas.Show();
+                    Window.GetWindow(this).Close();
                 }
 
-                if(TipoFuncionario == "Gerente")
+                // ===============================================
+                // CENÁRIO 2: GERENTE
+                // ===============================================
+                else if (tipoFuncionario == "Gerente")
                 {
-                    // Navegar para a tela de Gerente
+                    // 1. Cria a MainWindow passando o cargo "Gerente"
+                    MainWindow menu = new MainWindow(tipoFuncionario);
+
+                    // 2. Mostra a Janela Principal
+                    menu.Show();
+
+                    // 3. Fecha a janela de Login atual
+                    Window.GetWindow(this).Close();
                 }
 
-                if(TipoFuncionario == "Estoquista")
+                // ===============================================
+                // CENÁRIO 3: ESTOQUISTA
+                // ===============================================
+                else if (tipoFuncionario == "Estoquista")
                 {
-                    // Navegar para a tela de Estoquista
+                    // 1. Cria a MainWindow passando o cargo "Estoquista"
+                    MainWindow menu = new MainWindow(tipoFuncionario);
+
+                    // 2. Mostra a Janela Principal
+                    menu.Show();
+
+                    // 3. Fecha a janela de Login atual
+                    Window.GetWindow(this).Close();
                 }
 
+                // (Opcional) Caso o login retorne um tipo não esperado
+                else
+                {
+                    MessageBox.Show($"Tipo de funcionário '{tipoFuncionario}' não reconhecido.", "Erro de Login", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {

@@ -69,6 +69,29 @@ namespace StockFlow.DAL
             }
         }
 
+
+        public void ReativarPromocao(int promocaoId) 
+        {
+            this.mensagemErro = "";
+            try
+            {
+                var promocao = _context.Promocoes.Find(promocaoId);
+                if (promocao == null)
+                {
+                    this.mensagemErro = "Promocao não encontrado para desativação.";
+                    return;
+                }
+                promocao.Ativo = true;
+                _context.Promocoes.Update(promocao);
+                _context.SaveChanges();
+                this.mensagemErro = "Promocao desativado com sucesso!";
+            }
+            catch (Exception ex)
+            {
+                this.mensagemErro = "Erro ao desativar o produto! " + ex.Message;
+            }
+        }
+
         public void DesativarPromocoesExpiradas()
         {
             this.mensagemErro = "";
@@ -96,9 +119,29 @@ namespace StockFlow.DAL
             }
         }
 
+        public void RemoverPromocao(int promocaoId)
+        {
+            this.mensagemErro = "";
+            try
+            {
+                var promocao = _context.Promocoes.Find(promocaoId);
+                if (promocao == null)
+                {
+                    this.mensagemErro = "Promoção não encontrada para remoção.";
+                    return;
+                }
+                _context.Promocoes.Remove(promocao);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                this.mensagemErro = "Erro ao remover a promoção. Causa: " + ex.InnerException?.Message ?? ex.Message;
+            }
+        }
+
         public async Task<List<Promocao>> ObterTodosAsPromocoesAsync()
         {
-            return await _context.Promocoes.ToListAsync();
+            return await _context.Promocoes.Include(p => p.PromocaoProdutos).ToListAsync();
         }
 
         public async Task<List<Promocao>> ObterPromocoesAtivasAsync()

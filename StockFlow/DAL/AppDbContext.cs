@@ -3,6 +3,7 @@ using StockFlow.Modelo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,9 +41,21 @@ namespace StockFlow.DAL
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(@"Data Source = 100.124.148.100; Initial Catalog = Db_StockFlow; User ID = sa; Password = 21122005; Encrypt = False");
-            }
+            }            
         }
 
-        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<PromocaoProduto>().HasOne(pp => pp.Promocao).WithMany(p => p.PromocaoProdutos).HasForeignKey(pp => pp.PromocaoId).OnDelete(DeleteBehavior.Cascade);
+            
+            // Se um Produto for deletado, os vínculos dele nas promoções também somem.
+            modelBuilder.Entity<PromocaoProduto>()
+                .HasOne(pp => pp.Produto)
+                .WithMany(p => p.PromocaoProdutos)
+                .HasForeignKey(pp => pp.ProdutoId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

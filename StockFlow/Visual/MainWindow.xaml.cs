@@ -17,9 +17,40 @@ namespace StockFlow
 {
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private string cargoDoUsuarioLogado;
+
+        public MainWindow(string tipoFuncionario)
         {
             InitializeComponent();
+
+            // 1. Armazena o cargo na variável da classe
+            this.cargoDoUsuarioLogado = tipoFuncionario;
+
+            // 2. Chama um método para fazer a verificação que você precisa
+            ConfigurarVisibilidadeDosMenus();   
+        }
+
+        private void ConfigurarVisibilidadeDosMenus()
+        {
+            // Exemplo: Se você tem um botão no menu chamado 'BtnMenuFuncionarios'
+            // e só o Gerente pode vê-lo.
+
+            if (this.cargoDoUsuarioLogado == "Estoquista")
+            {
+                // O Estoquista não pode ver o menu de funcionários
+                SubMenuFun.Visibility = Visibility.Collapsed;
+                SubMenuRelat.Visibility = Visibility.Collapsed;
+                // Ex: BtnMenuRelatorios.Visibility = Visibility.Collapsed;
+            }
+            else if (this.cargoDoUsuarioLogado == "Gerente")
+            {
+                // O Gerente pode ver tudo
+                SubMenuFun.Visibility = Visibility.Visible;
+                SubMenuRelat.Visibility = Visibility.Visible;
+            }
+
+            // Você também pode querer exibir o cargo em algum lugar
+            // Ex: TxtBoasVindas.Text = $"Bem-vindo, {this.cargoDoUsuarioLogado}!";
         }
 
         private void btnResumoEstoque_Click(object sender, RoutedEventArgs e)

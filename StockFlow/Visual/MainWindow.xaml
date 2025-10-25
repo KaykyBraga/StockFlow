@@ -182,7 +182,7 @@
                             </StackPanel>
                         </Expander>
 
-                        <Expander Header="Relatórios" FontSize="22" FontWeight="Bold" TextBlock.Foreground="Black">
+                        <Expander Name="SubMenuRelat" Header="Relatórios" FontSize="22" FontWeight="Bold" TextBlock.Foreground="Black">
                             <StackPanel Margin="15,5,0,5">
                                 <Button Name="btnRelatVendas" Content="Vendas" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnRelatVendas_Click"/>
                                 <Button Name="btnRelatMoviment" Content="Movimentação" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnRelatMoviment_Click"/>
@@ -190,7 +190,7 @@
                             </StackPanel>
                         </Expander>
 
-                        <Expander Header="Funcionários" FontSize="22" FontWeight="Bold" TextBlock.Foreground="Black" Cursor="">
+                        <Expander Name="SubMenuFun" Header="Funcionários" FontSize="22" FontWeight="Bold" TextBlock.Foreground="Black" Cursor="">
                             <StackPanel Width="219">
                                 <Button x:Name="btnListFun" Content="Listagem de Funcionários" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Click="btnListFun_Click"/>
                                 <Button x:Name="btnAddFun" Content="Adicionar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="218" Click="btnAddFun_Click"/>
