@@ -96,9 +96,9 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID Caixa" Binding="{Binding IdCaixa}" Width="*"/>
                 <DataGridTextColumn Header="ID Usuário" Binding="{Binding IdUsuario}" Width="*"/>
-                <DataGridTextColumn Header="Abertura" Binding="{Binding DataAbertura, StringFormat='dd/MM/yyyy HH:mm'}" Width="2*"/>
+                <DataGridTextColumn Header="Data e Hora da Abertura" Binding="{Binding DataAbertura, StringFormat='dd/MM/yyyy HH:mm'}" Width="2*"/>
                 <DataGridTextColumn Header="Vlr. Abertura" Binding="{Binding ValorAbertura, StringFormat=C2, ConverterCulture='pt-BR'}" Width="*"/>
-                <DataGridTextColumn Header="Fechamento" Binding="{Binding DataFechamento, StringFormat='dd/MM/yyyy HH:mm'}" Width="2*"/>
+                <DataGridTextColumn Header="Data e Hora do Fechamento" Binding="{Binding DataFechamento, StringFormat='dd/MM/yyyy HH:mm'}" Width="2*"/>
                 <DataGridTextColumn Header="Vlr. Fechamento" Binding="{Binding ValorFechamento, StringFormat=C2, ConverterCulture='pt-BR'}" Width="*"/>
                 <DataGridTextColumn Header="Diferença" Binding="{Binding Diferenca, StringFormat=C2, ConverterCulture='pt-BR'}" Width="*">
                     <DataGridTextColumn.CellStyle>
