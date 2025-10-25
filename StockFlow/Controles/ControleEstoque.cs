@@ -392,6 +392,24 @@ namespace StockFlow.Controles
             return listaMovimentacoes;
         }
 
+        public async Task<List<StockFlow.Visual.MovimentacaoEstoque>> ObterTodasAsMovimentacoesParaOGridAsync()
+        {
+            MovimentacaoDao movimentacaoDao = new MovimentacaoDao();
+            List<Movimentacao> listaMovimentacoes = new List<Movimentacao>();
+            listaMovimentacoes = await movimentacaoDao.ObterTodasAsMovimentacoesAsync();
+            var listaFinalParaGrid = listaMovimentacoes.Select(movimentacao => new StockFlow.Visual.MovimentacaoEstoque
+            {
+                Data = movimentacao.Data,
+                NomeProduto = movimentacao.Produto.NomeCompleto,
+                Tipo = movimentacao.TipoMovimentacao,
+                Quantidade = movimentacao.Quantidade,
+                NomeFuncionario = movimentacao.Usuario.NomeCompleto,
+                Observacao = movimentacao.Observacao
+
+            }).ToList();
+            return listaFinalParaGrid;
+        }
+
         public async Task<List<StockFlow.Visual.Produtos.Produto>> ObterTodosOsProdutosParaOGridAtivosAsync()
         {
             var context = new AppDbContext();

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockFlow.Controles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -28,25 +29,36 @@ namespace StockFlow.Visual
             CarregarDadosIniciais();
         }
 
-        private void CarregarDadosIniciais()
+        private async void CarregarDadosIniciais()
         {
+            ControleEstoque controleEstoque = new ControleEstoque();
+            var carregamento = await controleEstoque.ObterTodasAsMovimentacoesParaOGridAsync();
+            List<string> tiposMovimentacao = new List<string>();
+            List<string> nomesFuncionarios = new List<string>();
+            tiposMovimentacao.Add("Todos");
+            nomesFuncionarios.Add("Todos");
+            foreach (var tipos in carregamento)
+            {
+                if (!tiposMovimentacao.Contains(tipos.Tipo))
+                    tiposMovimentacao.Add(tipos.Tipo);
+                
+            }
+            foreach (var nome in carregamento)
+            {
+                if (!nomesFuncionarios.Contains(nome.NomeFuncionario))
+                    nomesFuncionarios.Add(nome.NomeFuncionario);
+            }
             // --- SIMULAÇÃO ---
             // Carrega opções para os filtros
-            CboTipoMovimentacao.ItemsSource = new List<string> { "Todos", "Entrada", "Saída" };
+            CboTipoMovimentacao.ItemsSource = tiposMovimentacao;
             CboTipoMovimentacao.SelectedIndex = 0;
 
-            CboFuncionarios.ItemsSource = new List<string> { "Todos", "Ana Silva", "Bruno Costa", "Carlos Pereira" };
+            CboFuncionarios.ItemsSource = nomesFuncionarios;
             CboFuncionarios.SelectedIndex = 0;
 
             // Carrega a lista completa de movimentações (simulação do banco)
-            todasAsMovimentacoes = new List<MovimentacaoEstoque>
-            {
-                new MovimentacaoEstoque { Data = new DateTime(2025, 10, 20, 9, 0, 0), NomeProduto = "Notebook Gamer X", Tipo = "Entrada", Quantidade = 10, NomeFuncionario = "Ana Silva", Observacao = "Recebimento do fornecedor TecMaster." },
-                new MovimentacaoEstoque { Data = new DateTime(2025, 10, 20, 10, 35, 0), NomeProduto = "Notebook Gamer X", Tipo = "Saída", Quantidade = 1, NomeFuncionario = "Ana Silva", Observacao = "Venda #VEN-001" },
-                new MovimentacaoEstoque { Data = new DateTime(2025, 10, 20, 14, 5, 0), NomeProduto = "Mouse Óptico Sem Fio", Tipo = "Saída", Quantidade = 1, NomeFuncionario = "Bruno Costa", Observacao = "Venda #VEN-002" },
-                new MovimentacaoEstoque { Data = new DateTime(2025, 10, 21, 8, 30, 0), NomeProduto = "Teclado Mecânico RGB", Tipo = "Entrada", Quantidade = 20, NomeFuncionario = "Carlos Pereira", Observacao = "Recebimento do fornecedor CompShop." },
-                new MovimentacaoEstoque { Data = new DateTime(2025, 10, 21, 9, 20, 0), NomeProduto = "Notebook Gamer X", Tipo = "Saída", Quantidade = 2, NomeFuncionario = "Ana Silva", Observacao = "Venda #VEN-003" }
-            };
+            todasAsMovimentacoes = new List<MovimentacaoEstoque>();
+            todasAsMovimentacoes = carregamento;
 
             // Exibe todas as movimentações inicialmente
             DgMovimentacoes.ItemsSource = todasAsMovimentacoes;
