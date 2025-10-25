@@ -6,19 +6,20 @@ namespace StockFlow.Visual
 {
     public partial class Tela_EditarFuncionario : UserControl
     {
-        public Tela_EditarFuncionario(string funcionarioId)
+        private string funcionarioId;
+        public Tela_EditarFuncionario(string idFuncionario)
         {
             InitializeComponent();
-            CarregarDadosFuncionario(funcionarioId);
+            this.funcionarioId = idFuncionario;
+            CarregarDadosFuncionario();
         }
 
-        private void CarregarDadosFuncionario(string id)
+        private void CarregarDadosFuncionario()
         {
-            // Simulação de carregamento de dados do banco
-            TxtIdFuncionario.Text = id;
-            TxtNomeCompleto.Text = "Nome do Funcionário Carregado";
-            TxtEmail.Text = "email.do.banco@exemplo.com";
-            // A senha não é carregada por segurança, o campo fica pronto para receber uma nova
+           TxtIdFuncionario.Text = this.funcionarioId;
+
+
+
         }
 
         private void Button_Click_Salvar(object sender, RoutedEventArgs e)
@@ -29,35 +30,7 @@ namespace StockFlow.Visual
         }
 
         // ✅ MÉTODO ADICIONADO PARA O BOTÃO DE REMOVER
-        private void Button_Click_Remover(object sender, RoutedEventArgs e)
-        {
-            string id = TxtIdFuncionario.Text;
-            string nome = TxtNomeCompleto.Text;
-
-            // Pop-up de confirmação para uma ação destrutiva
-            MessageBoxResult resultado = MessageBox.Show(
-                $"TEM CERTEZA que deseja remover o funcionário '{nome}'?\n\nEsta ação não pode ser desfeita.",
-                "Confirmar Remoção",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Warning // Ícone de aviso para indicar perigo
-            );
-
-            if (resultado == MessageBoxResult.Yes)
-            {
-                // AQUI, você chamaria a lógica para fazer o DELETE no banco de dados
-                // Ex: FuncionarioController.Remover(id);
-
-                MessageBox.Show("Funcionário removido com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                // Limpa a tela após a remoção
-                TxtNomeCompleto.Clear();
-                TxtIdFuncionario.Clear();
-                TxtEmail.Clear();
-                TxtSenha.Clear();
-                TxtSenhaVisivel.Clear();
-                ChkMostrarSenha.IsChecked = false;
-            }
-        }
+        
 
         // Métodos para mostrar/esconder senha (continuam os mesmos)
         private void ChkMostrarSenha_Checked(object sender, RoutedEventArgs e)
@@ -87,6 +60,14 @@ namespace StockFlow.Visual
             {
                 navigationService?.Navigate(null as Uri);
             }
+        }
+
+        private void Button_Click_Limpar(object sender, RoutedEventArgs e)
+        {
+            TxtNomeCompleto.Text = string.Empty;
+            TxtIdFuncionario.Text = string.Empty;
+            TxtEmail.Text = string.Empty;
+            TxtSenhaVisivel.Text = string.Empty;
         }
     }
 }

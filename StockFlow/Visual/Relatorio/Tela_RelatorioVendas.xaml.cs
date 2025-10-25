@@ -1,9 +1,11 @@
-﻿using System;
+﻿using StockFlow.Visual.Relatorio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using StockFlow.Visual.Relatorio;
 
 namespace StockFlow.Visual
 {
@@ -12,8 +14,7 @@ namespace StockFlow.Visual
     {
         public string IdVenda { get; set; }
         public DateTime Data { get; set; }
-        public string NomeFuncionario { get; set; }
-        public string NomeCliente { get; set; }
+        public string NomeFuncionario { get; set; }        
         public int QuantidadeItens { get; set; }
         public decimal ValorTotal { get; set; }
     }
@@ -38,11 +39,11 @@ namespace StockFlow.Visual
 
             todasAsVendas = new List<Venda>
             {
-                new Venda { IdVenda = "VEN-001", Data = new DateTime(2025, 10, 20, 10, 30, 0), NomeFuncionario = "Ana Silva", NomeCliente = "Cliente A", QuantidadeItens = 3, ValorTotal = 150.75m },
-                new Venda { IdVenda = "VEN-002", Data = new DateTime(2025, 10, 20, 14, 0, 0), NomeFuncionario = "Bruno Costa", NomeCliente = "Cliente B", QuantidadeItens = 1, ValorTotal = 89.90m },
-                new Venda { IdVenda = "VEN-003", Data = new DateTime(2025, 10, 21, 9, 15, 0), NomeFuncionario = "Ana Silva", NomeCliente = "Cliente C", QuantidadeItens = 5, ValorTotal = 320.00m },
-                new Venda { IdVenda = "VEN-004", Data = new DateTime(2025, 10, 21, 11, 45, 0), NomeFuncionario = "Carlos Pereira", NomeCliente = "Cliente A", QuantidadeItens = 2, ValorTotal = 110.50m },
-                new Venda { IdVenda = "VEN-005", Data = new DateTime(2025, 10, 19, 16, 20, 0), NomeFuncionario = "Bruno Costa", NomeCliente = "Cliente D", QuantidadeItens = 8, ValorTotal = 540.20m }
+                new Venda { IdVenda = "VEN-001", Data = new DateTime(2025, 10, 20, 10, 30, 0), NomeFuncionario = "Ana Silva", QuantidadeItens = 3, ValorTotal = 150.75m },
+                new Venda { IdVenda = "VEN-002", Data = new DateTime(2025, 10, 20, 14, 0, 0), NomeFuncionario = "Bruno Costa", QuantidadeItens = 1, ValorTotal = 89.90m },
+                new Venda { IdVenda = "VEN-003", Data = new DateTime(2025, 10, 21, 9, 15, 0), NomeFuncionario = "Ana Silva", QuantidadeItens = 5, ValorTotal = 320.00m },
+                new Venda { IdVenda = "VEN-004", Data = new DateTime(2025, 10, 21, 11, 45, 0), NomeFuncionario = "Carlos Pereira", QuantidadeItens = 2, ValorTotal = 110.50m },
+                new Venda { IdVenda = "VEN-005", Data = new DateTime(2025, 10, 19, 16, 20, 0), NomeFuncionario = "Bruno Costa", QuantidadeItens = 8, ValorTotal = 540.20m }
             };
 
             DgVendas.ItemsSource = todasAsVendas;
@@ -82,6 +83,33 @@ namespace StockFlow.Visual
 
                 // Opcional: Se você quer ter certeza de que o histórico não guarda essa entrada de 'null':
                 // navigationService.RemoveBackEntry();
+            }
+        }
+
+        private void BtnVisualizar_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. Verificar se um item está realmente selecionado
+            if (DgVendas.SelectedItem == null)
+            {
+                MessageBox.Show("Por favor, selecione uma venda na tabela para visualizar.",
+                                "Nenhuma Venda Selecionada",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                return;
+            }
+
+            // 2. Obter o objeto "Venda" da linha selecionada
+            Venda vendaSelecionada = (Venda)DgVendas.SelectedItem;
+            string idDaVenda = vendaSelecionada.IdVenda;
+
+            // 3. Criar a instância da página de InfoVenda, passando o ID para o construtor dela
+            InfoVenda paginaDetalhes = new InfoVenda(idDaVenda);
+
+            // 4. Navegar para a nova página
+            NavigationService navigationService = NavigationService.GetNavigationService(this);
+            if (navigationService != null)
+            {
+                navigationService.Navigate(paginaDetalhes);
             }
         }
     }

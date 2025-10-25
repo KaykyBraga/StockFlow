@@ -34,6 +34,7 @@ namespace StockFlow.Visual
             string nome = TxtNomeCompleto.Text;
             string id = TxtIdFuncionario.Text;
             string email = TxtEmail.Text;
+            string tipoFun = CmbTipoFuncionario.Text;
 
             // Pega a senha do campo que estiver visível
             string senha;
@@ -70,6 +71,7 @@ namespace StockFlow.Visual
                 TxtSenha.Clear();
                 TxtSenhaVisivel.Clear();
                 ChkMostrarSenha.IsChecked = false;
+               
             }
         }
 

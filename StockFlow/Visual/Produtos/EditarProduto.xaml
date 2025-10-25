@@ -115,6 +115,16 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="AtentionButtonStyle" TargetType="Button" BasedOn="{StaticResource BlueActionButtonStyle}">
+            <Setter Property="Background" Value="#FFC107"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E6B000"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="ErrorButtonStyle" TargetType="Button" BasedOn="{StaticResource BlueActionButtonStyle}">
             <Setter Property="Background" Value="#dc3545"/>
             <Style.Triggers>
@@ -163,37 +173,31 @@
                         <TextBlock Text="Nome Produto" Margin="0,0,0,5"/>
                         <TextBox Height="30" x:Name="txtNomeProduto"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,0,10">
-                        <TextBlock Text="Unidade de Medida" Margin="0,0,0,5"/>
-                        <ComboBox Height="30" x:Name="cmbUnidadeMedida"/>
-                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,0,10"/>
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Preço de Custo" Margin="0,0,0,5"/>
                         <TextBox Height="30" x:Name="txtPrecoCusto"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
-                        <TextBlock Text="Estoque Inicial" Margin="0,0,0,5"/>
-                        <TextBox IsReadOnly="True" Height="30" Background="#FFEAEAEA" x:Name="txtEstoqueInicial"/>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,0,10">
+                        <TextBlock Text="Estoque Atual" Margin="0,0,0,5"/>
+                        <TextBox IsReadOnly="True" Height="30" Background="#FFEAEAEA" x:Name="txtEstoqueAtual"/>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Preço de Venda" Margin="0,0,0,5"/>
                         <TextBox Height="30" x:Name="txtPrecoVenda"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
                         <TextBlock Text="Estoque Mínimo" Margin="0,0,0,5"/>
                         <TextBox Height="30" x:Name="txtEstoqueMinimo"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,0,0,0">
-                        <TextBlock Text="Descrição do Produto" Margin="0,0,0,5"/>
-                        <TextBox AcceptsReturn="True" Height="100" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" x:Name="txtDescricao"/>
-                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,0,0,0"/>
                 </Grid>
 
                 <StackPanel Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Top">
                     <Button Content="Editar Marca" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnEditarMarca_Click"/>
                     <Button Content="Editar Fornecedor" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnEditarFornecedor_Click"/>
                     <Button Content="Editar Categoria" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnEditarCategoria_Click"/>
-                    <Button Content="Limpar" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,30" Click="btnLimpar_Click"/>
+                    <Button Content="Limpar" Style="{StaticResource AtentionButtonStyle}" Margin="0,0,0,30" Click="btnLimpar_Click"/>
                     <Button Content="Salvar" Style="{StaticResource PrimaryButtonStyle}" Click="SalvarButton_Click"/>
                 </StackPanel>
             </Grid>

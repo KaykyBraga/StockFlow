@@ -7,10 +7,35 @@ namespace StockFlow.Visual.Produtos
 {
     public partial class EditarProduto : Page
     {
-        public EditarProduto()
+        private string produtoId;
+
+        public EditarProduto(string idProduto)
         {
             InitializeComponent();
+            this.produtoId = idProduto;
+
+            // 2. Chama um método para carregar os dados do produto nos campos
+            CarregarDadosDoProduto();
         }
+
+        private void CarregarDadosDoProduto()
+        {
+            // É AQUI QUE VOCÊ DEVE BUSCAR NO BANCO DE DADOS:
+            // 1. Use 'this.produtoId' para buscar o produto completo no banco.
+            //    Ex: Produto produto = MeuBanco.GetProdutoPorId(this.produtoId);
+
+            // 2. Preencha os campos (TextBoxes, ComboBoxes, etc.) da sua
+            //    tela 'EditarProduto.xaml' com os dados encontrados.
+            //    Ex: txtNomeProduto.Text = produto.Nome;
+            //        txtPrecoVenda.Text = produto.Preco.ToString();
+            //        cmbCategoria.SelectedValue = produto.CategoriaId;
+
+            // Apenas como exemplo, vamos supor que você tem um TextBlock
+            // chamado 'txtTitulo' e vamos exibir o ID nele:
+
+            // Ex: txtTitulo.Text = $"Editando Produto ID: {this.produtoId}";
+        }
+
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
@@ -62,14 +87,6 @@ namespace StockFlow.Visual.Produtos
             txtPrecoCusto.Text = string.Empty;
             txtPrecoVenda.Text = string.Empty;
             txtEstoqueMinimo.Text = string.Empty;
-            txtDescricao.Text = string.Empty;
-
-            // O campo Estoque Inicial é ReadOnly, mas limpá-lo pode ser útil
-            // se o valor for carregado programaticamente.
-            txtEstoqueInicial.Text = string.Empty;
-
-            // Limpa a seleção do ComboBox, removendo qualquer item selecionado
-            cmbUnidadeMedida.SelectedIndex = -1;
         }
 
         // 1. O botão Salvar APENAS abre o pop-up de confirmação

@@ -39,23 +39,12 @@ namespace StockFlow
         private void btnListEstoque_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new ListagemProduto());
-        }
-
-        private void btnEditProduto_Click(object sender, RoutedEventArgs e)
-        {
-            ContentFrame.Navigate(new EditarProduto());
-        }
+        }        
 
         private void btnAddFun_Click(object sender, RoutedEventArgs e)
         {
             ContentFrame.Navigate(new Tela_AddFuncionario());
-        }
-
-        private void btnEditFun_Click(object sender, RoutedEventArgs e)
-        {
-            string idDoFuncionarioParaEditar = "FUNC-123";
-            ContentFrame.Navigate(new Tela_EditarFuncionario(idDoFuncionarioParaEditar));
-        }
+        }         
 
         private void btnListFun_Click(object sender, RoutedEventArgs e)
         {

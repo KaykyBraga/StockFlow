@@ -179,7 +179,6 @@
                                 <Button x:Name="btnListEstoque" Content="Listagem de Estoque" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Click="btnListEstoque_Click"/>
                                 <Button x:Name="btnAddProduto" Content="Adicionar Produto" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnAddProduto_Click"/>
                                 <Button x:Name="btnPromocoes" Content="Promoções" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnPromocoes_Click"/>
-                                <Button x:Name="btnEditProduto" Content="Editar Produto" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="0,0,0,0" Click="btnEditProduto_Click"/>
                             </StackPanel>
                         </Expander>
 
@@ -194,7 +193,6 @@
                             <StackPanel Width="219">
                                 <Button x:Name="btnListFun" Content="Listagem de Funcionários" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Click="btnListFun_Click"/>
                                 <Button x:Name="btnAddFun" Content="Adicionar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="218" Click="btnAddFun_Click"/>
-                                <Button x:Name="btnEditFun" Content="Editar Funcionário" Style="{StaticResource SubMenuItemButtonStyle}" FontSize="18" Margin="-3,0,0,0" Width="216" Click="btnEditFun_Click"/>
                             </StackPanel>
                         </Expander>
                     </StackPanel>

@@ -46,6 +46,20 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="SecondaryActionButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource BaseActionButtonStyle}">
+            <Style.Setters>
+                <Setter Property="Background" Value="#1890E0"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Width" Value="120"/>
+                <Setter Property="Height" Value="35"/>
+            </Style.Setters>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#0368AB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="BackButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -93,9 +107,11 @@
                            VerticalAlignment="Center"
                            Margin="15,0,0,0"/>
             </Grid>
+
             <Border Background="White" Padding="15" CornerRadius="5" BorderBrush="#CCCCCC" BorderThickness="1" Margin="0,0,0,20">
                 <StackPanel>
                     <TextBlock Text="Filtros" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -116,9 +132,13 @@
                         <TextBlock Grid.Column="4" Text="Funcionário:" VerticalAlignment="Center" Margin="15,5,5,5"/>
                         <ComboBox Grid.Column="5" x:Name="CboFuncionarios" VerticalAlignment="Center" Margin="5" FontSize="14"/>
 
+                        <Button Grid.Column="6" x:Name="BtnVisualizar" Content="Visualizar" 
+                                Style="{StaticResource SecondaryActionButtonStyle}"
+                                Margin="20,5,5,5" Click="BtnVisualizar_Click"/>
+
                         <Button Grid.Column="7" x:Name="BtnFiltrar" Content="Filtrar" 
                                 Style="{StaticResource PrimaryActionButtonStyle}"
-                                Margin="20,5,5,5" 
+                                Margin="5,5,5,5" 
                                 Click="BtnFiltrar_Click"/>
 
                     </Grid>
@@ -126,17 +146,30 @@
             </Border>
 
             <DataGrid x:Name="DgVendas" 
-                      AutoGenerateColumns="False" 
-                      IsReadOnly="True"
-                      CanUserAddRows="False"
-                      FontSize="14"
-                      ColumnWidth="*">
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  SelectionMode="Extended" 
+                  CanUserAddRows="False"
+                  FontSize="14"
+                  ColumnWidth="*">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Venda" Binding="{Binding IdVenda}" Width="120"/>
-                    <DataGridTextColumn Header="Data" Binding="{Binding Data, StringFormat='dd/MM/yyyy HH:mm'}" Width="150"/>
+
+                    <DataGridTemplateColumn Header=" " Width="25">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center"
+                                          IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Header="ID Venda" Binding="{Binding IdVenda}" Width="80"/>
+                    <DataGridTextColumn Header="Data" Binding="{Binding Data, StringFormat='dd/MM/yyyy HH:mm'}" Width="120"/>
                     <DataGridTextColumn Header="Funcionário" Binding="{Binding NomeFuncionario}" Width="*"/>
-                    <DataGridTextColumn Header="Cliente" Binding="{Binding NomeCliente}" Width="*"/>
                     <DataGridTextColumn Header="Itens" Binding="{Binding QuantidadeItens}" Width="100"/>
+                    <DataGridTextColumn Header="Desconto Total" Binding="{Binding DescontoTotal, StringFormat=C, ConverterCulture=pt-BR}" Width="120"/>
+                    <DataGridTextColumn Header="Método de Pagamento" Binding="{Binding ValorTotal, StringFormat=C, ConverterCulture=pt-BR}" Width="160"/>
                     <DataGridTextColumn Header="Valor Total" Binding="{Binding ValorTotal, StringFormat=C, ConverterCulture=pt-BR}" Width="150"/>
                 </DataGrid.Columns>
             </DataGrid>

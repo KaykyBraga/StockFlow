@@ -377,6 +377,32 @@ namespace StockFlow.Visual.Produtos
         }
 
 
+        private void Button_Click_Editar(object sender, RoutedEventArgs e)
+        {
+            // 1. Obter o Produto da linha clicada
+            // (Exatamente como você faz no botão de Remover)
+            Produto produtoSelecionado = (sender as Button).DataContext as Produto;
+
+            if (produtoSelecionado == null)
+            {
+                MessageBox.Show("Não foi possível identificar o produto selecionado.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            // 2. Pegar o ID do produto
+            string idDoProduto = produtoSelecionado.Id;
+
+            // 3. Criar a nova página de edição, passando o ID para o construtor dela
+            EditarProduto paginaEditar = new EditarProduto(idDoProduto);
+
+            // 4. Navegar para a página
+            NavigationService navigationService = NavigationService.GetNavigationService(this);
+            if (navigationService != null)
+            {
+                navigationService.Navigate(paginaEditar);
+            }
+        }
+
 
         private void Button_Click_Remover(object sender, RoutedEventArgs e)
         {
