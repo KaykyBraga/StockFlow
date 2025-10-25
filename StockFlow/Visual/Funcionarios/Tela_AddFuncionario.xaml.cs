@@ -1,6 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System;
+using StockFlow.Controles;
 
 namespace StockFlow.Visual
 {
@@ -60,7 +62,8 @@ namespace StockFlow.Visual
             if (resultado == MessageBoxResult.Yes)
             {
                 // Lógica para salvar no banco de dados...
-
+                ControleUsuario controleUsuario = new ControleUsuario();
+                controleUsuario.CadastrarUsuario(new System.Collections.Generic.List<string> { nome, senha, id, email, tipoFun  });
                 // Pop-up de sucesso
                 MessageBox.Show($"Funcionário '{nome}' adicionado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 
