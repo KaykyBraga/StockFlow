@@ -108,12 +108,12 @@ namespace StockFlow.Controles
             PromocaoDao promocaoDao = new PromocaoDao(context);
 
 
-            validacao.TentarConverterParaDecimal(listaDados[2], out decimal valorDesconto);
+            validacao.TentarConverterParaDecimal(listaDados[1], out decimal valorDesconto);
             novaPromocao.NomePromocao = listaDados[0];
-            novaPromocao.TipoDesconto = listaDados[1];
+            novaPromocao.TipoDesconto = "Porcentagem";
             novaPromocao.ValorDesconto = valorDesconto;
-            novaPromocao.DataInicio = Convert.ToDateTime(listaDados[3]);
-            novaPromocao.DataFim = Convert.ToDateTime(listaDados[4]);
+            novaPromocao.DataInicio = Convert.ToDateTime(listaDados[2]);
+            novaPromocao.DataFim = Convert.ToDateTime(listaDados[3]);
             novaPromocao.Ativo = true;
             if(validacao.mensagem != "")
             {
@@ -147,6 +147,19 @@ namespace StockFlow.Controles
             this.mensagem = "Promoção vinculada ao produto com sucesso.";
         }
 
+       public void DesvincularPromocaoProduto(int promocaoId, int produtoId)
+        {
+            var context = new AppDbContext();
+            PromocaoProdutoDao promocaoProdutoDao = new PromocaoProdutoDao(context);
+            promocaoProdutoDao.DesvincularPromocaoProduto(promocaoId, produtoId);
+            if (promocaoProdutoDao.mensagemErro != "")
+            {
+                this.mensagem = promocaoProdutoDao.mensagemErro;
+                return;
+            }
+            this.mensagem = "Promoção desvinculada do produto com sucesso.";
+        }
+
         public void DesativarPromocoesExpiradas()
         {
             var context = new AppDbContext();
@@ -158,6 +171,45 @@ namespace StockFlow.Controles
                 return;
             }
           
+        }
+
+        public void DesativarPromocao(int promocaoId)
+        {
+            var context = new AppDbContext();
+            PromocaoDao promocaoDao = new PromocaoDao(context);
+            promocaoDao.DesativarPromocao(promocaoId);
+            if (promocaoDao.mensagemErro != "")
+            {
+                this.mensagem = promocaoDao.mensagemErro;
+                return;
+            }
+            this.mensagem = "Promoção desativada com sucesso.";
+        }
+
+        public void ReativarPromocao(int promocaoId)
+        {
+            var context = new AppDbContext();
+            PromocaoDao promocaoDao = new PromocaoDao(context);
+            promocaoDao.ReativarPromocao(promocaoId);
+            if (promocaoDao.mensagemErro != "")
+            {
+                this.mensagem = promocaoDao.mensagemErro;
+                return;
+            }
+            this.mensagem = "Promoção reativada com sucesso.";
+        }
+
+        public void RemoverPromocao(int promocaoId)
+        {
+            var context = new AppDbContext();
+            PromocaoDao promocaoDao = new PromocaoDao(context);
+            promocaoDao.RemoverPromocao(promocaoId);
+            if (promocaoDao.mensagemErro != "")
+            {
+                this.mensagem = promocaoDao.mensagemErro;
+                return;
+            }
+            this.mensagem = "Promoção removida com sucesso.";
         }
 
         public void SangriaCaixa(string ValorSangria, string motivo)
@@ -226,6 +278,25 @@ namespace StockFlow.Controles
             List<Promocao> listaPromocoes = new List<Promocao>();
             listaPromocoes = await promocaoDao.ObterTodosAsPromocoesAsync();
             return listaPromocoes;
+        }
+
+        public async Task<List<StockFlow.Visual.Promocao>> ObterTodasAsPromocoesParaDataGridAsync()
+        {
+            var context = new AppDbContext();
+            PromocaoDao promocaoDao = new PromocaoDao(context);
+            List<Promocao> listaPromocoes = new List<Promocao>();
+            listaPromocoes = await promocaoDao.ObterTodosAsPromocoesAsync();
+            var listaFinalParaGrid = listaPromocoes.Select(promocao => new StockFlow.Visual.Promocao
+            {
+                Ativa = promocao.Ativo,
+                DataFim = promocao.DataFim,
+                DataInicio = promocao.DataInicio,
+                Desconto = promocao.ValorDesconto,
+                Id = promocao.PromocaoId,
+                Nome = promocao.NomePromocao,
+                ProdutoIds = promocao.PromocaoProdutos.Select(pp => pp.ProdutoId.ToString()).ToList()
+            }).ToList();
+            return listaFinalParaGrid;
         }
 
         public async Task<List<Promocao>> ObterTodasAsPromocoesAtivasAsync()

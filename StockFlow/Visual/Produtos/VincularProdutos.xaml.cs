@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockFlow.Controles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -33,17 +34,19 @@ namespace StockFlow.Visual
             CarregarProdutos();
         }
 
-        private void CarregarProdutos()
+        private async void CarregarProdutos()
         {
-            // ... (o resto do código continua igual)
-            var todosOsProdutos = new List<Produto>
+            ControleEstoque controleEstoque = new ControleEstoque();
+            var listaProdutos = await controleEstoque.ObterTodosOsProdutosAtivosAsync();
+            var todosOsProdutos = new List<Produto>();
+            foreach (var produto in listaProdutos)
             {
-                new Produto { Id = "PROD-001", Nome = "Notebook Gamer X" },
-                new Produto { Id = "PROD-002", Nome = "Mouse Óptico Sem Fio" },
-                new Produto { Id = "PROD-003", Nome = "Teclado Mecânico RGB" },
-                new Produto { Id = "PROD-004", Nome = "Monitor 27' 4K" },
-                new Produto { Id = "PROD-005", Nome = "Headset Gamer 7.1" }
-            };
+                todosOsProdutos.Add(new Produto
+                {
+                    Id = produto.ProdutoId.ToString(),
+                    Nome = produto.NomeCompleto
+                });
+            }
 
             listaProdutosVinculados = new List<ProdutoVinculado>();
             foreach (var produto in todosOsProdutos)
@@ -59,14 +62,21 @@ namespace StockFlow.Visual
 
         private void BtnSalvar_Click(object sender, RoutedEventArgs e)
         {
+            ControleVenda controleVenda = new ControleVenda();
+            foreach (var item in listaProdutosVinculados)
+            {
+                controleVenda.DesvincularPromocaoProduto(promocaoAlvo.Id, int.Parse(item.Produto.Id));
+            }
             promocaoAlvo.ProdutoIds.Clear();
             foreach (var item in listaProdutosVinculados)
             {
                 if (item.IsVinculado)
-                {
-                    promocaoAlvo.ProdutoIds.Add(item.Produto.Id);
-                }
+                {                 
+                        controleVenda.VincularPromocaoProduto(promocaoAlvo.Id, int.Parse(item.Produto.Id));
+                        promocaoAlvo.ProdutoIds.Add(item.Produto.Id);                
+                }               
             }
+
             MessageBox.Show("Produtos vinculados com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
             this.Close();
         }
