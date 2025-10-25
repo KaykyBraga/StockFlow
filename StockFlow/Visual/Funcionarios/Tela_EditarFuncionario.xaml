@@ -130,7 +130,7 @@
                 <TextBox Grid.Row="1" Grid.Column="1" x:Name="TxtNomeCompleto" Margin="0,5,0,5"/>
 
                 <TextBlock Grid.Row="2" Grid.Column="0" Text="ID Funcionário:" Margin="0,15,15,5" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtIdFuncionario" Margin="0,15,0,5"/>
+                <TextBox Grid.Row="2" Grid.Column="1" x:Name="TxtIdFuncionario" Margin="0,15,0,5" IsReadOnly="True" Background="#FFC3C0C0" Foreground="#FF171717"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0" Text="Email:" Margin="0,15,15,5" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 <TextBox Grid.Row="3" Grid.Column="1" x:Name="TxtEmail" Margin="0,15,0,5"/>
@@ -141,32 +141,21 @@
                     <ComboBoxItem Content="Estoquista"/>
                     <ComboBoxItem Content="Vendedor"/>
                 </ComboBox>
-
-                <TextBlock Grid.Row="5" Grid.Column="0" Text="Nova Senha (Opcional):" Margin="0,15,15,5" FontWeight="SemiBold" VerticalAlignment="Center"/>
                 <Grid Grid.Row="5" Grid.Column="1" Margin="0,15,0,0">
-                    <PasswordBox x:Name="TxtSenha" />
                     <TextBox x:Name="TxtSenhaVisivel" Visibility="Collapsed"/>
                 </Grid>
-                <CheckBox x:Name="ChkMostrarSenha" 
-                          Content="Mostrar Senha" 
-                          Grid.Row="5" Grid.Column="2"
-                          Margin="10,0,0,0"
-                          VerticalAlignment="Center"
-                          HorizontalAlignment="Left"
-                          Checked="ChkMostrarSenha_Checked"
-                          Unchecked="ChkMostrarSenha_Unchecked"/>
 
                 <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,30,0,0">
 
                     <Button Content="Limpar" 
                     Style="{StaticResource LimparButtonStyle}"
                     Margin="0,0,10,0"
-                    Click="Button_Click_Limpar"/>       
+                    Click="Button_Click_Limpar"/>
 
                     <Button Content="Salvar Alterações" 
                             Style="{StaticResource SalvarButtonStyle}"
                             Click="Button_Click_Salvar"/>
-                    
+
 
                 </StackPanel>
 

@@ -153,8 +153,8 @@
 
             <Grid Grid.Row="1" Margin="30,0,30,30">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0" VerticalAlignment="Top">
@@ -166,6 +166,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
@@ -173,24 +174,31 @@
                         <TextBlock Text="Nome Produto" Margin="0,0,0,5"/>
                         <TextBox Height="30" x:Name="txtNomeProduto"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,0,10"/>
-                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,15,10">
-                        <TextBlock Text="Preço de Custo" Margin="0,0,0,5"/>
-                        <TextBox Height="30" x:Name="txtPrecoCusto"/>
-                    </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1" Margin="0,0,0,10">
                         <TextBlock Text="Estoque Atual" Margin="0,0,0,5"/>
                         <TextBox IsReadOnly="True" Height="30" Background="#FFEAEAEA" x:Name="txtEstoqueAtual"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,15,10">
-                        <TextBlock Text="Preço de Venda" Margin="0,0,0,5"/>
-                        <TextBox Height="30" x:Name="txtPrecoVenda"/>
+
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,15,10">
+                        <TextBlock Text="Preço de Custo" Margin="0,0,0,5"/>
+                        <TextBox Height="30" x:Name="txtPrecoCusto"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
                         <TextBlock Text="Estoque Mínimo" Margin="0,0,0,5"/>
                         <TextBox Height="30" x:Name="txtEstoqueMinimo"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,0,0,0"/>
+
+                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,15,10">
+                        <TextBlock Text="Preço de Venda" Margin="0,0,0,5"/>
+                        <TextBox Height="30" x:Name="txtPrecoVenda"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
+                        <TextBlock Text="Localização no Estoque" Margin="0,0,0,5"/>
+                        <TextBox Height="30" x:Name="txtLocalizacao" ToolTip="Ex: Corredor A, Prateleira 3"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,10,0,0">
+                    </StackPanel>
                 </Grid>
 
                 <StackPanel Grid.Column="1" Margin="30,0,0,0" VerticalAlignment="Top">
@@ -198,13 +206,14 @@
                     <Button Content="Editar Fornecedor" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnEditarFornecedor_Click"/>
                     <Button Content="Editar Categoria" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnEditarCategoria_Click"/>
                     <Button Content="Limpar" Style="{StaticResource AtentionButtonStyle}" Margin="0,0,0,30" Click="btnLimpar_Click"/>
-                    <Button Content="Salvar" Style="{StaticResource PrimaryButtonStyle}" Click="SalvarButton_Click"/>
+                    <Button Content="Salvar Alterações" Style="{StaticResource SuccessButtonStyle}" Height="40" Click="SalvarButton_Click"/>
                 </StackPanel>
             </Grid>
         </Grid>
 
         <Grid x:Name="PopupOverlay" Visibility="Collapsed">
             <Border Background="#80000000"/>
+
             <Border x:Name="PopupEditarFornecedor" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" CornerRadius="8" Width="400">
                 <StackPanel Margin="25">
                     <TextBlock Text="Editar Fornecedor" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
@@ -223,6 +232,7 @@
                     </Grid>
                 </StackPanel>
             </Border>
+
             <Border x:Name="PopupEditarMarca" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" CornerRadius="8" Width="350">
                 <StackPanel Margin="25">
                     <TextBlock Text="Editar Marca" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
@@ -237,6 +247,7 @@
                     </Grid>
                 </StackPanel>
             </Border>
+
             <Border x:Name="PopupEditarCategoria" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" CornerRadius="8" Width="350">
                 <StackPanel Margin="25">
                     <TextBlock Text="Editar Categoria" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
@@ -251,6 +262,7 @@
                     </Grid>
                 </StackPanel>
             </Border>
+
             <Border x:Name="PopupConfirmacao" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" CornerRadius="8" BorderBrush="#AAAAAA" BorderThickness="1" Width="380">
                 <StackPanel Margin="25">
                     <Border Width="60" Height="60" CornerRadius="30" Background="#FFC107" HorizontalAlignment="Center">
@@ -268,6 +280,7 @@
                     </Grid>
                 </StackPanel>
             </Border>
+
             <Border x:Name="PopupSucesso" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#F0FFF4" CornerRadius="8" BorderBrush="#28a745" BorderThickness="1" Width="350">
                 <StackPanel Margin="25">
                     <Border Width="60" Height="60" CornerRadius="30" Background="#28a745" HorizontalAlignment="Center">
@@ -277,6 +290,7 @@
                     <Button Content="OK" Style="{StaticResource SuccessButtonStyle}" Width="100" Click="btnPopupOk_Click"/>
                 </StackPanel>
             </Border>
+
             <Border x:Name="PopupErro" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FFF0F1" CornerRadius="8" BorderBrush="#dc3545" BorderThickness="1" Width="350">
                 <StackPanel Margin="25">
                     <Border Width="60" Height="60" CornerRadius="30" Background="#dc3545" HorizontalAlignment="Center">
@@ -286,6 +300,7 @@
                     <Button Content="OK" Style="{StaticResource ErrorButtonStyle}" Width="100" Click="btnPopupOk_Click"/>
                 </StackPanel>
             </Border>
+
         </Grid>
     </Grid>
 </Page>
