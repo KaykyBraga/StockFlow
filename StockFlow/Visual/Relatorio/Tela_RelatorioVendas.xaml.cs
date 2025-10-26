@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using StockFlow.Visual.Relatorio;
+using StockFlow.Controles;
 
 namespace StockFlow.Visual
 {
@@ -16,6 +17,8 @@ namespace StockFlow.Visual
         public DateTime Data { get; set; }
         public string NomeFuncionario { get; set; }        
         public int QuantidadeItens { get; set; }
+        public decimal DescontoTotal { get; set; }
+        public string MetodoDePagamento { get; set; }
         public decimal ValorTotal { get; set; }
     }
 
@@ -30,21 +33,22 @@ namespace StockFlow.Visual
             CarregarDadosIniciais();
         }
 
-        private void CarregarDadosIniciais()
+        private async void CarregarDadosIniciais()
         {
             // --- SIMULAÇÃO ---
-            var funcionarios = new List<string> { "Todos", "Ana Silva", "Bruno Costa", "Carlos Pereira" };
+            ControleVenda controleVenda = new ControleVenda();
+            var carregamento = await controleVenda.ObterTodasAsVendasDataGridAsync();
+            var funcionarios = new List<string>();
+            funcionarios.Add("Todos");
+            foreach (var nome in carregamento)
+            {
+                if (!funcionarios.Contains(nome.NomeFuncionario))
+                    funcionarios.Add(nome.NomeFuncionario);
+            }
             CboFuncionarios.ItemsSource = funcionarios;
             CboFuncionarios.SelectedIndex = 0;
 
-            todasAsVendas = new List<Venda>
-            {
-                new Venda { IdVenda = "VEN-001", Data = new DateTime(2025, 10, 20, 10, 30, 0), NomeFuncionario = "Ana Silva", QuantidadeItens = 3, ValorTotal = 150.75m },
-                new Venda { IdVenda = "VEN-002", Data = new DateTime(2025, 10, 20, 14, 0, 0), NomeFuncionario = "Bruno Costa", QuantidadeItens = 1, ValorTotal = 89.90m },
-                new Venda { IdVenda = "VEN-003", Data = new DateTime(2025, 10, 21, 9, 15, 0), NomeFuncionario = "Ana Silva", QuantidadeItens = 5, ValorTotal = 320.00m },
-                new Venda { IdVenda = "VEN-004", Data = new DateTime(2025, 10, 21, 11, 45, 0), NomeFuncionario = "Carlos Pereira", QuantidadeItens = 2, ValorTotal = 110.50m },
-                new Venda { IdVenda = "VEN-005", Data = new DateTime(2025, 10, 19, 16, 20, 0), NomeFuncionario = "Bruno Costa", QuantidadeItens = 8, ValorTotal = 540.20m }
-            };
+            todasAsVendas = carregamento;
 
             DgVendas.ItemsSource = todasAsVendas;
         }
@@ -101,9 +105,10 @@ namespace StockFlow.Visual
             // 2. Obter o objeto "Venda" da linha selecionada
             Venda vendaSelecionada = (Venda)DgVendas.SelectedItem;
             string idDaVenda = vendaSelecionada.IdVenda;
-
+            string nomeFuncionario = vendaSelecionada.NomeFuncionario;
+            string metodoDePagamento = vendaSelecionada.MetodoDePagamento;
             // 3. Criar a instância da página de InfoVenda, passando o ID para o construtor dela
-            InfoVenda paginaDetalhes = new InfoVenda(idDaVenda);
+            InfoVenda paginaDetalhes = new InfoVenda(idDaVenda, nomeFuncionario, metodoDePagamento);
 
             // 4. Navegar para a nova página
             NavigationService navigationService = NavigationService.GetNavigationService(this);

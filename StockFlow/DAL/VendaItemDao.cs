@@ -10,15 +10,24 @@ namespace StockFlow.DAL
 {
     public class VendaItemDao
     {
+        private readonly AppDbContext _context;
+        public VendaItemDao(AppDbContext context)
+        {
+            _context = context;
+        }
         public async Task<List<VendaItem>> ObterTodasAsVendaItensAsync()
         {
-            await using (var context = new AppDbContext())
-            {
 
-                List<VendaItem> todasAsVendaItens = await context.VendaItens.Include(vi => vi.Venda).ToListAsync();
+            List<VendaItem> todasAsVendaItens = await _context.VendaItens.Include(vi => vi.Venda).ToListAsync();
+            return todasAsVendaItens;
+        }
 
-                return todasAsVendaItens;
-            }
+        public async Task<List<VendaItem>> ObterTodasAsVendaItensPorVendaIdAsync(int vendaId)
+        {
+
+            List<VendaItem> todasAsVendaItens = await _context.VendaItens.Where(Venda => Venda.VendaId == vendaId).Include(p => p.Produto).ToListAsync();
+            return todasAsVendaItens;
         }
     }
 }
+

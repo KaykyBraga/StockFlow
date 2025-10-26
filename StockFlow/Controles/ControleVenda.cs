@@ -263,12 +263,49 @@ namespace StockFlow.Controles
             return listaVendas;
         }
 
+        public async Task<List<StockFlow.Visual.Venda>> ObterTodasAsVendasDataGridAsync()
+        {
+            var context = new AppDbContext();
+            VendaDao vendaDao = new VendaDao(context);
+            List<Venda> listaVendas = new List<Venda>();
+            listaVendas = await vendaDao.ObterTodaAsVendasAsync();
+            var listaFinalParaGrid = listaVendas.Select(venda => new StockFlow.Visual.Venda
+            {
+                IdVenda = venda.VendaId.ToString(),
+                Data = venda.DataVenda,
+                NomeFuncionario = venda.Usuario.NomeCompleto,
+                QuantidadeItens = venda.VendaItems.Count,
+                DescontoTotal = venda.DescontoTotal,
+                MetodoDePagamento = venda.MetodoPagamento,              
+                ValorTotal = venda.ValorTotal
+            }).ToList();
+            return listaFinalParaGrid;
+        }
+
         public async Task<List<VendaItem>> ObterTodasAsVendasItemAsync()
         {
-            VendaItemDao vendaItemDao = new VendaItemDao();
+            var context = new AppDbContext();
+            VendaItemDao vendaItemDao = new VendaItemDao(context);
             List<VendaItem> listaVendaItem = new List<VendaItem>();
             listaVendaItem = await vendaItemDao.ObterTodasAsVendaItensAsync();
             return listaVendaItem;
+        }
+
+        public async Task<List<StockFlow.Visual.Relatorio.ItemVenda>> ObterTodasAsVendasItemParaGridAsync(int id)
+        {
+            var context = new AppDbContext();
+            VendaItemDao vendaItemDao = new VendaItemDao(context);
+            List<VendaItem> listaVendaItem = new List<VendaItem>();
+            listaVendaItem = await vendaItemDao.ObterTodasAsVendaItensPorVendaIdAsync(id);
+            var listaFinalParaGrid = listaVendaItem.Select(vendaItem => new StockFlow.Visual.Relatorio.ItemVenda
+            {
+                NomeProduto = vendaItem.Produto.NomeCompleto,
+                Quantidade = vendaItem.Quantidade,
+                PrecoUnitario = vendaItem.PrecoUnitarioMomento,
+                PrecoTotal = vendaItem.PrecoUnitarioMomento * vendaItem.Quantidade,
+                DescontoTotal = vendaItem.DescontoItem
+            }).ToList();
+            return listaFinalParaGrid;
         }
 
         public async Task<List<Promocao>> ObterTodasAsPromocoesAsync()

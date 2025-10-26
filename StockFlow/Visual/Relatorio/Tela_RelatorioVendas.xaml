@@ -169,7 +169,7 @@
                     <DataGridTextColumn Header="Funcionário" Binding="{Binding NomeFuncionario}" Width="*"/>
                     <DataGridTextColumn Header="Itens" Binding="{Binding QuantidadeItens}" Width="100"/>
                     <DataGridTextColumn Header="Desconto Total" Binding="{Binding DescontoTotal, StringFormat=C, ConverterCulture=pt-BR}" Width="120"/>
-                    <DataGridTextColumn Header="Método de Pagamento" Binding="{Binding ValorTotal, StringFormat=C, ConverterCulture=pt-BR}" Width="160"/>
+                    <DataGridTextColumn Header="Método de Pagamento" Binding="{Binding MetodoDePagamento}" Width="160"/>
                     <DataGridTextColumn Header="Valor Total" Binding="{Binding ValorTotal, StringFormat=C, ConverterCulture=pt-BR}" Width="150"/>
                 </DataGrid.Columns>
             </DataGrid>

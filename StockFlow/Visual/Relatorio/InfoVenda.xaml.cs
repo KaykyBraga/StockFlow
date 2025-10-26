@@ -12,15 +12,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using StockFlow.Controles;
 using StockFlow.Visual.Relatorio;
 
 namespace StockFlow.Visual.Relatorio
 {
+    public class ItemVenda
+    {
+        public string NomeProduto { get; set; }
+        public int Quantidade { get; set; }
+        public decimal PrecoUnitario { get; set; }
+        public decimal PrecoTotal { get; set; }
+        public decimal DescontoTotal { get; set; }
+    }
     /// <summary>
     /// Interação lógica para InfoVenda.xam
     /// </summary>
     public partial class InfoVenda : Page
     {
+        List<ItemVenda> itensVenda;
         // Construtor padrão (pode ser removido se você SEMPRE for passar um ID)
         public InfoVenda()
         {
@@ -28,38 +38,39 @@ namespace StockFlow.Visual.Relatorio
         }
 
         // NOVO CONSTRUTOR: Este é o que recebe o ID da tela anterior
-        public InfoVenda(string idVenda)
+        public InfoVenda(string idVenda, string nomeFuncionario, string metodoDePagamento)
         {
             InitializeComponent();
 
             // Agora você tem o ID. Chame um método para carregar os dados.
-            CarregarDadosVenda(idVenda);
+            CarregarDadosVenda(idVenda, nomeFuncionario, metodoDePagamento);
         }
 
-        private void CarregarDadosVenda(string idVenda)
+        private async void CarregarDadosVenda(string idVenda, string nomeFuncionario, string metodoDePagamento)
         {
-            // É AQUI QUE VOCÊ DEVE FAZER A LÓGICA:
-            // 1. Usar o 'idVenda' para buscar os detalhes no banco de dados.
-            // 2. Preencher os TextBlocks e o DataGrid que criamos no XAML.
-
-            // Exemplo (usando os nomes do XAML que eu te passei):
-            // VendaDetalhada venda = seuBancoDeDados.BuscarVendaPorId(idVenda);
-            // List<ItemVenda> itens = seuBancoDeDados.BuscarItensDaVenda(idVenda);
-
-            // txtIdVenda.Text = venda.IdVenda;
-            // txtDataVenda.Text = venda.Data.ToString("g");
-            // txtFuncionario.Text = venda.NomeFuncionario;
-            // txtMetodoPgto.Text = venda.MetodoPagamento;
-            //
-            // DgItensVenda.ItemsSource = itens;
-            //
-            // txtSubtotal.Text = venda.Subtotal.ToString("C");
-            // txtDesconto.Text = venda.Desconto.ToString("C");
-            // txtTotalVenda.Text = venda.TotalPago.ToString("C");
-
-
-            // Por enquanto, vamos só exibir o ID no TextBlock para confirmar que funcionou
+            
             txtIdVenda.Text = $"{idVenda}";
+            txtFuncionario.Text = $"{nomeFuncionario}";
+            txtMetodoPgto.Text = $"{metodoDePagamento}";
+            ControleVenda controleVenda = new ControleVenda();
+            var carregamento = await controleVenda.ObterTodasAsVendasItemParaGridAsync(int.Parse(idVenda));
+            itensVenda = carregamento;
+            decimal totalVenda = 0;
+            foreach (var item in itensVenda)
+            {
+                totalVenda += item.PrecoTotal;
+            }
+            txtTotalVenda.Text = $"R$ {totalVenda:F2}";
+            decimal descontoTotal = 0;
+            foreach (var item in itensVenda)
+            {
+                descontoTotal += item.DescontoTotal;
+            }
+            txtDesconto.Text = $"R$ {descontoTotal:F2}";
+            decimal subtotalVenda = totalVenda + descontoTotal;
+            txtSubtotal.Text = $"R$ {subtotalVenda:F2}";
+
+            DgItensVenda.ItemsSource = itensVenda;
         }
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
