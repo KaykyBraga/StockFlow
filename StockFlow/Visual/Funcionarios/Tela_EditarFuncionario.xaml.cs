@@ -63,19 +63,9 @@ namespace StockFlow.Visual
 
 
         // Métodos para mostrar/esconder senha (continuam os mesmos)
-        private void ChkMostrarSenha_Checked(object sender, RoutedEventArgs e)
-        {
-            TxtSenhaVisivel.Text = TxtSenha.Password;
-            TxtSenhaVisivel.Visibility = Visibility.Visible;
-            TxtSenha.Visibility = Visibility.Collapsed;
-        }
+        
 
-        private void ChkMostrarSenha_Unchecked(object sender, RoutedEventArgs e)
-        {
-            TxtSenha.Password = TxtSenhaVisivel.Text;
-            TxtSenha.Visibility = Visibility.Visible;
-            TxtSenhaVisivel.Visibility = Visibility.Collapsed;
-        }
+        
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {

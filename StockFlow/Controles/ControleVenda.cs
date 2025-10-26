@@ -317,13 +317,23 @@ namespace StockFlow.Controles
             return listaPromocaoProdutos;
         }
 
-        public async Task<List<Caixa>> ObterTodosOsCaixasAsync()
+        public async Task<List<StockFlow.Visual.Relatorio.SessaoCaixa>> ObterTodosOsCaixasParaGridAsync()
         {
             var context = new AppDbContext();
             CaixaDao caixaDao = new CaixaDao(context);
             List<Caixa> listaCaixas = new List<Caixa>();
             listaCaixas = await caixaDao.ObterTodosOsCaixasAsync();
-            return listaCaixas;
+            var listaFinalParaGrid = listaCaixas.Select(caixa => new StockFlow.Visual.Relatorio.SessaoCaixa
+            {
+                IdCaixa = caixa.CaixaId,
+                IdUsuario = caixa.UsuarioAbertura.NomeCompleto,
+                DataAbertura = caixa.DataHoraAbertura,
+                ValorAbertura = caixa.ValorAbertura,
+                DataFechamento = caixa.DataHoraFechamento,
+                ValorFechamento = caixa.ValorFechamentoInformado ?? 0,
+                Diferenca = caixa.Diferenca ?? 0
+            }).ToList();
+            return listaFinalParaGrid;
         }
 
         public async Task<List<MovimentacaoCaixa>> ObterTodasAsMovimentacaoCaixasAsync()

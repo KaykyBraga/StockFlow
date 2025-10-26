@@ -78,7 +78,7 @@
                     <TextBlock Grid.Column="2" Text="Data Fim:" VerticalAlignment="Center" Margin="5"/>
                     <DatePicker Grid.Column="3" x:Name="DpDataFim" VerticalAlignment="Center" Margin="5" FontSize="14"/>
 
-                    <TextBlock Grid.Column="4" Text="ID Usuário:" VerticalAlignment="Center" Margin="15,5,5,5"/>
+                    <TextBlock Grid.Column="4" Text="Usuários:" VerticalAlignment="Center" Margin="15,5,5,5"/>
                     <ComboBox Grid.Column="5" x:Name="CboIdUsuario" VerticalAlignment="Center" Margin="5" FontSize="14"/>
 
                     <Button Grid.Column="6" x:Name="BtnFiltrar" Content="Filtrar" 
@@ -95,7 +95,7 @@
                   RowHeaderWidth="0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID Caixa" Binding="{Binding IdCaixa}" Width="*"/>
-                <DataGridTextColumn Header="ID Usuário" Binding="{Binding IdUsuario}" Width="*"/>
+                <DataGridTextColumn Header="Nome Usuario" Binding="{Binding IdUsuario}" Width="*"/>
                 <DataGridTextColumn Header="Data e Hora da Abertura" Binding="{Binding DataAbertura, StringFormat='dd/MM/yyyy HH:mm'}" Width="2*"/>
                 <DataGridTextColumn Header="Vlr. Abertura" Binding="{Binding ValorAbertura, StringFormat=C2, ConverterCulture='pt-BR'}" Width="*"/>
                 <DataGridTextColumn Header="Data e Hora do Fechamento" Binding="{Binding DataFechamento, StringFormat='dd/MM/yyyy HH:mm'}" Width="2*"/>

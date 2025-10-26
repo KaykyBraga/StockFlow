@@ -179,6 +179,7 @@ namespace StockFlow.DAL
         {
             return await _context.Caixas.Include(c => c.UsuarioAbertura).ToListAsync();
         }
+       
     }
 
 }
