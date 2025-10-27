@@ -18,6 +18,13 @@ namespace StockFlow.Visual
     /// <summary>
     /// Interação lógica para AlertasPage.xam
     /// </summary>
+    
+    public class Alertagrid
+    {
+        public string EstadoDeAtencao { get; set; }
+        public string PrecisaDeReposicao { get; set; }
+
+    }
     public partial class AlertasPage : Page
     {
         public AlertasPage()

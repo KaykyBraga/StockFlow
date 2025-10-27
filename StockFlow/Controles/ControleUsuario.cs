@@ -87,7 +87,12 @@ namespace StockFlow.Controles
 
             // Busca o usuario pelo email
             usuario = usuarioDao.BuscarUsuarioPorEmail(email);
-
+            if (usuario == null) 
+            {
+                this.mensagem = "Erro ao realizar login, email ou senha invalidos ";
+                TipoUsuario = "";
+                return;
+            }
             // Verifica se o usuario existe
             if (usuarioDao.mensagem == "")
             {

@@ -16,6 +16,12 @@ namespace StockFlow.Modelo
          public string TelefonePrincipal { get; set; }
          public bool Ativo { get; set; }
          public DateTime DataCadastro { get; set; }
-         public virtual Produto Produto { get; set; }
+         public virtual ICollection<Produto> Produtos { get; set; }
+
+        public Fornecedor()
+        {
+            Produtos = new HashSet<Produto>();
+            
+        }
     }
 }

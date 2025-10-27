@@ -187,17 +187,16 @@ namespace StockFlow.Visual
                     Window.GetWindow(this).Close();
 
                 }
-
-
-
-                // (Opcional) Caso o login retorne um tipo não esperado
-
-                else
-
+                else// (Opcional) Caso o login retorne um tipo não esperado
                 {
 
                     MessageBox.Show($"Tipo de funcionário '{tipoFuncionario}' não reconhecido.", "Erro de Login", MessageBoxButton.OK, MessageBoxImage.Error);
 
+                }
+
+                if(controleUsuario.mensagem != "")
+                {
+                    MessageBox.Show(controleUsuario.mensagem, "Erro de Login", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
             }

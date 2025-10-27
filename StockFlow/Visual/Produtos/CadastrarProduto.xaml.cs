@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockFlow.Controles;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -7,9 +8,15 @@ namespace StockFlow.Visual.Produtos
 {
     public partial class CadastrarProduto : Page
     {
+        List<StockFlow.Modelo.Marca> marcas;
+        List<StockFlow.Modelo.Fornecedor> fornecedores;
+        List<StockFlow.Modelo.Categoria> categorias;
+
         public CadastrarProduto()
         {
+            Carregar();
             InitializeComponent();
+            
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -23,10 +30,49 @@ namespace StockFlow.Visual.Produtos
 
         #region Controle de Pop-ups de Cadastro (Marca, Fornecedor, Categoria)
 
+
+        private async void Carregar()
+        {
+            ControleEstoque controleEstoque = new ControleEstoque();
+            marcas = await controleEstoque.ObterTodasAsMarcasAsync();
+            List<string> listaMarcas = new List<string>();
+            foreach (var marca in marcas)
+            {
+                if (marca.Ativo)
+                {
+                    listaMarcas.Add(marca.NomeMarca);
+                }
+            }
+            cmbMarca.ItemsSource = listaMarcas;
+
+            fornecedores = await controleEstoque.ObterTodosOsFornecedoresAsync();
+            List<string> listaFornecedores = new List<string>();
+            foreach (var fornecedor in fornecedores)
+            {
+                if (fornecedor.Ativo)
+                {
+                    listaFornecedores.Add(fornecedor.NomeFantasia);
+                }
+            }
+            cmbFornecedor.ItemsSource = listaFornecedores;
+
+            categorias = await controleEstoque.ObterTodasAsCategoriasAsync();
+            List<string> listaCategorias = new List<string>();
+            foreach (var categoria in categorias)
+            {
+                if (categoria.Ativo)
+                {
+                    listaCategorias.Add(categoria.NomeCategoria);
+                }
+            }
+            cmbCategoria.ItemsSource = listaCategorias;
+
+        }
         private void btnAddMarca_Click(object sender, RoutedEventArgs e)
         {
             PopupOverlay.Visibility = Visibility.Visible;
             PopupMarca.Visibility = Visibility.Visible;
+            
         }
 
         private void btnAddFornecedor_Click(object sender, RoutedEventArgs e)
@@ -41,6 +87,90 @@ namespace StockFlow.Visual.Produtos
             PopupCategoria.Visibility = Visibility.Visible;
         }
 
+        private void btnAdicinarMarca_Click(object sender, RoutedEventArgs e)
+        {
+            ControleEstoque controleEstoque = new ControleEstoque();
+            if (string.IsNullOrWhiteSpace(txtNomeMarca.Text))
+            {
+                MessageBox.Show("O campo 'Nome da Marca' é obrigatório.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            controleEstoque.AdicionarMarca(txtNomeMarca.Text);
+
+            if (!string.IsNullOrEmpty(controleEstoque.mensagem))
+            {
+                MessageBox.Show(controleEstoque.mensagem, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            MessageBox.Show("Marca cadastrada com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+            txtNomeMarca.Clear();
+            Carregar();
+            btnCancelar_Click(sender, e);
+
+        }
+
+        private void btnAdicinarFornecedor_Click(object sender, RoutedEventArgs e)
+        {
+            ControleEstoque controleEstoque = new ControleEstoque();
+            if (string.IsNullOrWhiteSpace(txtRazaoSocial.Text) ||
+                string.IsNullOrWhiteSpace(txtNomeFantasia.Text) ||
+                string.IsNullOrWhiteSpace(txtCnpj.Text) ||
+                string.IsNullOrWhiteSpace(txtEmail.Text) ||
+                string.IsNullOrWhiteSpace(txtTelefonePrincipal.Text)) 
+            {
+                MessageBox.Show("Os campos 'Nome do Fornecedor' e 'CNPJ' são obrigatórios.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            controleEstoque.AdicionarFornecedor(new List<string>
+            {
+                txtNomeFantasia.Text,
+                txtRazaoSocial.Text,             
+                txtCnpj.Text,
+                txtEmail.Text,
+                txtTelefonePrincipal.Text              
+            });
+            if (!string.IsNullOrEmpty(controleEstoque.mensagem))
+            {
+                MessageBox.Show(controleEstoque.mensagem, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            MessageBox.Show("Fornecedor cadastrado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+            txtNomeFantasia.Clear();
+            txtRazaoSocial.Clear();
+            txtCnpj.Clear();
+            txtEmail.Clear();
+            txtTelefonePrincipal.Clear();
+            Carregar();
+            btnCancelar_Click(sender, e);
+
+        }
+
+        private void btnAdicinarCategoria_Click(object sender, RoutedEventArgs e)
+        {
+            ControleEstoque controleEstoque = new ControleEstoque();
+            if (string.IsNullOrWhiteSpace(txtNomeCategoria.Text))
+            {
+                MessageBox.Show("O campo 'Nome da Categoria' é obrigatório.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            controleEstoque.AdicionarCategoria(txtNomeCategoria.Text);
+
+            if (!string.IsNullOrEmpty(controleEstoque.mensagem))
+            {
+                MessageBox.Show(controleEstoque.mensagem, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            MessageBox.Show("Categoria cadastrada com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
+            txtNomeCategoria.Clear();
+            Carregar();
+            btnCancelar_Click(sender, e);
+
+        }
         private void btnCancelar_Click(object sender, RoutedEventArgs e)
         {
             // Esconde todos os pop-ups de cadastro

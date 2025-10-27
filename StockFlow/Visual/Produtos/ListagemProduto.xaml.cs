@@ -115,8 +115,7 @@ namespace StockFlow.Visual.Produtos
                                 $"{quantidadeAdicionada.Value} unidades adicionadas.\n" +
                                 $"Novo Total: {novaQuantidade} unidades.",
                                 "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                            // ** Chamada ao DB deve ser feita aqui **
+                           
                         }
                     }
                 }

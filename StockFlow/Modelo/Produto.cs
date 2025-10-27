@@ -23,6 +23,7 @@ namespace StockFlow.Modelo
         public int MarcaId { get; set; }
         public int CategoriaId { get; set; }
         public int FornecedorId { get; set; }
+        public string LocalizacaoEstoque { get; set; }
         public virtual Marca Marca { get; set; }
 
         [ForeignKey("CategoriaId")]
