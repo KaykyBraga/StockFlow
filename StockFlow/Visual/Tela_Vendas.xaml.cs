@@ -31,23 +31,26 @@ namespace StockFlow.Visual
 
         // Sua classe Produto precisa ter uma propriedade 'Nome' (ou ajuste DisplayMemberPath)
 
-        private class Produto
+        public class Produto
 
         {
-
             // Adicione outras propriedades como Id, se tiver
 
             public string Nome { get; set; }
-
             public decimal Preco { get; set; }
-
-            // O ToString() não é mais estritamente necessário para o ComboBox agora
-
-            // public override string ToString() => $"{Nome} - R$ {Preco:F2}";
+            public int Id { get; set; }
+            public override string ToString() => $"{Nome} - R$ {Preco:F2}";
 
         }
 
-        private class ItemVenda { public string Nome { get; set; } public decimal PrecoUnitario { get; set; } public int Quantidade { get; set; } public decimal PrecoTotal => PrecoUnitario * Quantidade; }
+        private class ItemVenda
+        {
+            public string Nome { get; set; }
+            public decimal PrecoUnitario { get; set; }
+            public int Quantidade { get; set; }
+            public int ProdutoId { get; set; }
+            public decimal PrecoTotal => PrecoUnitario * Quantidade;
+        }
 
         #endregion
 
@@ -57,7 +60,7 @@ namespace StockFlow.Visual
 
         // Renomeado para refletir que guarda todos os produtos
 
-        private List<Produto> listaDeTodosOsProdutos = new List<Produto>();
+        private List<Produto> listaDeTodosOsProdutos;
 
         private List<ItemVenda> itensVenda = new List<ItemVenda>();
 
@@ -70,19 +73,13 @@ namespace StockFlow.Visual
 
 
         public Tela_Vendas()
-
         {
-
+            CarregarProdutos(); // Carrega listaDeTodosOsProdutos
             InitializeComponent();
 
-            CarregarProdutos(); // Carrega listaDeTodosOsProdutos
+            // Configura o ItemsSource e o que será exibido no ComboBox           
 
-            // Configura o ItemsSource e o que será exibido no ComboBox
-
-            ComboBuscarProduto.ItemsSource = listaDeTodosOsProdutos;
-
-            ComboBuscarProduto.DisplayMemberPath = "Nome"; // IMPORTANTE: Diz qual propriedade mostrar
-
+  
             AtualizarEstadoVisualCaixa(false);
 
         }
@@ -267,31 +264,16 @@ namespace StockFlow.Visual
 
         // MÉTODO ATUALIZADO: Apenas carrega a lista principal
 
-        private void CarregarProdutos()
+        private async void CarregarProdutos()
 
         {
 
             // --- SIMULAÇÃO --- Substitua pela busca real no banco de dados
+            ControleVenda controleVenda = new ControleVenda();
+            var lista = await controleVenda.ObterTodosOsProdutosParaVendaAsync();
+            listaDeTodosOsProdutos = lista;
 
-            listaDeTodosOsProdutos = new List<Produto>
-
-            {
-
-                new Produto { Nome = "Água Mineral 500ml", Preco = 3.00m },
-
-                new Produto { Nome = "Coca-Cola Lata 350ml", Preco = 5.50m },
-
-                new Produto { Nome = "Salgado Assado (Frango)", Preco = 7.00m },
-
-                new Produto { Nome = "Salgado Frito (Carne)", Preco = 6.50m },
-
-                new Produto { Nome = "Chocolate Barra Lacta", Preco = 8.00m },
-
-                new Produto { Nome = "Suco de Laranja Prats 300ml", Preco = 6.00m }
-
-                // Adicione mais produtos
-
-            };
+            ComboBuscarProduto.ItemsSource = listaDeTodosOsProdutos;
 
             // A definição do ItemsSource foi movida para o construtor
 
@@ -450,7 +432,7 @@ namespace StockFlow.Visual
 
             {
 
-                itensVenda.Add(new ItemVenda { Nome = produtoSelecionado.Nome, PrecoUnitario = produtoSelecionado.Preco, Quantidade = 1 });
+                itensVenda.Add(new ItemVenda { Nome = produtoSelecionado.Nome, PrecoUnitario = produtoSelecionado.Preco, Quantidade = 1, ProdutoId = produtoSelecionado.Id });
 
             }
 
@@ -647,13 +629,24 @@ namespace StockFlow.Visual
 
 
             // --- Adicione aqui a lógica para registrar a venda no banco de dados ---
+            var listaDeVenda = itensVenda.Select(x => new StockFlow.Modelo.VendaItem
+            {
+                ProdutoId = x.ProdutoId,
+                Quantidade = x.Quantidade,
+            }).ToList();
+            
+            ControleVenda controleVenda = new ControleVenda();
+            controleVenda.RegistrarVenda(listaDeVenda,metodoPagamentoSelecionado);
+            
+            if(controleVenda.mensagem != "")
+            {
+                MessageBox.Show(controleVenda.mensagem, "Erro de Venda", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                MessageBox.Show($"Venda finalizada com sucesso!\nTotal: {TxtTotalVenda.Text}\nMétodo: {metodoPagamentoSelecionado}", "Venda Concluída", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            // RegistrarVendaNoBanco(itensVenda, metodoPagamentoSelecionado, itensVenda.Sum(i => i.PrecoTotal));
-
-
-
-            MessageBox.Show($"Venda finalizada com sucesso!\nTotal: {TxtTotalVenda.Text}\nMétodo: {metodoPagamentoSelecionado}", "Venda Concluída", MessageBoxButton.OK, MessageBoxImage.Information);
-
+            }
             LimparVendaAtual();
 
         }

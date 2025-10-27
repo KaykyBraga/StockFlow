@@ -158,7 +158,7 @@
                             <Button x:Name="BtnPagamentoCartao" Content="Cartão" Background="#5DADE2" Foreground="White" 
                                     Style="{StaticResource ButtonStyle}" Margin="0,0,0,15" BorderBrush="#3498DB" Height="37" Click="BtnPagamento_Click"/>
                             <Button x:Name="BtnPagamentoDinheiro" Content="Dinheiro" Background="#27AE60" Foreground="White" 
-                                    Style="{StaticResource ButtonStyle}" Margin="0,0,0,15" BorderBrush="#229954" Height="37" Click="BtnPagamento_Click"/>
+                                    Style="{StaticResource ButtonStyle}" Margin="0,0,0,15" BorderBrush="#229954" Height="37" Click="BtnPagamento_Click" Cursor="Hand"/>
                             <Button x:Name="BtnPagamentoPix" Content="Pix" Background="#F39C12" Foreground="White" 
                                     Style="{StaticResource ButtonStyle}" Margin="0,0,0,15" BorderBrush="#E67E22" Height="37" Click="BtnPagamento_Click"/>
                             <Button x:Name="BtnFinalizarVenda" Content="Finalizar Venda" Background="#5DADE2" Foreground="White" 
