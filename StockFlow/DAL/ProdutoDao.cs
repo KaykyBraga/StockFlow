@@ -161,6 +161,7 @@ namespace StockFlow.DAL
                 .Include(p => p.Marca)
                 .Include(p => p.Fornecedor)
                 .Include(p => p.Categoria)
+                .Include(p => p.PromocaoProdutos).ThenInclude(p => p.Promocao)
                 .Where(u => u.Ativo == true).ToListAsync();
         }
 

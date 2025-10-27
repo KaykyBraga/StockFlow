@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockFlow.Controles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -11,12 +12,23 @@ namespace StockFlow.Visual
     public partial class Tela_Vendas : Window
     {
         #region Classes de Dados
-        private class Produto { public string Nome { get; set; } public decimal Preco { get; set; } public override string ToString() => $"{Nome} - R$ {Preco:F2}"; }
-        private class ItemVenda { public string Nome { get; set; } public decimal PrecoUnitario { get; set; } public int Quantidade { get; set; } public decimal PrecoTotal => PrecoUnitario * Quantidade; }
+        public class Produto 
+        { 
+            public string Nome { get; set; } 
+            public decimal Preco { get; set; }
+            public int Id { get; set; }          
+            public override string ToString() => $"{Nome} - R$ {Preco:F2}"; 
+        }
+        private class ItemVenda 
+        { 
+            public string Nome { get; set; } 
+            public decimal PrecoUnitario { get; set; } 
+            public int Quantidade { get; set; } 
+            public decimal PrecoTotal => PrecoUnitario * Quantidade; }
         #endregion
 
         #region Variáveis de Controle
-        private List<Produto> listaCompletaProdutos = new List<Produto>();
+        private List<Produto> listaCompletaProdutos = new List<Produto>(); 
         private List<ItemVenda> itensVenda = new List<ItemVenda>();
         private string metodoPagamentoSelecionado = "";
         private bool isCaixaAberto = false;
@@ -64,6 +76,12 @@ namespace StockFlow.Visual
             {
                 isCaixaAberto = true;
                 AtualizarEstadoVisualCaixa(true);
+                //ControleVenda controleVenda = new ControleVenda();
+                //controleVenda.AbrirCaixa(valorInicial.Value.ToString());
+                //if (controleVenda.mensagem == "")
+                //{
+                //    MessageBox.Show(controleVenda.mensagem, "Erro ao Abrir Caixa", MessageBoxButton.OK, MessageBoxImage.Error);
+                //}
                 MessageBox.Show($"Caixa aberto com sucesso com um valor inicial de {valorInicial.Value:C}!", "Caixa Aberto", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -95,9 +113,10 @@ namespace StockFlow.Visual
         #endregion
 
         #region Lógica de Venda
-        private void CarregarProdutos()
+        private async void CarregarProdutos()
         {
-            listaCompletaProdutos = new List<Produto> { new Produto { Nome = "Água Mineral 500ml", Preco = 3.00m } };
+            ControleVenda controleVenda = new ControleVenda();
+            listaCompletaProdutos = await controleVenda.ObterTodosOsProdutosParaVendaAsync();
             ComboProdutos.ItemsSource = listaCompletaProdutos;
         }
 
