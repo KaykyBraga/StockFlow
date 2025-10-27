@@ -42,14 +42,6 @@ namespace StockFlow.Controles
             ValidacaoUsuario validacaoUsuario = new ValidacaoUsuario();
             FornecedorDao fornecedorDao = new FornecedorDao();
             Fornecedor fornecedor = new Fornecedor();
-            fornecedor.NomeFantasia = ListaDados[0];
-            fornecedor.RazaoSocial = ListaDados[1];
-            fornecedor.Cnpj = ListaDados[2];
-            fornecedor.EmailPrincipal = ListaDados[3];
-            fornecedor.TelefonePrincipal = ListaDados[4];
-            fornecedor.Ativo = true;
-            
-
             dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
             {
                 if (horaAtual.HasValue)
@@ -63,7 +55,13 @@ namespace StockFlow.Controles
                 }
 
             });
-
+            fornecedor.NomeFantasia = ListaDados[0];
+            fornecedor.RazaoSocial = ListaDados[1];
+            fornecedor.Cnpj = ListaDados[2];
+            fornecedor.EmailPrincipal = ListaDados[3];
+            fornecedor.TelefonePrincipal = ListaDados[4];
+            fornecedor.Ativo = true;
+               
             fornecedorDao.CadastrarFornecedor(fornecedor);
             this.mensagem = fornecedorDao.mensagem;
         }
@@ -83,20 +81,7 @@ namespace StockFlow.Controles
             validacao.TentarConverterParaDecimal(listaDados[3], out precoVenda);
             decimal precoCusto;
             validacao.TentarConverterParaDecimal(listaDados[4], out precoCusto);
-            
 
-            produto.Sku = listaDados[0];
-            produto.Ean = listaDados[1];
-            produto.NomeCompleto = listaDados[2];
-            produto.PrecoVenda = precoVenda;
-            produto.PrecoCusto = precoCusto;
-            produto.Ativo = true;
-            produto.EstoqueAtual = validacao.CoverterParaInt(listaDados[5]);
-            produto.EstoqueMinimo = validacao.CoverterParaInt(listaDados[6]);
-            produto.MarcaId = validacao.CoverterParaInt(listaDados[7]);
-            produto.FornecedorId = validacao.CoverterParaInt(listaDados[8]);
-            produto.CategoriaId = validacao.CoverterParaInt(listaDados[9]);
-           
             dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
             {
                 if (horaAtual.HasValue)
@@ -110,6 +95,21 @@ namespace StockFlow.Controles
                     return;
                 }
             });
+
+            
+
+            produto.Sku = listaDados[0];
+            produto.Ean = listaDados[1];
+            produto.NomeCompleto = listaDados[2];
+            produto.PrecoVenda = precoVenda;
+            produto.PrecoCusto = precoCusto;
+            produto.Ativo = true;
+            produto.EstoqueAtual = validacao.CoverterParaInt(listaDados[5]);
+            produto.EstoqueMinimo = validacao.CoverterParaInt(listaDados[6]);
+            produto.MarcaId = validacao.CoverterParaInt(listaDados[7]);
+            produto.FornecedorId = validacao.CoverterParaInt(listaDados[8]);
+            produto.CategoriaId = validacao.CoverterParaInt(listaDados[9]);
+            produto.LocalizacaoEstoque = listaDados[10];
 
             if (validacao.mensagem != "")
             {
@@ -362,9 +362,8 @@ namespace StockFlow.Controles
 
         public async Task<List<Fornecedor>> ObterTodosOsFornecedoresAsync()
         {
-            FornecedorDao fornecedorDao = new FornecedorDao();
-            List<Fornecedor> listaFornecedores = new List<Fornecedor>();
-            listaFornecedores = await fornecedorDao.ObterTodosOsFornecedoresAsync();
+            FornecedorDao fornecedorDao = new FornecedorDao();          
+            var listaFornecedores = await fornecedorDao.ObterTodosOsFornecedoresAsync();
             return listaFornecedores;
         }
 
@@ -462,13 +461,27 @@ namespace StockFlow.Controles
             return listaCategorias;
         }
 
-        public async Task<List<Produto>> ObterTodosOsProdtuosComEstoqueBaixoAsync()
+        public async Task<List<Produto>> ObterTodosOsProdutosComEstoqueBaixoAsync()
         {
             var context = new AppDbContext();
             ProdutoDao produtoDao = new ProdutoDao(context);
             List<Produto> listaCategorias = new List<Produto>();
             listaCategorias = await produtoDao.ObterProdutosComEstoqueBaixoAsync();
             return listaCategorias;
+        }
+
+        public async Task<List<StockFlow.Visual.Alertagrid>> ObterTodosOsProdutosParaGridAlertaAsync()
+        {
+            var context = new AppDbContext();
+            ProdutoDao produtoDao = new ProdutoDao(context);
+            List<Produto> listaProdutos = new List<Produto>();
+            listaProdutos = await produtoDao.ObterProdutosAtivosAsync();
+            var listaFinalParaGrid = listaProdutos.Select(produto => new StockFlow.Visual.Alertagrid
+            {
+                EstadoDeAtencao = produto.EstoqueAtual <= produto.EstoqueMinimo ? produto.NomeCompleto : null,
+                PrecisaDeReposicao = produto.EstoqueAtual <= produto.EstoqueMinimo ? "Sim" : "Não"
+            }).ToList();
+            return listaFinalParaGrid;
         }
     }
 }
