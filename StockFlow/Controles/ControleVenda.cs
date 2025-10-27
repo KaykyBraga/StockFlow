@@ -63,7 +63,7 @@ namespace StockFlow.Controles
                 return;
             }
 
-            this.mensagem = "Caixa aberto com sucesso.";
+            this.mensagem = "";
         }
 
         public Caixa FecharCaixa(string ValorInformado)
@@ -380,6 +380,56 @@ namespace StockFlow.Controles
             List<MovimentacaoCaixa> listaMovimentacaoCaixas = new List<MovimentacaoCaixa>();
             listaMovimentacaoCaixas = await movimetacaoCaixaDao.ObterTodosAsMovimentacoesDoCaixaAsync();
             return listaMovimentacaoCaixas;
+        }
+
+        public async Task<List<StockFlow.Visual.Tela_Vendas.Produto>> ObterTodosOsProdutosParaVendaAsync()
+        {
+            var context = new AppDbContext();
+            ProdutoDao produtoDao = new ProdutoDao(context);            
+            var produtosDoBanco = await produtoDao.ObterProdutosAtivosAsync();
+
+            var listaFinal = produtosDoBanco.Select(produto =>
+            {
+                // --- INÍCIO DA LÓGICA DO PREÇO PARA CADA PRODUTO ---
+
+                // a) Encontra a promoção ATIVA para este produto, se houver.
+                var promocaoAtiva = produto.PromocaoProdutos
+                    .Select(pp => pp.Promocao) // Pega o objeto da promoção
+                    .FirstOrDefault(promo =>
+                        promo.Ativo &&
+                        DateTime.Now >= promo.DataInicio &&
+                        DateTime.Now <= promo.DataFim);
+
+                // b) Começa com o preço normal.
+                decimal precoFinal = produto.PrecoVenda;
+
+                // c) Se encontrou uma promoção ativa, calcula o desconto.
+                if (promocaoAtiva != null)
+                {
+                    if (promocaoAtiva.TipoDesconto == "Porcentagem")
+                    {
+                        decimal valorDoDesconto = precoFinal * (promocaoAtiva.ValorDesconto / 100);
+                        precoFinal -= valorDoDesconto;
+                    }
+                    else // Assume que é "Fixo"
+                    {
+                        precoFinal -= promocaoAtiva.ValorDesconto;
+                    }
+                }
+
+                // d) Cria o objeto final para a lista da tela
+                return new StockFlow.Visual.Tela_Vendas.Produto
+                {
+                    Nome = produto.NomeCompleto,
+                    Preco = precoFinal,
+                    Id = produto.ProdutoId
+                };
+
+                // --- FIM DA LÓGICA ---
+
+            }).ToList();
+
+            return listaFinal;
         }
     }
 }

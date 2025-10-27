@@ -470,6 +470,7 @@ namespace StockFlow.Controles
             return listaCategorias;
         }
 
+        // revissar o que vai aqui quando o andre chegar
         public async Task<List<StockFlow.Visual.Alertagrid>> ObterTodosOsProdutosParaGridAlertaAsync()
         {
             var context = new AppDbContext();
