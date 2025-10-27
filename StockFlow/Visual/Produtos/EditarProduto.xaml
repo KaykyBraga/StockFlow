@@ -108,6 +108,7 @@
 
         <Style x:Key="SuccessButtonStyle" TargetType="Button" BasedOn="{StaticResource BlueActionButtonStyle}">
             <Setter Property="Background" Value="#28a745"/>
+            <Setter Property="Height" Value="40"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#218838"/>
@@ -167,6 +168,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
@@ -180,24 +182,32 @@
                     </StackPanel>
 
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,15,10">
+                        <TextBlock Text="SKU (Código Interno)" Margin="0,0,0,5"/>
+                        <TextBox Height="30" x:Name="txtSku" ToolTip="Código único de identificação interna"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
+                        <TextBlock Text="EAN (Código de Barras)" Margin="0,0,0,5"/>
+                        <TextBox Height="30" x:Name="txtEan" ToolTip="Número Global do Item Comercial (código de barras)"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Preço de Custo" Margin="0,0,0,5"/>
                         <TextBox Height="30" x:Name="txtPrecoCusto"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
+                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
                         <TextBlock Text="Estoque Mínimo" Margin="0,0,0,5"/>
                         <TextBox Height="30" x:Name="txtEstoqueMinimo"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,15,10">
+                    <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Preço de Venda" Margin="0,0,0,5"/>
                         <TextBox Height="30" x:Name="txtPrecoVenda"/>
                     </StackPanel>
-
-                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
+                    <StackPanel Grid.Row="3" Grid.Column="1" Margin="0,0,0,10">
                         <TextBlock Text="Localização no Estoque" Margin="0,0,0,5"/>
                         <TextBox Height="30" x:Name="txtLocalizacao" ToolTip="Ex: Corredor A, Prateleira 3"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,10,0,0">
+
+                    <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Grid.Column="0" Margin="0,10,0,0">
                     </StackPanel>
                 </Grid>
 
@@ -206,7 +216,7 @@
                     <Button Content="Editar Fornecedor" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnEditarFornecedor_Click"/>
                     <Button Content="Editar Categoria" Style="{StaticResource BlueActionButtonStyle}" Margin="0,0,0,10" Click="btnEditarCategoria_Click"/>
                     <Button Content="Limpar" Style="{StaticResource AtentionButtonStyle}" Margin="0,0,0,30" Click="btnLimpar_Click"/>
-                    <Button Content="Salvar Alterações" Style="{StaticResource SuccessButtonStyle}" Height="40" Click="SalvarButton_Click"/>
+                    <Button Content="Salvar Alterações" Style="{StaticResource SuccessButtonStyle}" Click="SalvarButton_Click"/>
                 </StackPanel>
             </Grid>
         </Grid>

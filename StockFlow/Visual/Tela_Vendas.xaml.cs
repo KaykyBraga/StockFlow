@@ -1,298 +1,967 @@
 ﻿using System;
+
 using System.Collections.Generic;
+
+using System.Globalization;
+
 using System.Linq;
+
 using System.Windows;
+
 using System.Windows.Controls;
-using System.Windows.Input;
+
+using System.Windows.Input; // Necessário para KeyEventArgs
+
 using System.Windows.Media;
 
+using System.Windows.Threading; // Necessário para Dispatcher
+
+
+
 namespace StockFlow.Visual
+
 {
+
     public partial class Tela_Vendas : Window
+
     {
+
         #region Classes de Dados
-        private class Produto { public string Nome { get; set; } public decimal Preco { get; set; } public override string ToString() => $"{Nome} - R$ {Preco:F2}"; }
+
+        // Sua classe Produto precisa ter uma propriedade 'Nome' (ou ajuste DisplayMemberPath)
+
+        private class Produto
+
+        {
+
+            // Adicione outras propriedades como Id, se tiver
+
+            public string Nome { get; set; }
+
+            public decimal Preco { get; set; }
+
+            // O ToString() não é mais estritamente necessário para o ComboBox agora
+
+            // public override string ToString() => $"{Nome} - R$ {Preco:F2}";
+
+        }
+
         private class ItemVenda { public string Nome { get; set; } public decimal PrecoUnitario { get; set; } public int Quantidade { get; set; } public decimal PrecoTotal => PrecoUnitario * Quantidade; }
+
         #endregion
+
+
 
         #region Variáveis de Controle
-        private List<Produto> listaCompletaProdutos = new List<Produto>();
+
+        // Renomeado para refletir que guarda todos os produtos
+
+        private List<Produto> listaDeTodosOsProdutos = new List<Produto>();
+
         private List<ItemVenda> itensVenda = new List<ItemVenda>();
+
         private string metodoPagamentoSelecionado = "";
+
         private bool isCaixaAberto = false;
+
         #endregion
 
+
+
         public Tela_Vendas()
+
         {
+
             InitializeComponent();
-            CarregarProdutos();
+
+            CarregarProdutos(); // Carrega listaDeTodosOsProdutos
+
+            // Configura o ItemsSource e o que será exibido no ComboBox
+
+            ComboBuscarProduto.ItemsSource = listaDeTodosOsProdutos;
+
+            ComboBuscarProduto.DisplayMemberPath = "Nome"; // IMPORTANTE: Diz qual propriedade mostrar
+
             AtualizarEstadoVisualCaixa(false);
+
         }
+
+
 
         #region LÓGICA DE ESTADO DO CAIXA
 
+        // ... (Seus métodos AtualizarEstadoVisualCaixa, AlertaCaixaFechado, BtnAbrirCaixa_Click, BtnFecharCaixa_Click, BtnSair_Click permanecem os mesmos) ...
+
+        // Cole aqui os métodos da região LÓGICA DE ESTADO DO CAIXA do seu código original
+
         private void AtualizarEstadoVisualCaixa(bool caixaAberto)
+
         {
+
             if (caixaAberto)
+
             {
+
                 BtnAbrirCaixa.Visibility = Visibility.Collapsed;
+
                 BtnFecharCaixa.Visibility = Visibility.Visible;
+
                 GridVendaPrincipal.Opacity = 1.0;
+
+                GridVendaPrincipal.IsEnabled = true; // Habilita a área de venda
+
             }
+
             else
+
             {
+
                 BtnAbrirCaixa.Visibility = Visibility.Visible;
+
                 BtnFecharCaixa.Visibility = Visibility.Collapsed;
+
                 GridVendaPrincipal.Opacity = 0.5;
+
+                GridVendaPrincipal.IsEnabled = false; // Desabilita a área de venda
+
+                LimparVendaAtual(); // Limpa a venda ao fechar o caixa
+
             }
+
         }
+
+
 
         private bool AlertaCaixaFechado()
+
         {
+
             if (!isCaixaAberto)
+
             {
+
                 MessageBox.Show("É necessário abrir o caixa para utilizar esta função.", "Caixa Fechado", MessageBoxButton.OK, MessageBoxImage.Warning);
+
                 return true;
+
             }
+
             return false;
+
         }
+
+
 
         private void BtnAbrirCaixa_Click(object sender, RoutedEventArgs e)
+
         {
+
             decimal? valorInicial = CriarPopupAberturaCaixa();
+
             if (valorInicial.HasValue)
+
             {
+
                 isCaixaAberto = true;
+
                 AtualizarEstadoVisualCaixa(true);
+
                 MessageBox.Show($"Caixa aberto com sucesso com um valor inicial de {valorInicial.Value:C}!", "Caixa Aberto", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // --- Adicione aqui a lógica para registrar a abertura no banco, se necessário ---
+
+                // RegistrarAberturaCaixa(valorInicial.Value);
+
             }
+
         }
+
+
 
         private void BtnFecharCaixa_Click(object sender, RoutedEventArgs e)
-        {
-            if (AlertaCaixaFechado()) return;
 
-            SolidColorBrush laranjaConfirmar = (SolidColorBrush)(new BrushConverter().ConvertFrom("#FF9800"));
-            bool fecharConfirmado = CriarPopupConfirmacaoSimples("Fechar Caixa", "Deseja realmente fechar o caixa?", "Sim, Fechar", laranjaConfirmar);
-            if (fecharConfirmado)
+        {
+
+            // 1. Verifica se o caixa já está fechado
+
+            if (AlertaCaixaFechado()) return; // A função AlertaCaixaFechado já exibe a mensagem se necessário
+
+
+
+            // ==========================================================
+
+            // 2. CALCULAR O VALOR FINAL DO CAIXA (ADICIONE SUA LÓGICA AQUI)
+
+            // ==========================================================
+
+            decimal valorFinalCalculado = 0; // Substitua pelo seu cálculo real
+
+
+
+            // ==========================================================
+
+            // 3. CHAMAR O POPUP DE CONFIRMAÇÃO DE FECHAMENTO
+
+            // ==========================================================
+
+            bool? resultadoPopup = CriarPopupFechamentoCaixa(valorFinalCalculado);
+
+
+
+            // ==========================================================
+
+            // 4. VERIFICAR SE O USUÁRIO CONFIRMOU
+
+            // ==========================================================
+
+            if (resultadoPopup == true)
+
             {
+
                 MessageBox.Show("Caixa fechado com sucesso!", "Fechamento de Caixa", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 isCaixaAberto = false;
-                LimparVendaAtual();
-                AtualizarEstadoVisualCaixa(false);
+
+                AtualizarEstadoVisualCaixa(false); // Chama LimparVendaAtual internamente
+
+
+
+                // --- Adicione aqui a lógica para registrar o fechamento no banco ---
+
+                // RegistrarFechamentoCaixa(valorFinalCalculado);
+
             }
+
         }
+
+
+
+
 
         private void BtnSair_Click(object sender, RoutedEventArgs e)
+
         {
+
             if (isCaixaAberto)
+
             {
+
                 MessageBox.Show("Você precisa fechar o caixa antes de sair.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
+
                 return;
+
             }
+
             this.Close();
+
         }
+
         #endregion
+
+
 
         #region Lógica de Venda
+
+
+
+        // MÉTODO ATUALIZADO: Apenas carrega a lista principal
+
         private void CarregarProdutos()
+
         {
-            listaCompletaProdutos = new List<Produto> { new Produto { Nome = "Água Mineral 500ml", Preco = 3.00m } };
-            ComboProdutos.ItemsSource = listaCompletaProdutos;
+
+            // --- SIMULAÇÃO --- Substitua pela busca real no banco de dados
+
+            listaDeTodosOsProdutos = new List<Produto>
+
+            {
+
+                new Produto { Nome = "Água Mineral 500ml", Preco = 3.00m },
+
+                new Produto { Nome = "Coca-Cola Lata 350ml", Preco = 5.50m },
+
+                new Produto { Nome = "Salgado Assado (Frango)", Preco = 7.00m },
+
+                new Produto { Nome = "Salgado Frito (Carne)", Preco = 6.50m },
+
+                new Produto { Nome = "Chocolate Barra Lacta", Preco = 8.00m },
+
+                new Produto { Nome = "Suco de Laranja Prats 300ml", Preco = 6.00m }
+
+                // Adicione mais produtos
+
+            };
+
+            // A definição do ItemsSource foi movida para o construtor
+
         }
 
-        private void TxtBuscarProduto_TextChanged(object sender, TextChangedEventArgs e)
+
+
+        // MÉTODO REMOVIDO: TxtBuscarProduto_TextChanged não existe mais
+
+        // private void TxtBuscarProduto_TextChanged(object sender, TextChangedEventArgs e) { ... }
+
+
+
+        // NOVO MÉTODO: Evento KeyUp para o ComboBox editável
+
+        private void ComboBuscarProduto_KeyUp(object sender, KeyEventArgs e)
+
         {
-            if (AlertaCaixaFechado()) { TxtBuscarProduto.Clear(); return; }
-            string textoBusca = TxtBuscarProduto.Text.ToLower();
-            ComboProdutos.ItemsSource = string.IsNullOrWhiteSpace(textoBusca) ? listaCompletaProdutos : listaCompletaProdutos.Where(p => p.Nome.ToLower().Contains(textoBusca)).ToList();
-            ComboProdutos.IsDropDownOpen = true;
+
+            var comboBox = sender as ComboBox;
+
+            if (comboBox == null || listaDeTodosOsProdutos == null) return; // Verificação extra
+
+
+
+            // Pega o texto atual DENTRO do ComboBox
+
+            string textoBusca = comboBox.Text.ToLower();
+
+
+
+            // Evita re-filtragem desnecessária quando um item é selecionado via clique ou Enter/Tab
+
+            // Exceto se o usuário estiver apagando o texto (Backspace/Delete)
+
+            if (comboBox.SelectedItem != null &&
+
+                (comboBox.SelectedItem as Produto)?.Nome.ToLower() == textoBusca &&
+
+                e.Key != Key.Back && e.Key != Key.Delete)
+
+            {
+
+                // Se o texto é igual ao item selecionado E não foi Backspace/Delete, não faz nada.
+
+                return;
+
+            }
+
+
+
+            // Filtra a lista
+
+            if (string.IsNullOrWhiteSpace(textoBusca))
+
+            {
+
+                // Se não há texto, mostra a lista completa
+
+                comboBox.ItemsSource = listaDeTodosOsProdutos;
+
+            }
+
+            else
+
+            {
+
+                // Filtra a lista principal baseada no texto digitado
+
+                var produtosFiltrados = listaDeTodosOsProdutos
+
+                    .Where(p => p.Nome.ToLower().Contains(textoBusca)) // Busca se o Nome CONTÉM o texto
+
+                    .ToList();
+
+                comboBox.ItemsSource = produtosFiltrados;
+
+            }
+
+
+
+            // Força a abertura/manutenção do DropDown enquanto digita,
+
+            // exceto se for Enter/Tab (seleção) ou Escape (fechar)
+
+            if (e.Key != Key.Enter && e.Key != Key.Tab && e.Key != Key.Escape)
+
+            {
+
+                // Garante que o dropdown abra APÓS a atualização do ItemsSource
+
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+
+                    // Só abre se estiver fechado E se houver itens para mostrar
+
+                    if (!comboBox.IsDropDownOpen && comboBox.HasItems)
+
+                    {
+
+                        comboBox.IsDropDownOpen = true;
+
+                    }
+
+                }), DispatcherPriority.Background);
+
+            }
+
         }
+
+
+
+
+
+        // MÉTODO ATUALIZADO: Usa ComboBuscarProduto e limpa corretamente
 
         private void BtnAdicionar_Click(object sender, RoutedEventArgs e)
+
         {
+
             if (AlertaCaixaFechado()) return;
-            if (ComboProdutos.SelectedItem == null) { MessageBox.Show("Por favor, selecione um produto!", "Atenção", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
-            var produtoSelecionado = ComboProdutos.SelectedItem as Produto;
-            var itemExistente = itensVenda.FirstOrDefault(i => i.Nome == produtoSelecionado.Nome);
-            if (itemExistente != null) { itemExistente.Quantidade++; }
-            else { itensVenda.Add(new ItemVenda { Nome = produtoSelecionado.Nome, PrecoUnitario = produtoSelecionado.Preco, Quantidade = 1 }); }
+
+
+
+            // Pega o item do NOVO ComboBox
+
+            if (ComboBuscarProduto.SelectedItem == null)
+
+            {
+
+                MessageBox.Show("Por favor, selecione um produto válido da lista!", "Atenção", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                return;
+
+            }
+
+
+
+            var produtoSelecionado = ComboBuscarProduto.SelectedItem as Produto;
+
+
+
+            // Lógica para adicionar ou incrementar quantidade (sem alterações)
+
+            var itemExistente = itensVenda.FirstOrDefault(i => i.Nome == produtoSelecionado.Nome); // Idealmente, compare por ID
+
+            if (itemExistente != null)
+
+            {
+
+                itemExistente.Quantidade++;
+
+            }
+
+            else
+
+            {
+
+                itensVenda.Add(new ItemVenda { Nome = produtoSelecionado.Nome, PrecoUnitario = produtoSelecionado.Preco, Quantidade = 1 });
+
+            }
+
+
+
             AtualizarListaItens();
+
             AtualizarTotal();
-            TxtBuscarProduto.Clear();
-            ComboProdutos.SelectedItem = null;
+
+
+
+            // Limpa o ComboBox de busca corretamente
+
+            ComboBuscarProduto.Text = string.Empty;          // Limpa o texto digitado
+
+            ComboBuscarProduto.SelectedItem = null;       // Desseleciona o item
+
+            ComboBuscarProduto.ItemsSource = listaDeTodosOsProdutos; // Restaura a lista completa
+
+            ComboBuscarProduto.IsDropDownOpen = false;       // Fecha o dropdown
+
         }
+
+
+
+
+
+        // ... (Seus métodos AtualizarListaItens, AdicionarItemVisual, Aumentar/Diminuir/Remover Quantidade, AtualizarTotal permanecem os mesmos) ...
+
+        // Cole aqui os métodos da região Lógica de Venda do seu código original (exceto CarregarProdutos e TxtBuscarProduto_TextChanged)
+
+
 
         private void AtualizarListaItens()
+
         {
+
             PainelItensVenda.Children.Clear();
+
             foreach (var item in itensVenda) { AdicionarItemVisual(item); }
+
         }
+
+
 
         private void AdicionarItemVisual(ItemVenda item)
+
         {
-            var itemBorder = new Border { BorderBrush = Brushes.LightGray, BorderThickness = new Thickness(0, 0, 0, 1), Padding = new Thickness(5), Margin = new Thickness(0, 0, 5, 0) };
+
+            var itemBorder = new Border { BorderBrush = Brushes.LightGray, BorderThickness = new Thickness(0, 0, 0, 1), Padding = new Thickness(5), Margin = new Thickness(0, 0, 5, 5) }; // Adicionado Margin bottom
+
             var itemGrid = new Grid();
-            itemGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            itemGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            itemGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+            itemGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }); // Nome e Preço
+
+            itemGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Botões +/-
+
+            itemGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); // Botão Remover
+
+
+
             var infoPanel = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
-            infoPanel.Children.Add(new TextBlock { Text = item.Nome, FontWeight = FontWeights.SemiBold });
-            infoPanel.Children.Add(new TextBlock { Text = $"{item.Quantidade}x R$ {item.PrecoUnitario:F2} = R$ {item.PrecoTotal:F2}", Foreground = Brushes.Gray });
+
+            infoPanel.Children.Add(new TextBlock { Text = item.Nome, FontWeight = FontWeights.SemiBold, FontSize = 14 }); // Fonte um pouco maior
+
+            infoPanel.Children.Add(new TextBlock { Text = $"{item.Quantidade} x {item.PrecoUnitario:C} = {item.PrecoTotal:C}", Foreground = Brushes.Gray, FontSize = 12 }); // Usando :C para moeda
+
             Grid.SetColumn(infoPanel, 0);
+
+
+
             var qtdPanel = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
-            var btnDiminuir = new Button { Content = "-", Width = 25, Height = 25, Margin = new Thickness(5, 0, 5, 0) };
-            var btnAumentar = new Button { Content = "+", Width = 25, Height = 25, Margin = new Thickness(5, 0, 5, 0) };
+
+            var btnDiminuir = new Button { Content = "-", Width = 25, Height = 25, Margin = new Thickness(5, 0, 2, 0), FontSize = 14, FontWeight = FontWeights.Bold }; // Ajuste visual
+
+            var btnAumentar = new Button { Content = "+", Width = 25, Height = 25, Margin = new Thickness(2, 0, 5, 0), FontSize = 14, FontWeight = FontWeights.Bold }; // Ajuste visual
+
             btnDiminuir.Click += (s, ev) => DiminuirQuantidade(item);
+
             btnAumentar.Click += (s, ev) => AumentarQuantidade(item);
+
             qtdPanel.Children.Add(btnDiminuir);
+
             qtdPanel.Children.Add(btnAumentar);
+
             Grid.SetColumn(qtdPanel, 1);
-            var btnRemover = new Button { Content = "✕", Width = 25, Height = 25, Foreground = Brushes.Red, FontWeight = FontWeights.Bold, Margin = new Thickness(10, 0, 0, 0), Background = Brushes.Transparent, BorderBrush = Brushes.Transparent };
+
+
+
+            var btnRemover = new Button { Content = "✕", Width = 25, Height = 25, Foreground = Brushes.Red, FontWeight = FontWeights.Bold, Margin = new Thickness(10, 0, 0, 0), Background = Brushes.Transparent, BorderBrush = Brushes.Transparent, VerticalAlignment = VerticalAlignment.Center, ToolTip = "Remover item" }; // Adicionado ToolTip
+
             btnRemover.Click += (s, ev) => RemoverItem(item);
+
             Grid.SetColumn(btnRemover, 2);
+
+
+
             itemGrid.Children.Add(infoPanel);
+
             itemGrid.Children.Add(qtdPanel);
+
             itemGrid.Children.Add(btnRemover);
+
             itemBorder.Child = itemGrid;
+
             PainelItensVenda.Children.Add(itemBorder);
+
         }
+
+
+
+
 
         private void AumentarQuantidade(ItemVenda item) { item.Quantidade++; AtualizarListaItens(); AtualizarTotal(); }
+
         private void DiminuirQuantidade(ItemVenda item) { item.Quantidade--; if (item.Quantidade <= 0) { itensVenda.Remove(item); } AtualizarListaItens(); AtualizarTotal(); }
+
         private void RemoverItem(ItemVenda item) { itensVenda.Remove(item); AtualizarListaItens(); AtualizarTotal(); }
-        private void AtualizarTotal() { TxtTotalVenda.Text = itensVenda.Sum(i => i.PrecoTotal).ToString("C"); }
+
+        private void AtualizarTotal() { TxtTotalVenda.Text = itensVenda.Sum(i => i.PrecoTotal).ToString("C", CultureInfo.GetCultureInfo("pt-BR")); } // Formata como moeda BR
+
         #endregion
+
+
 
         #region Lógica de Pagamento e Finalização
+
+        // ... (Seus métodos BtnPagamento_Click, ResetarBordasBotoesPagamento, BtnFinalizarVenda_Click e LimparVendaAtual) ...
+
+        // MÉTODO ATUALIZADO: LimparVendaAtual também limpa o ComboBox de busca
+
+        // Cole aqui os métodos da região Lógica de Pagamento e Finalização do seu código original, MAS SUBSTITUA o LimparVendaAtual por este:
+
+
+
         private void BtnPagamento_Click(object sender, RoutedEventArgs e)
+
         {
+
             if (AlertaCaixaFechado()) return;
-            BtnPagamentoCartao.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#3498DB"));
-            BtnPagamentoDinheiro.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#229954"));
-            BtnPagamentoPix.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#E67E22"));
-            BtnPagamentoCartao.BorderThickness = new Thickness(2);
-            BtnPagamentoDinheiro.BorderThickness = new Thickness(2);
-            BtnPagamentoPix.BorderThickness = new Thickness(2);
+
+            ResetarBordasBotoesPagamento();
+
+
+
             Button botaoClicado = sender as Button;
-            botaoClicado.BorderBrush = Brushes.Gold;
-            botaoClicado.BorderThickness = new Thickness(4);
-            metodoPagamentoSelecionado = botaoClicado.Content.ToString();
+
+            if (botaoClicado != null)
+
+            {
+
+                botaoClicado.BorderBrush = Brushes.Gold;
+
+                botaoClicado.BorderThickness = new Thickness(4);
+
+                metodoPagamentoSelecionado = botaoClicado.Content.ToString();
+
+            }
+
         }
+
+
+
+        private void ResetarBordasBotoesPagamento()
+
+        {
+
+            BtnPagamentoCartao.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#3498DB"));
+
+            BtnPagamentoDinheiro.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#229954"));
+
+            BtnPagamentoPix.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#E67E22"));
+
+            BtnPagamentoCartao.BorderThickness = new Thickness(2);
+
+            BtnPagamentoDinheiro.BorderThickness = new Thickness(2);
+
+            BtnPagamentoPix.BorderThickness = new Thickness(2);
+
+        }
+
+
 
         private void BtnFinalizarVenda_Click(object sender, RoutedEventArgs e)
+
         {
+
             if (AlertaCaixaFechado()) return;
+
             if (itensVenda.Count == 0) { MessageBox.Show("Adicione pelo menos um item para finalizar a venda.", "Venda Vazia", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
+
             if (string.IsNullOrEmpty(metodoPagamentoSelecionado)) { MessageBox.Show("Por favor, selecione um método de pagamento.", "Pagamento não Selecionado", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
+
+
+
+            // --- Adicione aqui a lógica para registrar a venda no banco de dados ---
+
+            // RegistrarVendaNoBanco(itensVenda, metodoPagamentoSelecionado, itensVenda.Sum(i => i.PrecoTotal));
+
+
+
             MessageBox.Show($"Venda finalizada com sucesso!\nTotal: {TxtTotalVenda.Text}\nMétodo: {metodoPagamentoSelecionado}", "Venda Concluída", MessageBoxButton.OK, MessageBoxImage.Information);
+
             LimparVendaAtual();
+
         }
+
+
+
+
+
+        // MÉTODO ATUALIZADO
 
         private void LimparVendaAtual()
+
         {
+
             itensVenda.Clear();
+
             PainelItensVenda.Children.Clear();
+
             AtualizarTotal();
+
             metodoPagamentoSelecionado = "";
-            BtnPagamentoCartao.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#3498DB"));
-            BtnPagamentoDinheiro.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#229954"));
-            BtnPagamentoPix.BorderBrush = (SolidColorBrush)(new BrushConverter().ConvertFrom("#E67E22"));
-            BtnPagamentoCartao.BorderThickness = new Thickness(2);
-            BtnPagamentoDinheiro.BorderThickness = new Thickness(2);
-            BtnPagamentoPix.BorderThickness = new Thickness(2);
-            TxtBuscarProduto.Clear();
+
+            ResetarBordasBotoesPagamento();
+
+
+
+            // Limpa o ComboBox de busca corretamente
+
+            ComboBuscarProduto.Text = string.Empty;
+
+            ComboBuscarProduto.SelectedItem = null;
+
+            ComboBuscarProduto.ItemsSource = listaDeTodosOsProdutos; // Restaura lista completa
+
+            ComboBuscarProduto.IsDropDownOpen = false;
+
         }
+
         #endregion
+
+
 
         #region Lógica de Operações de Caixa
+
+        // ... (Seus métodos BtnSangria_Click e BtnAdicionarTroco_Click permanecem os mesmos) ...
+
+        // Cole aqui os métodos da região Lógica de Operações de Caixa do seu código original
+
         private void BtnSangria_Click(object sender, RoutedEventArgs e)
+
         {
+
             if (AlertaCaixaFechado()) return;
+
             var r = CriarPopupEntradaValorMotivo("Sangria de Caixa", "Digite o valor a ser RETIRADO do caixa e o motivo.", (SolidColorBrush)new BrushConverter().ConvertFrom("#E67E22"));
-            if (r != null) MessageBox.Show($"Sangria de {r.Item1:C} registrada.");
+
+            if (r != null)
+
+            {
+
+                // --- Adicione aqui a lógica para registrar a sangria no banco ---
+
+                // RegistrarSangria(r.Item1, r.Item2);
+
+                MessageBox.Show($"Sangria de {r.Item1:C} registrada com sucesso.");
+
+            }
+
         }
+
+
 
         private void BtnAdicionarTroco_Click(object sender, RoutedEventArgs e)
+
         {
+
             if (AlertaCaixaFechado()) return;
+
             var r = CriarPopupEntradaValorMotivo("Adicionar Troco", "Digite o valor a ser ADICIONADO ao caixa e o motivo.", (SolidColorBrush)new BrushConverter().ConvertFrom("#2ECC71"));
-            if (r != null) MessageBox.Show($"Troco de {r.Item1:C} adicionado.");
+
+            if (r != null)
+
+            {
+
+                // --- Adicione aqui a lógica para registrar a adição de troco no banco ---
+
+                // RegistrarAdicaoTroco(r.Item1, r.Item2);
+
+                MessageBox.Show($"Troco de {r.Item1:C} adicionado com sucesso.");
+
+            }
+
         }
+
         #endregion
+
+
 
         #region Métodos de Criação de Popups
+
+        // ... (Cole aqui os métodos CriarPopupAberturaCaixa, CriarPopupFechamentoCaixa, CriarPopupConfirmacaoSimples e CriarPopupEntradaValorMotivo) ...
+
+        // Cole aqui os métodos da região Métodos de Criação de Popups do seu código original
+
         private decimal? CriarPopupAberturaCaixa()
+
         {
+
             var popupWindow = new Window { Title = "Abertura de Caixa", Width = 400, Height = 250, WindowStartupLocation = WindowStartupLocation.CenterOwner, Owner = this, ResizeMode = ResizeMode.NoResize };
+
             var mainGrid = new Grid { Margin = new Thickness(20) };
+
             var contentStack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+
             var titleText = new TextBlock { Text = "Abrir Caixa", FontSize = 22, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 0, 0, 15) };
+
             var messageText = new TextBlock { Text = "Digite o valor inicial do troco (fundo de caixa):", Margin = new Thickness(0, 0, 0, 5) };
+
             var txtValorInicial = new TextBox { Name = "txtValorInicial", Height = 30, FontSize = 14, Padding = new Thickness(5) };
+
+            txtValorInicial.PreviewTextInput += (s, args) => { args.Handled = !System.Text.RegularExpressions.Regex.IsMatch(args.Text, @"^[0-9]*(,|\.)?[0-9]*$"); };
+
             contentStack.Children.Add(titleText); contentStack.Children.Add(messageText); contentStack.Children.Add(txtValorInicial);
+
             var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 20, 0, 0) };
-            var btnCancelar = new Button { Content = "Cancelar", Width = 100, Height = 35, Margin = new Thickness(0, 0, 10, 0) };
-            var btnConfirmar = new Button { Content = "Confirmar", Width = 100, Height = 35, FontWeight = FontWeights.Bold, Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#4CAF50"), Foreground = Brushes.White };
-            btnConfirmar.Click += (s, args) => { if (decimal.TryParse(txtValorInicial.Text, out decimal valor) && valor >= 0) { popupWindow.DialogResult = true; popupWindow.Close(); } else { MessageBox.Show("Por favor, insira um valor monetário válido (ex: 50,00).", "Valor Inválido", MessageBoxButton.OK, MessageBoxImage.Error); } };
+
+            var btnCancelar = new Button { Content = "Cancelar", Width = 100, Height = 35, Margin = new Thickness(0, 0, 10, 0), IsCancel = true };
+
+            var btnConfirmar = new Button { Content = "Confirmar", Width = 100, Height = 35, FontWeight = FontWeights.Bold, Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#4CAF50"), Foreground = Brushes.White, IsDefault = true };
+
+            btnConfirmar.Click += (s, args) =>
+            {
+
+                if (decimal.TryParse(txtValorInicial.Text, NumberStyles.Currency, CultureInfo.GetCultureInfo("pt-BR"), out decimal valor) && valor >= 0)
+
+                {
+
+                    popupWindow.DialogResult = true; popupWindow.Close();
+
+                }
+
+                else
+
+                {
+
+                    MessageBox.Show("Por favor, insira um valor monetário válido (ex: 50,00).", "Valor Inválido", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                }
+
+            };
+
             btnCancelar.Click += (s, args) => { popupWindow.DialogResult = false; popupWindow.Close(); };
+
             buttonPanel.Children.Add(btnCancelar); buttonPanel.Children.Add(btnConfirmar);
+
             contentStack.Children.Add(buttonPanel);
+
             mainGrid.Children.Add(contentStack);
+
             popupWindow.Content = mainGrid;
-            if (popupWindow.ShowDialog() == true) { return decimal.Parse(txtValorInicial.Text); }
+
+            if (popupWindow.ShowDialog() == true)
+
+            {
+
+                if (decimal.TryParse(txtValorInicial.Text, NumberStyles.Currency, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorFinal)) { return valorFinal; }
+
+            }
+
             return null;
+
         }
 
-        private bool CriarPopupConfirmacaoSimples(string titulo, string mensagem, string textoBotaoConfirmar, SolidColorBrush corIcone)
+
+
+        private bool? CriarPopupFechamentoCaixa(decimal valorFinalCaixa)
+
         {
-            var popupWindow = new Window { Title = titulo, Width = 400, Height = 250, WindowStyle = WindowStyle.ToolWindow, WindowStartupLocation = WindowStartupLocation.CenterOwner, Owner = this, ResizeMode = ResizeMode.NoResize, Background = Brushes.White };
-            var mainGrid = new Grid { Margin = new Thickness(20) };
-            mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); mainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            var iconStack = new StackPanel { Margin = new Thickness(0, 0, 0, 10), HorizontalAlignment = HorizontalAlignment.Center }; Grid.SetRow(iconStack, 0);
-            var iconText = new TextBlock { Text = "💵", FontSize = 48, HorizontalAlignment = HorizontalAlignment.Center, Foreground = corIcone }; iconStack.Children.Add(iconText);
-            var titleText = new TextBlock { Text = titulo, FontSize = 24, FontWeight = FontWeights.Bold, Margin = new Thickness(0, 5, 0, 0), HorizontalAlignment = HorizontalAlignment.Center }; iconStack.Children.Add(titleText);
-            mainGrid.Children.Add(iconStack);
-            var msgText = new TextBlock { Text = mensagem, FontSize = 16, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Foreground = Brushes.Gray }; Grid.SetRow(msgText, 1);
-            mainGrid.Children.Add(msgText);
-            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center }; Grid.SetRow(buttonPanel, 3);
-            var buttonStyle = (Style)this.FindResource("ButtonStyle");
-            var btnCancelar = new Button { Content = "Cancelar", Width = 120, Height = 40, Margin = new Thickness(10, 0, 10, 10), Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FFE0E0E0"), Style = buttonStyle, BorderBrush = Brushes.Gray, IsCancel = true };
-            btnCancelar.Click += (s, args) => { popupWindow.DialogResult = false; };
-            var btnConfirmar = new Button { Content = textoBotaoConfirmar, Width = 120, Height = 40, Margin = new Thickness(10, 0, 10, 10), Foreground = Brushes.White, Background = corIcone, Style = buttonStyle, BorderBrush = corIcone, IsDefault = true };
-            btnConfirmar.Click += (s, args) => { popupWindow.DialogResult = true; };
-            buttonPanel.Children.Add(btnCancelar); buttonPanel.Children.Add(btnConfirmar); mainGrid.Children.Add(buttonPanel);
+
+            SolidColorBrush corConfirmar = (SolidColorBrush)new BrushConverter().ConvertFrom("#28A745");
+
+            SolidColorBrush corConfirmarHover = (SolidColorBrush)new BrushConverter().ConvertFrom("#218838");
+
+            SolidColorBrush corCancelar = (SolidColorBrush)new BrushConverter().ConvertFrom("#AAAAAA");
+
+            SolidColorBrush corCancelarHover = (SolidColorBrush)new BrushConverter().ConvertFrom("#888888");
+
+            SolidColorBrush corValor = (SolidColorBrush)new BrushConverter().ConvertFrom("#1E88E5");
+
+
+
+            var popupWindow = new Window { Title = "Confirmar Fechamento de Caixa", SizeToContent = SizeToContent.WidthAndHeight, WindowStartupLocation = WindowStartupLocation.CenterOwner, Owner = this, ResizeMode = ResizeMode.NoResize, WindowStyle = WindowStyle.ToolWindow };
+
+            var mainGrid = new Grid { Margin = new Thickness(25) };
+
+            var contentStack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+
+            var iconText = new TextBlock { Text = "?", FontSize = 48, FontWeight = FontWeights.Bold, Foreground = Brushes.DodgerBlue, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 0, 0, 15) };
+
+            var messageText = new TextBlock { Text = "Deseja realmente fechar o caixa?", FontSize = 16, TextAlignment = TextAlignment.Center, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 20) };
+
+            var labelValorFinal = new TextBlock { Text = "Valor Final Calculado:", FontSize = 12, Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 0, 0, 5) };
+
+            var txtValorFinalDisplay = new TextBox { Text = valorFinalCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR")), IsReadOnly = true, Background = Brushes.Transparent, BorderThickness = new Thickness(0), FontSize = 24, FontWeight = FontWeights.Bold, Foreground = corValor, TextAlignment = TextAlignment.Center, Margin = new Thickness(0, 0, 0, 25) };
+
+            contentStack.Children.Add(iconText); contentStack.Children.Add(messageText); contentStack.Children.Add(labelValorFinal); contentStack.Children.Add(txtValorFinalDisplay);
+
+            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+
+            var btnCancelar = new Button { Content = "Cancelar", Width = 120, Height = 40, Margin = new Thickness(0, 0, 10, 0), Background = corCancelar, Foreground = Brushes.White, IsCancel = true };
+
+            btnCancelar.MouseEnter += (s, e) => btnCancelar.Background = corCancelarHover; btnCancelar.MouseLeave += (s, e) => btnCancelar.Background = corCancelar;
+
+            btnCancelar.Click += (s, args) => { popupWindow.DialogResult = false; popupWindow.Close(); };
+
+            var btnConfirmar = new Button { Content = "Confirmar", Width = 120, Height = 40, FontWeight = FontWeights.Bold, Background = corConfirmar, Foreground = Brushes.White, IsDefault = true };
+
+            btnConfirmar.MouseEnter += (s, e) => btnConfirmar.Background = corConfirmarHover; btnConfirmar.MouseLeave += (s, e) => btnConfirmar.Background = corConfirmar;
+
+            btnConfirmar.Click += (s, args) => { popupWindow.DialogResult = true; popupWindow.Close(); };
+
+            buttonPanel.Children.Add(btnCancelar); buttonPanel.Children.Add(btnConfirmar);
+
+            contentStack.Children.Add(buttonPanel);
+
+            mainGrid.Children.Add(contentStack);
+
             popupWindow.Content = mainGrid;
-            return popupWindow.ShowDialog() == true;
+
+            return popupWindow.ShowDialog();
+
         }
+
+
 
         private Tuple<decimal, string> CriarPopupEntradaValorMotivo(string titulo, string mensagem, SolidColorBrush corBotaoConfirmar)
+
         {
+
             var popupWindow = new Window { Title = titulo, Width = 450, Height = 350, WindowStartupLocation = WindowStartupLocation.CenterOwner, Owner = this, ResizeMode = ResizeMode.NoResize, Background = Brushes.WhiteSmoke };
+
             var mainGrid = new Grid { Margin = new Thickness(20) };
+
             mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto }); mainGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }); mainGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
             var titleText = new TextBlock { Text = titulo, FontSize = 22, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 0, 0, 20) };
+
             Grid.SetRow(titleText, 0); mainGrid.Children.Add(titleText);
+
             var contentStack = new StackPanel { VerticalAlignment = VerticalAlignment.Center }; Grid.SetRow(contentStack, 1);
+
             contentStack.Children.Add(new TextBlock { Text = mensagem, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 15) });
+
             contentStack.Children.Add(new TextBlock { Text = "Valor (R$):", FontWeight = FontWeights.SemiBold });
+
             var txtValor = new TextBox { Name = "txtValor", Height = 30, FontSize = 14, Padding = new Thickness(5), Margin = new Thickness(0, 5, 0, 15) };
+
+            txtValor.PreviewTextInput += (s, args) => { args.Handled = !System.Text.RegularExpressions.Regex.IsMatch(args.Text, @"^[0-9]*(,|\.)?[0-9]*$"); };
+
             contentStack.Children.Add(txtValor);
+
             contentStack.Children.Add(new TextBlock { Text = "Motivo:", FontWeight = FontWeights.SemiBold });
+
             var txtMotivo = new TextBox { Name = "txtMotivo", Height = 30, FontSize = 14, Padding = new Thickness(5), Margin = new Thickness(0, 5, 0, 0) };
+
             contentStack.Children.Add(txtMotivo);
+
             mainGrid.Children.Add(contentStack);
+
             var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right }; Grid.SetRow(buttonPanel, 2);
-            var btnCancelar = new Button { Content = "Cancelar", Width = 120, Height = 40, Margin = new Thickness(0, 0, 10, 0), Background = Brushes.LightGray };
+
+            var btnCancelar = new Button { Content = "Cancelar", Width = 120, Height = 40, Margin = new Thickness(0, 0, 10, 0), Background = Brushes.LightGray, IsCancel = true };
+
             btnCancelar.Click += (s, args) => { popupWindow.DialogResult = false; popupWindow.Close(); };
-            var btnConfirmar = new Button { Content = "Confirmar", Width = 120, Height = 40, Background = corBotaoConfirmar, Foreground = Brushes.White, FontWeight = FontWeights.Bold };
-            btnConfirmar.Click += (s, args) => { if (!decimal.TryParse(txtValor.Text, out decimal valor) || valor <= 0) { MessageBox.Show("Por favor, insira um valor numérico válido e maior que zero.", "Valor Inválido", MessageBoxButton.OK, MessageBoxImage.Error); return; } if (string.IsNullOrWhiteSpace(txtMotivo.Text)) { MessageBox.Show("O motivo não pode estar em branco.", "Motivo Inválido", MessageBoxButton.OK, MessageBoxImage.Error); return; } popupWindow.DialogResult = true; popupWindow.Close(); };
+
+            var btnConfirmar = new Button { Content = "Confirmar", Width = 120, Height = 40, Background = corBotaoConfirmar, Foreground = Brushes.White, FontWeight = FontWeights.Bold, IsDefault = true };
+
+            btnConfirmar.Click += (s, args) =>
+            {
+
+                if (!decimal.TryParse(txtValor.Text, NumberStyles.Currency, CultureInfo.GetCultureInfo("pt-BR"), out decimal valor) || valor <= 0)
+
+                { MessageBox.Show("Por favor, insira um valor numérico válido e maior que zero.", "Valor Inválido", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+
+                if (string.IsNullOrWhiteSpace(txtMotivo.Text)) { MessageBox.Show("O motivo não pode estar em branco.", "Motivo Inválido", MessageBoxButton.OK, MessageBoxImage.Error); return; }
+
+                popupWindow.DialogResult = true; popupWindow.Close();
+
+            };
+
             buttonPanel.Children.Add(btnCancelar); buttonPanel.Children.Add(btnConfirmar);
+
             mainGrid.Children.Add(buttonPanel);
+
             popupWindow.Content = mainGrid;
-            if (popupWindow.ShowDialog() == true) { return new Tuple<decimal, string>(decimal.Parse(txtValor.Text), txtMotivo.Text); }
+
+            if (popupWindow.ShowDialog() == true)
+
+            {
+
+                if (decimal.TryParse(txtValor.Text, NumberStyles.Currency, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorFinal)) { return new Tuple<decimal, string>(valorFinal, txtMotivo.Text); }
+
+            }
+
             return null;
+
         }
+
         #endregion
+
     }
 }

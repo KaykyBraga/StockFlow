@@ -83,8 +83,9 @@
                 AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
                 FontSize="14" ColumnWidth="*"  Margin="0,0,-2,0" Height="502" VerticalAlignment="Top">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Produto" Binding="{Binding Produto}" Width="2*"/>                    
-                    <DataGridTextColumn Header="Quantidade no estoque" Binding="{Binding Quantidade}" Width="250"/>             
+                    <DataGridTextColumn Header="Produto" Binding="{Binding Produto}" Width="2*"/>
+                    <DataGridTextColumn Header="Localização no Estoque" Binding="{Binding Produto}" Width="285"/>
+                    <DataGridTextColumn Header="Quantidade no estoque" Binding="{Binding Quantidade}" Width="170"/>             
                     <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100" FontWeight="Bold"/>                    
                 </DataGrid.Columns>
             </DataGrid>
