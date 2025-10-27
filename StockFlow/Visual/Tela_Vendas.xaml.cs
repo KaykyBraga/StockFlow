@@ -25,6 +25,7 @@ namespace StockFlow.Visual
     public partial class Tela_Vendas : Window
 
     {
+        private decimal valorAberturaAtual = 0;
 
         #region Classes de Dados
 
@@ -153,85 +154,55 @@ namespace StockFlow.Visual
 
 
         private void BtnAbrirCaixa_Click(object sender, RoutedEventArgs e)
-
         {
-
             decimal? valorInicial = CriarPopupAberturaCaixa();
-
             if (valorInicial.HasValue)
-
             {
+                // --- GUARDA O VALOR DE ABERTURA AQUI ---
+                this.valorAberturaAtual = valorInicial.Value;
+                // ----------------------------------------
 
                 isCaixaAberto = true;
-
                 AtualizarEstadoVisualCaixa(true);
-
-                MessageBox.Show($"Caixa aberto com sucesso com um valor inicial de {valorInicial.Value:C}!", "Caixa Aberto", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                // --- Adicione aqui a lógica para registrar a abertura no banco, se necessário ---
-
-                // RegistrarAberturaCaixa(valorInicial.Value);
-
+                MessageBox.Show($"Caixa aberto com sucesso com um valor inicial de {this.valorAberturaAtual:C}!", "Caixa Aberto", MessageBoxButton.OK, MessageBoxImage.Information);
+                // RegistrarAberturaCaixa(this.valorAberturaAtual);
             }
-
         }
 
 
 
         private void BtnFecharCaixa_Click(object sender, RoutedEventArgs e)
-
         {
-
             // 1. Verifica se o caixa já está fechado
-
-            if (AlertaCaixaFechado()) return; // A função AlertaCaixaFechado já exibe a mensagem se necessário
-
-
+            if (AlertaCaixaFechado()) return;
 
             // ==========================================================
-
-            // 2. CALCULAR O VALOR FINAL DO CAIXA (ADICIONE SUA LÓGICA AQUI)
+            // 2. CHAMAR O POPUP DE FECHAMENTO, PASSANDO O VALOR DE ABERTURA GUARDADO
+            // ==========================================================
+            // O cálculo da diferença agora é feito DENTRO do CriarPopupFechamentoCaixa.
+            // Apenas passamos o valor que foi salvo na abertura.
+            bool? resultadoPopup = CriarPopupFechamentoCaixa(this.valorAberturaAtual); // <-- Passa o valor aqui
 
             // ==========================================================
-
-            decimal valorFinalCalculado = 0; // Substitua pelo seu cálculo real
-
-
-
+            // 3. VERIFICAR SE O USUÁRIO CONFIRMOU (APÓS VER A DIFERENÇA NO POPUP)
             // ==========================================================
-
-            // 3. CHAMAR O POPUP DE CONFIRMAÇÃO DE FECHAMENTO
-
-            // ==========================================================
-
-            bool? resultadoPopup = CriarPopupFechamentoCaixa(valorFinalCalculado);
-
-
-
-            // ==========================================================
-
-            // 4. VERIFICAR SE O USUÁRIO CONFIRMOU
-
-            // ==========================================================
-
             if (resultadoPopup == true)
-
             {
-
+                // O popup já mostrou a diferença e o usuário confirmou.
+                // Agora só precisamos registrar o fechamento e atualizar a tela.
                 MessageBox.Show("Caixa fechado com sucesso!", "Fechamento de Caixa", MessageBoxButton.OK, MessageBoxImage.Information);
-
                 isCaixaAberto = false;
-
                 AtualizarEstadoVisualCaixa(false); // Chama LimparVendaAtual internamente
 
-
-
                 // --- Adicione aqui a lógica para registrar o fechamento no banco ---
-
-                // RegistrarFechamentoCaixa(valorFinalCalculado);
-
+                // Você pode querer passar o valorAberturaAtual e talvez o valor final
+                // contado (teria que ajustar o popup para retornar isso também, se necessário).
+                // Ex: RegistrarFechamentoCaixa(this.valorAberturaAtual /*, valorFinalContado*/);
             }
-
+            // else
+            // {
+            //     // Usuário cancelou no popup, não faz nada ou mostra mensagem opcional
+            // }
         }
 
 
@@ -828,62 +799,157 @@ namespace StockFlow.Visual
 
 
 
-        private bool? CriarPopupFechamentoCaixa(decimal valorFinalCaixa)
-
+        private bool? CriarPopupFechamentoCaixa(decimal valorAberturaCaixa)
         {
-
+            // --- Cores ---
             SolidColorBrush corConfirmar = (SolidColorBrush)new BrushConverter().ConvertFrom("#28A745");
-
             SolidColorBrush corConfirmarHover = (SolidColorBrush)new BrushConverter().ConvertFrom("#218838");
-
             SolidColorBrush corCancelar = (SolidColorBrush)new BrushConverter().ConvertFrom("#AAAAAA");
-
             SolidColorBrush corCancelarHover = (SolidColorBrush)new BrushConverter().ConvertFrom("#888888");
+            SolidColorBrush corValorAbertura = Brushes.Gray; // Cor para o valor de abertura
 
-            SolidColorBrush corValor = (SolidColorBrush)new BrushConverter().ConvertFrom("#1E88E5");
+            // --- Janela Popup ---
+            var popupWindow = new Window
+            {
+                Title = "Fechamento de Caixa",
+                SizeToContent = SizeToContent.WidthAndHeight, // Ajusta altura ao conteúdo
+                Width = 450, // Largura fixa
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = Window.GetWindow(this),
+                ResizeMode = ResizeMode.NoResize,
+                WindowStyle = WindowStyle.ToolWindow
+            };
 
-
-
-            var popupWindow = new Window { Title = "Confirmar Fechamento de Caixa", SizeToContent = SizeToContent.WidthAndHeight, WindowStartupLocation = WindowStartupLocation.CenterOwner, Owner = this, ResizeMode = ResizeMode.NoResize, WindowStyle = WindowStyle.ToolWindow };
-
+            // --- Layout ---
             var mainGrid = new Grid { Margin = new Thickness(25) };
-
             var contentStack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
 
-            var iconText = new TextBlock { Text = "?", FontSize = 48, FontWeight = FontWeights.Bold, Foreground = Brushes.DodgerBlue, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 0, 0, 15) };
+            // Título
+            var titleText = new TextBlock { Text = "Fechamento de Caixa", FontSize = 22, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 0, 0, 15) };
 
-            var messageText = new TextBlock { Text = "Deseja realmente fechar o caixa?", FontSize = 16, TextAlignment = TextAlignment.Center, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 20) };
+            // Valor de Abertura (Display ReadOnly)
+            var labelValorAbertura = new TextBlock { Text = "Valor de Abertura Registrado:", FontSize = 12, Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 10, 0, 2) };
+            var txtValorAberturaDisplay = new TextBox
+            {
+                Text = valorAberturaCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR")),
+                IsReadOnly = true,
+                Background = Brushes.Transparent,
+                BorderThickness = new Thickness(0),
+                FontSize = 16,
+                FontWeight = FontWeights.SemiBold,
+                Foreground = corValorAbertura,
+                TextAlignment = TextAlignment.Center,
+                Margin = new Thickness(0, 0, 0, 15)
+            };
 
-            var labelValorFinal = new TextBlock { Text = "Valor Final Calculado:", FontSize = 12, Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 0, 0, 5) };
+            // Valor Final (Entrada do Usuário)
+            var labelValorFinal = new TextBlock { Text = "Digite o Valor Final Contado em Caixa (R$):", FontWeight = FontWeights.SemiBold, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, 0, 0, 5) };
+            var txtValorFinalContado = new TextBox
+            {
+                Name = "txtValorFinalContado",
+                Height = 35,
+                FontSize = 16,
+                Padding = new Thickness(5),
+                Margin = new Thickness(0, 0, 0, 25)
+            };
+            // Filtro para permitir apenas números e separador decimal
+            txtValorFinalContado.PreviewTextInput += (s, args) => { args.Handled = !System.Text.RegularExpressions.Regex.IsMatch(args.Text, @"^[0-9]*(,|\.)?[0-9]*$"); };
 
-            var txtValorFinalDisplay = new TextBox { Text = valorFinalCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR")), IsReadOnly = true, Background = Brushes.Transparent, BorderThickness = new Thickness(0), FontSize = 24, FontWeight = FontWeights.Bold, Foreground = corValor, TextAlignment = TextAlignment.Center, Margin = new Thickness(0, 0, 0, 25) };
+            // Adiciona elementos ao StackPanel
+            contentStack.Children.Add(titleText);
+            contentStack.Children.Add(labelValorAbertura);
+            contentStack.Children.Add(txtValorAberturaDisplay);
+            contentStack.Children.Add(labelValorFinal);
+            contentStack.Children.Add(txtValorFinalContado);
 
-            contentStack.Children.Add(iconText); contentStack.Children.Add(messageText); contentStack.Children.Add(labelValorFinal); contentStack.Children.Add(txtValorFinalDisplay);
+            // --- Painel de Botões ---
+            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right }; // Alinhado à direita
 
-            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
-
-            var btnCancelar = new Button { Content = "Cancelar", Width = 120, Height = 40, Margin = new Thickness(0, 0, 10, 0), Background = corCancelar, Foreground = Brushes.White, IsCancel = true };
-
-            btnCancelar.MouseEnter += (s, e) => btnCancelar.Background = corCancelarHover; btnCancelar.MouseLeave += (s, e) => btnCancelar.Background = corCancelar;
-
+            // --- Botão Cancelar ---
+            var btnCancelar = new Button
+            {
+                Content = "Cancelar",
+                Width = 120,
+                Height = 40,
+                Margin = new Thickness(0, 0, 10, 0),
+                Background = corCancelar,
+                Foreground = Brushes.White,
+                IsCancel = true,
+                Padding = new Thickness(5)
+                // Sem Template e Cursor
+            };
+            btnCancelar.MouseEnter += (s, e) => btnCancelar.Background = corCancelarHover;
+            btnCancelar.MouseLeave += (s, e) => btnCancelar.Background = corCancelar;
             btnCancelar.Click += (s, args) => { popupWindow.DialogResult = false; popupWindow.Close(); };
 
-            var btnConfirmar = new Button { Content = "Confirmar", Width = 120, Height = 40, FontWeight = FontWeights.Bold, Background = corConfirmar, Foreground = Brushes.White, IsDefault = true };
+            // --- Botão Confirmar ---
+            var btnConfirmar = new Button
+            {
+                Content = "Confirmar Fechamento",
+                Width = 180,
+                Height = 40, // Botão maior
+                FontWeight = FontWeights.Bold,
+                Background = corConfirmar,
+                Foreground = Brushes.White,
+                IsDefault = true,
+                Padding = new Thickness(5)
+                // Sem Template e Cursor
+            };
+            btnConfirmar.MouseEnter += (s, e) => btnConfirmar.Background = corConfirmarHover;
+            btnConfirmar.MouseLeave += (s, e) => btnConfirmar.Background = corConfirmar;
+            // Ação de Clique Modificada
+            btnConfirmar.Click += (s, args) =>
+            {
+                // 1. Valida o valor final contado
+                if (!decimal.TryParse(txtValorFinalContado.Text, NumberStyles.Currency, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorFinalContado) || valorFinalContado < 0)
+                {
+                    MessageBox.Show(popupWindow, "Por favor, insira um valor monetário válido (ex: 1500,00 ou 1500.00) e não negativo no campo 'Valor Final'.", "Valor Inválido", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    txtValorFinalContado.Focus();
+                    return; // Impede o fechamento do popup
+                }
 
-            btnConfirmar.MouseEnter += (s, e) => btnConfirmar.Background = corConfirmarHover; btnConfirmar.MouseLeave += (s, e) => btnConfirmar.Background = corConfirmar;
+                // 2. Calcula a diferença
+                decimal diferenca = valorFinalContado - valorAberturaCaixa;
 
-            btnConfirmar.Click += (s, args) => { popupWindow.DialogResult = true; popupWindow.Close(); };
+                // 3. Monta a mensagem da diferença
+                string tituloMsgBox = "Resultado do Fechamento";
+                string msgResultado;
+                MessageBoxImage iconeMsgBox = MessageBoxImage.Information;
 
-            buttonPanel.Children.Add(btnCancelar); buttonPanel.Children.Add(btnConfirmar);
+                if (diferenca == 0)
+                {
+                    msgResultado = "O caixa fechou sem diferença.";
+                }
+                else if (diferenca > 0)
+                {
+                    msgResultado = $"SOBRA: O caixa fechou com {diferenca.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))} a mais.";
+                    iconeMsgBox = MessageBoxImage.Warning;
+                }
+                else // diferenca < 0
+                {
+                    msgResultado = $"FALTA: O caixa fechou com {(-diferenca).ToString("C", CultureInfo.GetCultureInfo("pt-BR"))} a menos.";
+                    iconeMsgBox = MessageBoxImage.Warning; // Pode ser Warning ou Error
+                }
 
+                string msgCompleta = $"{msgResultado}\n\nValor Abertura: {valorAberturaCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))}\nValor Fechamento: {valorFinalContado.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))}";
+
+                // 4. Mostra a MessageBox APENAS com o resultado
+                MessageBox.Show(popupWindow, msgCompleta, tituloMsgBox, MessageBoxButton.OK, iconeMsgBox);
+
+                // 5. Fecha o popup original e sinaliza sucesso (para continuar o processo de fechamento)
+                popupWindow.DialogResult = true;
+                popupWindow.Close();
+            };
+
+            buttonPanel.Children.Add(btnCancelar);
+            buttonPanel.Children.Add(btnConfirmar);
             contentStack.Children.Add(buttonPanel);
-
             mainGrid.Children.Add(contentStack);
-
             popupWindow.Content = mainGrid;
 
-            return popupWindow.ShowDialog();
+            popupWindow.Loaded += (s, e) => txtValorFinalContado.Focus();
 
+            return popupWindow.ShowDialog();
         }
 
 

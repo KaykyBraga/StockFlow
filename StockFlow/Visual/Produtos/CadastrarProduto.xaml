@@ -67,7 +67,7 @@
                     <ControlTemplate TargetType="TextBox">
                         <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" SnapsToDevicePixels="True">
                             <Grid>
-                                <TextBlock Text="{TemplateBinding Tag}" Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False">
+                                <TextBlock Text="{TemplateBinding Tag}" Foreground="Gray" VerticalAlignment="Center" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="5,0,5,0" IsHitTestVisible="False">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -79,7 +79,7 @@
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-                                <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                                <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Margin="5,0,5,0"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -107,7 +107,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" SnapsToDevicePixels="True">
-                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Margin="{TemplateBinding Padding}"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
@@ -122,13 +122,77 @@
             </Setter>
         </Style>
 
+        <SolidColorBrush x:Key="WindowBackgroundBrush" Color="White"/>
+        <SolidColorBrush x:Key="SolidBorderBrush" Color="#8C8C8C"/>
+        <SolidColorBrush x:Key="HighlightBrush" Color="#7EB4EA"/>
+        <SolidColorBrush x:Key="AccentBrush" Color="#1C86EE"/>
+        <SolidColorBrush x:Key="GlyphBrush" Color="#333"/>
+
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="20" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="BackgroundBorder" Grid.ColumnSpan="2" Background="Transparent"/>
+                <Path x:Name="Arrow" Grid.Column="1" Fill="{StaticResource GlyphBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z"/>
+            </Grid>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
+            <Border x:Name="PART_ContentHost" Focusable="False" />
+        </ControlTemplate>
         <Style x:Key="FormComboBoxStyle" TargetType="ComboBox">
             <Setter Property="Height" Value="30"/>
+            <Setter Property="Padding" Value="5,0,0,0"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="BorderBrush" Value="#8C8C8C"/>
+            <Setter Property="BorderBrush" Value="{StaticResource SolidBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Border x:Name="MainBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" SnapsToDevicePixels="True">
+                            <Grid>
+                                <ToggleButton Name="ToggleButton" Template="{StaticResource ComboBoxToggleButton}" Grid.Column="2" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                                <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                                <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" Template="{StaticResource ComboBoxTextBox}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}" Focusable="True" Background="Transparent" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                                <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                    <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                        <Border x:Name="DropDownBorder" Background="{StaticResource WindowBackgroundBrush}" BorderThickness="1" BorderBrush="{StaticResource SolidBorderBrush}"/>
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95"/>
+                            </Trigger>
+                            <Trigger Property="IsEditable" Value="true">
+                                <Setter Property="IsTabStop" Value="false"/>
+                                <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="{StaticResource HighlightBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                <Setter TargetName="MainBorder" Property="Background" Value="#EEE"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
+
 
         <Style x:Key="PopupCancelButtonStyle" TargetType="Button" BasedOn="{StaticResource BlueActionButtonStyle}">
             <Setter Property="Background" Value="#FFAAAAAA"/>
@@ -210,6 +274,7 @@
                         <TextBlock Text="EAN (Código de Barras)"/>
                         <TextBox x:Name="txtEan" Style="{StaticResource FormTextBoxStyle}" ToolTip="Número Global do Item Comercial (código de barras)"/>
                     </StackPanel>
+
                     <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Preço de Custo" Margin="0,0,0,5"/>
                         <TextBox x:Name="txtPrecodeCusto" Style="{StaticResource FormTextBoxStyle}"/>
@@ -276,9 +341,9 @@
                     <TextBlock Text="Adicionar Fornecedor" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                     <TextBox x:Name="txtNomeFantasia" Style="{StaticResource PopupTextBoxStyle}" Tag="Nome Fantasia"/>
                     <TextBox x:Name="txtRazaoSocial" Style="{StaticResource PopupTextBoxStyle}" Tag="Razão Social"/>
-                    <TextBox x:Name="txtCnpj" Style="{StaticResource PopupTextBoxStyle}" Tag="CNPJ"/>
+                    <TextBox x:Name="txtCnpj" Style="{StaticResource PopupTextBoxStyle}" Tag="CNPJ (apenas números)" MaxLength="18" PreviewTextInput="NumberValidationTextBox" TextChanged="TxtCnpj_TextChanged"/>
                     <TextBox x:Name="txtEmail" Style="{StaticResource PopupTextBoxStyle}" Tag="Email"/>
-                    <TextBox x:Name="txtTelefonePrincipal" Style="{StaticResource PopupTextBoxStyle}" Tag="Telefone Principal"/>
+                    <TextBox x:Name="txtTelefonePrincipal" Style="{StaticResource PopupTextBoxStyle}" Tag="Telefone (apenas números com DDD)" MaxLength="15" PreviewTextInput="NumberValidationTextBox" TextChanged="TxtTelefonePrincipal_TextChanged"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

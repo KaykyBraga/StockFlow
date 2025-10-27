@@ -1,7 +1,9 @@
 ﻿using StockFlow.Controles;
 using System;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Navigation;
 
 namespace StockFlow.Visual.Produtos
@@ -68,6 +70,81 @@ namespace StockFlow.Visual.Produtos
             cmbCategoria.ItemsSource = listaCategorias;
 
         }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        // NOVO: Evento TextChanged para formatar o CNPJ
+        private void TxtCnpj_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox == null) return;
+
+            // 1. Remove qualquer formatação existente para trabalhar só com números
+            string digitsOnly = new String(textBox.Text.Where(char.IsDigit).ToArray());
+
+            // Evita loop infinito desanexando temporariamente o handler
+            textBox.TextChanged -= TxtCnpj_TextChanged;
+
+            // 2. Aplica a máscara XX.XXX.XXX/XXXX-XX
+            string formatted = digitsOnly;
+            if (digitsOnly.Length > 12)
+                formatted = $"{digitsOnly.Substring(0, 2)}.{digitsOnly.Substring(2, 3)}.{digitsOnly.Substring(5, 3)}/{digitsOnly.Substring(8, 4)}-{digitsOnly.Substring(12)}";
+            else if (digitsOnly.Length > 8)
+                formatted = $"{digitsOnly.Substring(0, 2)}.{digitsOnly.Substring(2, 3)}.{digitsOnly.Substring(5, 3)}/{digitsOnly.Substring(8)}";
+            else if (digitsOnly.Length > 5)
+                formatted = $"{digitsOnly.Substring(0, 2)}.{digitsOnly.Substring(2, 3)}.{digitsOnly.Substring(5)}";
+            else if (digitsOnly.Length > 2)
+                formatted = $"{digitsOnly.Substring(0, 2)}.{digitsOnly.Substring(2)}";
+
+            // 3. Atualiza o texto e a posição do cursor
+            int caretPosition = textBox.CaretIndex;
+            textBox.Text = formatted;
+            // Tenta manter o cursor no fim ou na posição correta após a formatação
+            textBox.CaretIndex = Math.Min(formatted.Length, Math.Max(caretPosition + (formatted.Length - digitsOnly.Length), 0));
+
+            // Reanexa o handler
+            textBox.TextChanged += TxtCnpj_TextChanged;
+        }
+
+        // NOVO: Evento TextChanged para formatar o Telefone
+        private void TxtTelefonePrincipal_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox == null) return;
+
+            // 1. Remove qualquer formatação existente
+            string digitsOnly = new String(textBox.Text.Where(char.IsDigit).ToArray());
+
+            // Evita loop infinito
+            textBox.TextChanged -= TxtTelefonePrincipal_TextChanged;
+
+            // 2. Aplica a máscara (XX) XXXXX-XXXX ou (XX) XXXX-XXXX
+            string formatted = digitsOnly;
+            if (digitsOnly.Length == 11) // Celular com 9 dígitos
+                formatted = $"({digitsOnly.Substring(0, 2)}) {digitsOnly.Substring(2, 5)}-{digitsOnly.Substring(7)}";
+            else if (digitsOnly.Length == 10) // Fixo ou celular antigo
+                formatted = $"({digitsOnly.Substring(0, 2)}) {digitsOnly.Substring(2, 4)}-{digitsOnly.Substring(6)}";
+            else if (digitsOnly.Length > 6) // Após o DDD e os 4/5 primeiros dígitos
+                formatted = $"({digitsOnly.Substring(0, 2)}) {digitsOnly.Substring(2, Math.Min(digitsOnly.Length - 2, 5))}{(digitsOnly.Length > 7 ? "-" : "")}{digitsOnly.Substring(Math.Min(digitsOnly.Length, 7))}";
+            else if (digitsOnly.Length > 2) // Após o DDD
+                formatted = $"({digitsOnly.Substring(0, 2)}) {digitsOnly.Substring(2)}";
+            else if (digitsOnly.Length > 0) // Durante o DDD
+                formatted = $"({digitsOnly}";
+
+
+            // 3. Atualiza o texto e a posição do cursor
+            int caretPosition = textBox.CaretIndex;
+            textBox.Text = formatted;
+            textBox.CaretIndex = Math.Min(formatted.Length, Math.Max(caretPosition + (formatted.Length - digitsOnly.Length), 0));
+
+
+            // Reanexa o handler
+            textBox.TextChanged += TxtTelefonePrincipal_TextChanged;
+        }
+
         private void btnAddMarca_Click(object sender, RoutedEventArgs e)
         {
             PopupOverlay.Visibility = Visibility.Visible;

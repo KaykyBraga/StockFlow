@@ -3,8 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="StockFlow.Visual.Tela_Vendas"
         Title="StockFlow - Sistema de Vendas" Height="700" Width="1400"
-        WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
+        MinHeight="720"
+        MinWidth="1280"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style x:Key="HeaderStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="48"/>
@@ -88,6 +90,9 @@
                                 Foreground="White" Style="{StaticResource ButtonStyle}"
                                 BorderBrush="#C0392B" Height="37" Click="BtnSair_Click"/>
                     </StackPanel>
+                    <Grid>
+                    <Image Source="/Imagens/Caixa.png" Margin="35,83,35,281" Stretch="Uniform"/>
+                    </Grid>
                 </Grid>
             </Border>
 
@@ -170,6 +175,5 @@
         </Grid>
 
         <Image Source="/Imagens/Armazem.png" Stretch="Fill" Height="80" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" Margin="10,0,0,0"/>
-        <Image Grid.Row="1" Source="/Imagens/Caixa.png" Margin="31,49,1161,315" Stretch="Fill"/>
     </Grid>
 </Window>
