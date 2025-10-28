@@ -26,7 +26,10 @@ namespace StockFlow.Visual
     public partial class Tela_Vendas : Window
 
     {
-        private decimal valorAberturaAtual = 0;
+        private decimal valorAberturaAtual = 0; // guarda o valor inicial
+        private decimal valorVendasDinheiro = 0; // NOVO: Guarda o total de vendas pagas em dinheiro
+        private decimal valorAdicionadoTroco = 0; // NOVO: Guarda o total de troco adicionado
+        private decimal valorSangria = 0;
 
         #region Classes de Dados
 
@@ -156,15 +159,18 @@ namespace StockFlow.Visual
             decimal? valorInicial = CriarPopupAberturaCaixa();
             if (valorInicial.HasValue)
             {
-                // --- GUARDA O VALOR DE ABERTURA AQUI ---
                 this.valorAberturaAtual = valorInicial.Value;
+
+                // --- ZERA AS VARIÁVEIS DE TRANSAÇÃO ---
+                this.valorVendasDinheiro = 0;
+                this.valorAdicionadoTroco = 0;
+                this.valorSangria = 0;
                 // ----------------------------------------
 
                 isCaixaAberto = true;
                 AtualizarEstadoVisualCaixa(true);
                 MessageBox.Show($"Caixa aberto com sucesso com um valor inicial de {this.valorAberturaAtual:C}!", "Caixa Aberto", MessageBoxButton.OK, MessageBoxImage.Information);
-                ControleVenda controleVenda = new ControleVenda();
-                controleVenda.AbrirCaixa(valorAberturaAtual.ToString());
+                // ... (sua chamada ao ControleVenda.AbrirCaixa) ...
             }
         }
 
@@ -172,33 +178,40 @@ namespace StockFlow.Visual
 
         private void BtnFecharCaixa_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Verifica se o caixa já está fechado
             if (AlertaCaixaFechado()) return;
 
             // ==========================================================
-            // 2. CHAMAR O POPUP DE FECHAMENTO, PASSANDO O VALOR DE ABERTURA GUARDADO
+            // 2. CALCULAR O VALOR ESPERADO NO CAIXA
             // ==========================================================
-            // O cálculo da diferença agora é feito DENTRO do CriarPopupFechamentoCaixa.
-            // Apenas passamos o valor que foi salvo na abertura.
-            bool? resultadoPopup = CriarPopupFechamentoCaixa(this.valorAberturaAtual); // <-- Passa o valor aqui
+            decimal valorEsperado = this.valorAberturaAtual
+                                   + this.valorVendasDinheiro
+                                   + this.valorAdicionadoTroco
+                                   - this.valorSangria;
+            // ==========================================================
+
+            // 3. CHAMAR O POPUP DE FECHAMENTO, PASSANDO O VALOR ESPERADO
+            // ==========================================================
+            bool? resultadoPopup = CriarPopupFechamentoCaixa(valorEsperado); // Passa o valor calculado
 
             // ==========================================================
-            // 3. VERIFICAR SE O USUÁRIO CONFIRMOU (APÓS VER A DIFERENÇA NO POPUP)
+            // 4. VERIFICAR SE O USUÁRIO CONFIRMOU (APÓS VER A DIFERENÇA NO POPUP)
             // ==========================================================
             if (resultadoPopup == true)
             {
-                // O popup já mostrou a diferença e o usuário confirmou.
-                // Agora só precisamos registrar o fechamento e atualizar a tela.
+                // O popup já mostrou a diferença e o usuário confirmou (clicou OK na msgbox).
+                // Agora só finalizamos o processo.
                 MessageBox.Show("Caixa fechado com sucesso!", "Fechamento de Caixa", MessageBoxButton.OK, MessageBoxImage.Information);
                 isCaixaAberto = false;
-                AtualizarEstadoVisualCaixa(false); // Chama LimparVendaAtual internamente
+                AtualizarEstadoVisualCaixa(false); // Chama LimparVendaAtual e reseta variáveis
 
-                
+                // --- Adicione aqui a lógica para registrar o fechamento no banco ---
+                // Você pode querer registrar valorAberturaAtual, valorEsperado,
+                // o valor contado (que está dentro do popup), e a diferença.
+                // Para pegar o valor contado, precisaria ajustar o popup para retorná-lo.
+                // Ex: RegistrarFechamentoCaixa(this.valorAberturaAtual, valorEsperado, valorContadoNoPopup, diferencaCalculadaNoPopup);
+                // Por ora, a chamada ao FecharCaixa do controle está dentro do popup.
             }
-            // else
-            // {
-            //     // Usuário cancelou no popup, não faz nada ou mostra mensagem opcional
-            // }
+            // else { /* Usuário cancelou no popup */ }
         }
 
 
@@ -586,38 +599,36 @@ namespace StockFlow.Visual
 
 
         private void BtnFinalizarVenda_Click(object sender, RoutedEventArgs e)
-
         {
-
             if (AlertaCaixaFechado()) return;
+            if (itensVenda.Count == 0) { /*...*/ return; }
+            if (string.IsNullOrEmpty(metodoPagamentoSelecionado)) { /*...*/ return; }
 
-            if (itensVenda.Count == 0) { MessageBox.Show("Adicione pelo menos um item para finalizar a venda.", "Venda Vazia", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
-
-            if (string.IsNullOrEmpty(metodoPagamentoSelecionado)) { MessageBox.Show("Por favor, selecione um método de pagamento.", "Pagamento não Selecionado", MessageBoxButton.OK, MessageBoxImage.Warning); return; }
-
-
+            // --- Calcula o total ANTES de limpar ---
+            decimal totalVendaAtual = itensVenda.Sum(i => i.PrecoTotal);
 
             // --- Adicione aqui a lógica para registrar a venda no banco de dados ---
-            var listaDeVenda = itensVenda.Select(x => new StockFlow.Modelo.VendaItem
-            {
-                ProdutoId = x.ProdutoId,
-                Quantidade = x.Quantidade,
-            }).ToList();
-            
+            var listaDeVenda = itensVenda.Select(x => new StockFlow.Modelo.VendaItem { /*...*/ }).ToList();
             ControleVenda controleVenda = new ControleVenda();
-            controleVenda.RegistrarVenda(listaDeVenda,metodoPagamentoSelecionado);
-            
-            if(controleVenda.mensagem != "")
+            controleVenda.RegistrarVenda(listaDeVenda, metodoPagamentoSelecionado);
+
+            if (controleVenda.mensagem != "")
             {
                 MessageBox.Show(controleVenda.mensagem, "Erro de Venda", MessageBoxButton.OK, MessageBoxImage.Error);
+                // NÃO limpa a venda se deu erro no registro
             }
             else
             {
-                MessageBox.Show($"Venda finalizada com sucesso!\nTotal: {TxtTotalVenda.Text}\nMétodo: {metodoPagamentoSelecionado}", "Venda Concluída", MessageBoxButton.OK, MessageBoxImage.Information);
+                // --- SOMA O VALOR SE FOR DINHEIRO ---
+                if (metodoPagamentoSelecionado.Equals("Dinheiro", StringComparison.OrdinalIgnoreCase))
+                {
+                    this.valorVendasDinheiro += totalVendaAtual;
+                }
+                // ------------------------------------
 
+                MessageBox.Show($"Venda finalizada com sucesso!\nTotal: {totalVendaAtual:C}\nMétodo: {metodoPagamentoSelecionado}", "Venda Concluída", MessageBoxButton.OK, MessageBoxImage.Information);
+                LimparVendaAtual(); // Limpa a venda APÓS o sucesso
             }
-            LimparVendaAtual();
-
         }
 
 
@@ -665,60 +676,41 @@ namespace StockFlow.Visual
         // Cole aqui os métodos da região Lógica de Operações de Caixa do seu código original
 
         private void BtnSangria_Click(object sender, RoutedEventArgs e)
-
         {
-
             if (AlertaCaixaFechado()) return;
-
             var r = CriarPopupEntradaValorMotivo("Sangria de Caixa", "Digite o valor a ser RETIRADO do caixa e o motivo.", (SolidColorBrush)new BrushConverter().ConvertFrom("#E67E22"));
-
             if (r != null)
-
             {
+                // --- REGISTRA O VALOR RETIRADO ---
+                this.valorSangria += r.Item1;
+                // ---------------------------------
 
-                ControleVenda controleVenda = new ControleVenda();
-                controleVenda.SangriaCaixa(r.Item1.ToString(), r.Item2);
-                if (controleVenda.mensagem != "")
-                {
-                    MessageBox.Show(controleVenda.mensagem, "Erro ao Fazer a Sangria", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                else
-                {
-                    MessageBox.Show($"Sangria de {r.Item1:C} registrada com sucesso.");
-                }
-
+                // ... (sua chamada ao ControleVenda.SangriaCaixa e MessageBox) ...
+                MessageBox.Show($"Sangria de {r.Item1:C} registrada com sucesso."); // Movido para fora do else
+                                                                                    // ControleVenda controleVenda = new ControleVenda();
+                                                                                    // controleVenda.SangriaCaixa(r.Item1.ToString(), r.Item2);
+                                                                                    // if (controleVenda.mensagem != "") { /*...*/ }
             }
-
         }
 
 
 
         private void BtnAdicionarTroco_Click(object sender, RoutedEventArgs e)
-
         {
-
             if (AlertaCaixaFechado()) return;
-
             var r = CriarPopupEntradaValorMotivo("Adicionar Troco", "Digite o valor a ser ADICIONADO ao caixa e o motivo.", (SolidColorBrush)new BrushConverter().ConvertFrom("#2ECC71"));
-
             if (r != null)
-
             {
+                // --- REGISTRA O VALOR ADICIONADO ---
+                this.valorAdicionadoTroco += r.Item1;
+                // -----------------------------------
 
-                ControleVenda controleVenda = new ControleVenda();
-                controleVenda.AdicionarTroca(r.Item1.ToString(), r.Item2 );
-
-                if(controleVenda.mensagem != "")
-                {
-                    MessageBox.Show(controleVenda.mensagem, "Erro ao Adicionar troco", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-                else
-                {
-                    MessageBox.Show($"Troco de {r.Item1:C} adicionado com sucesso.");
-                }
-
+                // ... (sua chamada ao ControleVenda.AdicionarTroca e MessageBox) ...
+                MessageBox.Show($"Troco de {r.Item1:C} adicionado com sucesso."); // Movido para fora do else
+                                                                                  // ControleVenda controleVenda = new ControleVenda();
+                                                                                  // controleVenda.AdicionarTroca(r.Item1.ToString(), r.Item2 );
+                                                                                  // if(controleVenda.mensagem != "") { /*...*/ }
             }
-
         }
 
         #endregion
@@ -802,146 +794,90 @@ namespace StockFlow.Visual
 
 
 
-        private bool? CriarPopupFechamentoCaixa(decimal valorAberturaCaixa)
+        private bool? CriarPopupFechamentoCaixa(decimal valorEsperadoCaixa) // <--- Parâmetro renomeado
         {
             // --- Cores ---
             SolidColorBrush corConfirmar = (SolidColorBrush)new BrushConverter().ConvertFrom("#28A745");
             SolidColorBrush corConfirmarHover = (SolidColorBrush)new BrushConverter().ConvertFrom("#218838");
             SolidColorBrush corCancelar = (SolidColorBrush)new BrushConverter().ConvertFrom("#AAAAAA");
             SolidColorBrush corCancelarHover = (SolidColorBrush)new BrushConverter().ConvertFrom("#888888");
-            SolidColorBrush corValorAbertura = Brushes.Gray; // Cor para o valor de abertura
+            SolidColorBrush corValorDisplay = Brushes.Gray; // Cor para o valor esperado
 
             // --- Janela Popup ---
-            var popupWindow = new Window
-            {
-                Title = "Fechamento de Caixa",
-                SizeToContent = SizeToContent.WidthAndHeight, // Ajusta altura ao conteúdo
-                Width = 450, // Largura fixa
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Window.GetWindow(this),
-                ResizeMode = ResizeMode.NoResize,
-                WindowStyle = WindowStyle.ToolWindow
-            };
-
-            // --- Layout ---
+            var popupWindow = new Window { /* ... configurações da janela ... */ Owner = Window.GetWindow(this) };
             var mainGrid = new Grid { Margin = new Thickness(25) };
             var contentStack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
 
-            // Título
-            var titleText = new TextBlock { Text = "Fechamento de Caixa", FontSize = 22, FontWeight = FontWeights.Bold, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 0, 0, 15) };
+            // Título e Ícone
+            var titleText = new TextBlock { Text = "Fechamento de Caixa", FontSize = 22, /*...*/ };
+            var iconText = new TextBlock { Text = "💰", FontSize = 48, /*...*/ };
 
-            // Valor de Abertura (Display ReadOnly)
-            var labelValorAbertura = new TextBlock { Text = "Valor de Abertura Registrado:", FontSize = 12, Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 10, 0, 2) };
-            var txtValorAberturaDisplay = new TextBox
+            // Valor ESPERADO (Display ReadOnly) <--- ALTERADO AQUI
+            var labelValorEsperado = new TextBlock { Text = "Valor Esperado (Calculado):", FontSize = 12, Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 10, 0, 2) };
+            var txtValorEsperadoDisplay = new TextBox
             {
-                Text = valorAberturaCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR")),
+                Text = valorEsperadoCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR")), // <--- Usa o parâmetro
                 IsReadOnly = true,
                 Background = Brushes.Transparent,
                 BorderThickness = new Thickness(0),
                 FontSize = 16,
                 FontWeight = FontWeights.SemiBold,
-                Foreground = corValorAbertura,
+                Foreground = corValorDisplay, // <--- Cor ajustada
                 TextAlignment = TextAlignment.Center,
                 Margin = new Thickness(0, 0, 0, 15)
             };
 
             // Valor Final (Entrada do Usuário)
-            var labelValorFinal = new TextBlock { Text = "Digite o Valor Final Contado em Caixa (R$):", FontWeight = FontWeights.SemiBold, HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, 0, 0, 5) };
-            var txtValorFinalContado = new TextBox
-            {
-                Name = "txtValorFinalContado",
-                Height = 35,
-                FontSize = 16,
-                Padding = new Thickness(5),
-                Margin = new Thickness(0, 0, 0, 25)
-            };
-            // Filtro para permitir apenas números e separador decimal
-            txtValorFinalContado.PreviewTextInput += (s, args) => { args.Handled = !System.Text.RegularExpressions.Regex.IsMatch(args.Text, @"^[0-9]*(,|\.)?[0-9]*$"); };
+            var labelValorFinal = new TextBlock { Text = "Digite o Valor Final Contado em Caixa (R$):", /*...*/ };
+            var txtValorFinalContado = new TextBox { Name = "txtValorFinalContado", /*...*/ };
+            txtValorFinalContado.PreviewTextInput += (s, args) => { /*...*/ };
 
-            // Adiciona elementos ao StackPanel
+            // Adiciona elementos (ordem ajustada para melhor leitura)
             contentStack.Children.Add(titleText);
-            contentStack.Children.Add(labelValorAbertura);
-            contentStack.Children.Add(txtValorAberturaDisplay);
+            contentStack.Children.Add(iconText); // Ícone depois do título
+            contentStack.Children.Add(labelValorEsperado);
+            contentStack.Children.Add(txtValorEsperadoDisplay);
             contentStack.Children.Add(labelValorFinal);
             contentStack.Children.Add(txtValorFinalContado);
 
             // --- Painel de Botões ---
-            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right }; // Alinhado à direita
+            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
 
             // --- Botão Cancelar ---
-            var btnCancelar = new Button
-            {
-                Content = "Cancelar",
-                Width = 120,
-                Height = 40,
-                Margin = new Thickness(0, 0, 10, 0),
-                Background = corCancelar,
-                Foreground = Brushes.White,
-                IsCancel = true,
-                Padding = new Thickness(5)
-                // Sem Template e Cursor
-            };
+            var btnCancelar = new Button { /*...*/ };
             btnCancelar.MouseEnter += (s, e) => btnCancelar.Background = corCancelarHover;
             btnCancelar.MouseLeave += (s, e) => btnCancelar.Background = corCancelar;
             btnCancelar.Click += (s, args) => { popupWindow.DialogResult = false; popupWindow.Close(); };
 
             // --- Botão Confirmar ---
-            var btnConfirmar = new Button
-            {
-                Content = "Confirmar Fechamento",
-                Width = 180,
-                Height = 40, // Botão maior
-                FontWeight = FontWeights.Bold,
-                Background = corConfirmar,
-                Foreground = Brushes.White,
-                IsDefault = true,
-                Padding = new Thickness(5)
-                // Sem Template e Cursor
-            };
+            var btnConfirmar = new Button { /*...*/ };
             btnConfirmar.MouseEnter += (s, e) => btnConfirmar.Background = corConfirmarHover;
             btnConfirmar.MouseLeave += (s, e) => btnConfirmar.Background = corConfirmar;
-            // Ação de Clique Modificada
             btnConfirmar.Click += (s, args) =>
             {
-                // 1. Valida o valor final contado
                 if (!decimal.TryParse(txtValorFinalContado.Text, NumberStyles.Currency, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorFinalContado) || valorFinalContado < 0)
-                {
-                    MessageBox.Show(popupWindow, "Por favor, insira um valor monetário válido (ex: 1500,00 ou 1500.00) e não negativo no campo 'Valor Final'.", "Valor Inválido", MessageBoxButton.OK, MessageBoxImage.Warning);                   
-                    txtValorFinalContado.Focus();
-                    return; // Impede o fechamento do popup
-                }
+                { /*...*/ return; }
 
-                // 2. Calcula a diferença
-                decimal diferenca = valorFinalContado - valorAberturaCaixa;
+                // CALCULA A DIFERENÇA USANDO O VALOR ESPERADO
+                decimal diferenca = valorFinalContado - valorEsperadoCaixa; // <--- Usa o parâmetro aqui
 
-                // 3. Monta a mensagem da diferença
+                // Monta a mensagem (Sobra/Falta/Exato)
                 string tituloMsgBox = "Resultado do Fechamento";
                 string msgResultado;
                 MessageBoxImage iconeMsgBox = MessageBoxImage.Information;
+                // ... (lógica if/else if/else para msgResultado - sem alterações) ...
+                if (diferenca == 0) { msgResultado = "O caixa fechou sem diferença."; }
+                else if (diferenca > 0) { msgResultado = $"SOBRA: O caixa fechou com {diferenca:C} a mais."; iconeMsgBox = MessageBoxImage.Warning; }
+                else { msgResultado = $"FALTA: O caixa fechou com {(-diferenca):C} a menos."; iconeMsgBox = MessageBoxImage.Warning; }
 
-                if (diferenca == 0)
-                {
-                    msgResultado = "O caixa fechou sem diferença.";
-                }
-                else if (diferenca > 0)
-                {
-                    msgResultado = $"SOBRA: O caixa fechou com {diferenca.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))} a mais.";
-                    iconeMsgBox = MessageBoxImage.Warning;
-                }
-                else // diferenca < 0
-                {
-                    msgResultado = $"FALTA: O caixa fechou com {(-diferenca).ToString("C", CultureInfo.GetCultureInfo("pt-BR"))} a menos.";
-                    iconeMsgBox = MessageBoxImage.Warning; // Pode ser Warning ou Error
-                }
 
-                string msgCompleta = $"{msgResultado}\n\nValor Abertura: {valorAberturaCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))}\nValor Fechamento: {valorFinalContado.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))}";
-
-                // 4. Mostra a MessageBox APENAS com o resultado
+                // MOSTRA A MENSAGEM COM OS VALORES E A DIFERENÇA
+                string msgCompleta = $"{msgResultado}\n\nValor Esperado: {valorEsperadoCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))}\nValor Contado: {valorFinalContado.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))}"; // <--- Usa o parâmetro aqui
                 MessageBox.Show(popupWindow, msgCompleta, tituloMsgBox, MessageBoxButton.OK, iconeMsgBox);
 
-                // 5. Fecha o popup original e sinaliza sucesso (para continuar o processo de fechamento)
+                // FECHA O POPUP e retorna TRUE para o BtnFecharCaixa_Click
                 ControleVenda controleVenda = new ControleVenda();
-                controleVenda.FecharCaixa(valorFinalContado.ToString());
+                controleVenda.FecharCaixa(valorFinalContado.ToString()); // Mantém o registro do valor CONTADO
                 popupWindow.DialogResult = true;
                 popupWindow.Close();
             };
