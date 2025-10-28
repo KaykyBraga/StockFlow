@@ -181,6 +181,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
         <Style x:Key="PopupTextBoxStyle" TargetType="TextBox">
             <Setter Property="Height" Value="40"/>
             <Setter Property="Margin" Value="0,0,0,10"/>
@@ -336,14 +337,29 @@
 
         <Grid x:Name="PopupOverlay" Visibility="Collapsed">
             <Border Background="#80000000"/>
+
             <Border x:Name="PopupEditarFornecedor" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" CornerRadius="8" Width="400">
                 <StackPanel Margin="25">
                     <TextBlock Text="Editar Fornecedor" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                     <TextBox x:Name="txtPopupFornecedorNomeFantasia" Style="{StaticResource PopupTextBoxStyle}" Tag="Nome Fantasia"/>
                     <TextBox x:Name="txtPopupFornecedorRazaoSocial" Style="{StaticResource PopupTextBoxStyle}" Tag="Razão Social"/>
-                    <TextBox x:Name="txtPopupFornecedorCnpj" Style="{StaticResource PopupTextBoxStyle}" Tag="CNPJ"/>
+
+                    <TextBox x:Name="txtPopupFornecedorCnpj"
+                             Style="{StaticResource PopupTextBoxStyle}"
+                             Tag="CNPJ (apenas números)"
+                             MaxLength="18"
+                             PreviewTextInput="NumberValidationTextBox"
+                             TextChanged="TxtCnpj_TextChanged"/>
+
                     <TextBox x:Name="txtPopupFornecedorEmail" Style="{StaticResource PopupTextBoxStyle}" Tag="Email"/>
-                    <TextBox x:Name="txtPopupFornecedorTelefone" Style="{StaticResource PopupTextBoxStyle}" Tag="Telefone Principal"/>
+
+                    <TextBox x:Name="txtPopupFornecedorTelefone"
+                             Style="{StaticResource PopupTextBoxStyle}"
+                             Tag="Telefone (apenas números com DDD)"
+                             MaxLength="15"
+                             PreviewTextInput="NumberValidationTextBox"
+                             TextChanged="TxtTelefonePrincipal_TextChanged"/>
+
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -354,6 +370,7 @@
                     </Grid>
                 </StackPanel>
             </Border>
+
             <Border x:Name="PopupEditarMarca" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" CornerRadius="8" Width="350">
                 <StackPanel Margin="25">
                     <TextBlock Text="Editar Marca" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
@@ -368,6 +385,7 @@
                     </Grid>
                 </StackPanel>
             </Border>
+
             <Border x:Name="PopupEditarCategoria" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" CornerRadius="8" Width="350">
                 <StackPanel Margin="25">
                     <TextBlock Text="Editar Categoria" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
@@ -382,6 +400,7 @@
                     </Grid>
                 </StackPanel>
             </Border>
+
             <Border x:Name="PopupConfirmacao" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" CornerRadius="8" BorderBrush="#AAAAAA" BorderThickness="1" Width="380">
                 <StackPanel Margin="25">
                     <Border Width="60" Height="60" CornerRadius="30" Background="#FFC107" HorizontalAlignment="Center">
@@ -399,6 +418,7 @@
                     </Grid>
                 </StackPanel>
             </Border>
+
             <Border x:Name="PopupSucesso" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#F0FFF4" CornerRadius="8" BorderBrush="#28a745" BorderThickness="1" Width="350">
                 <StackPanel Margin="25">
                     <Border Width="60" Height="60" CornerRadius="30" Background="#28a745" HorizontalAlignment="Center">
@@ -408,6 +428,7 @@
                     <Button Content="OK" Style="{StaticResource SuccessButtonStyle}" Width="100" Click="btnPopupOk_Click"/>
                 </StackPanel>
             </Border>
+
             <Border x:Name="PopupErro" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FFF0F1" CornerRadius="8" BorderBrush="#dc3545" BorderThickness="1" Width="350">
                 <StackPanel Margin="25">
                     <Border Width="60" Height="60" CornerRadius="30" Background="#dc3545" HorizontalAlignment="Center">
@@ -417,6 +438,7 @@
                     <Button Content="OK" Style="{StaticResource ErrorButtonStyle}" Width="100" Click="btnPopupOk_Click"/>
                 </StackPanel>
             </Border>
+
         </Grid>
     </Grid>
 </Page>
