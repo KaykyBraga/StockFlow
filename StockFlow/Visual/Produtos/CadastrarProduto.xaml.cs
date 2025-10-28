@@ -46,6 +46,7 @@ namespace StockFlow.Visual.Produtos
                 }
             }
             cmbMarca.ItemsSource = listaMarcas;
+            cmbMarca.SelectedIndex = 1;
 
             fornecedores = await controleEstoque.ObterTodosOsFornecedoresAsync();
             List<string> listaFornecedores = new List<string>();
@@ -57,7 +58,7 @@ namespace StockFlow.Visual.Produtos
                 }
             }
             cmbFornecedor.ItemsSource = listaFornecedores;
-
+            cmbFornecedor.SelectedIndex = 1;
             categorias = await controleEstoque.ObterTodasAsCategoriasAsync();
             List<string> listaCategorias = new List<string>();
             foreach (var categoria in categorias)
@@ -68,6 +69,7 @@ namespace StockFlow.Visual.Produtos
                 }
             }
             cmbCategoria.ItemsSource = listaCategorias;
+            cmbCategoria.SelectedIndex = 1;
 
         }
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
@@ -268,10 +270,16 @@ namespace StockFlow.Visual.Produtos
         {
             // --- AQUI VAI A SUA LÓGICA DE VALIDAÇÃO E CADASTRO ---
             // Por exemplo, verificar se o campo nome do produto está preenchido
-            if (string.IsNullOrWhiteSpace(txtNomeProduto.Text))
+            if (string.IsNullOrWhiteSpace(txtNomeProduto.Text) || 
+                string.IsNullOrWhiteSpace(txtSku.Text) ||
+                string.IsNullOrWhiteSpace(txtPrecodeCusto.Text) ||
+                string.IsNullOrWhiteSpace(txtPrecodeVenda.Text) ||
+                string.IsNullOrWhiteSpace(txtEstoqueInicial.Text) ||
+                string.IsNullOrWhiteSpace(txtEan.Text) ||
+                string.IsNullOrWhiteSpace(txtEstoqueMinimo.Text) ||
+                string.IsNullOrWhiteSpace(txtLocalizacao.Text))
             {
-                // Se estiver vazio, mostra pop-up de erro
-                ShowErrorPopup("O campo 'Nome Produto' é obrigatório.");
+                MessageBox.Show("Preencha todos os campos corretamente", "Erro campos nao preenchidos", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {

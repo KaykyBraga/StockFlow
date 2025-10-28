@@ -97,7 +97,7 @@ namespace StockFlow.Controles
                 this.mensagem = vendaDao.mensagemErro;
                 return;
             }
-            this.mensagem = "Venda registrada com sucesso.";
+            this.mensagem = "";
         }
 
         public void CriarPromocao(List<string> listaDados)
