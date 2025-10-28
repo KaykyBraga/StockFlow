@@ -163,7 +163,8 @@ namespace StockFlow.Visual
                 isCaixaAberto = true;
                 AtualizarEstadoVisualCaixa(true);
                 MessageBox.Show($"Caixa aberto com sucesso com um valor inicial de {this.valorAberturaAtual:C}!", "Caixa Aberto", MessageBoxButton.OK, MessageBoxImage.Information);
-                // RegistrarAberturaCaixa(this.valorAberturaAtual);
+                ControleVenda controleVenda = new ControleVenda();
+                controleVenda.AbrirCaixa(valorAberturaAtual.ToString());
             }
         }
 
@@ -192,10 +193,7 @@ namespace StockFlow.Visual
                 isCaixaAberto = false;
                 AtualizarEstadoVisualCaixa(false); // Chama LimparVendaAtual internamente
 
-                // --- Adicione aqui a lógica para registrar o fechamento no banco ---
-                // Você pode querer passar o valorAberturaAtual e talvez o valor final
-                // contado (teria que ajustar o popup para retornar isso também, se necessário).
-                // Ex: RegistrarFechamentoCaixa(this.valorAberturaAtual /*, valorFinalContado*/);
+                
             }
             // else
             // {
@@ -678,11 +676,16 @@ namespace StockFlow.Visual
 
             {
 
-                // --- Adicione aqui a lógica para registrar a sangria no banco ---
-
-                // RegistrarSangria(r.Item1, r.Item2);
-
-                MessageBox.Show($"Sangria de {r.Item1:C} registrada com sucesso.");
+                ControleVenda controleVenda = new ControleVenda();
+                controleVenda.SangriaCaixa(r.Item1.ToString(), r.Item2);
+                if (controleVenda.mensagem != "")
+                {
+                    MessageBox.Show(controleVenda.mensagem, "Erro ao Fazer a Sangria", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    MessageBox.Show($"Sangria de {r.Item1:C} registrada com sucesso.");
+                }
 
             }
 
@@ -702,11 +705,17 @@ namespace StockFlow.Visual
 
             {
 
-                // --- Adicione aqui a lógica para registrar a adição de troco no banco ---
+                ControleVenda controleVenda = new ControleVenda();
+                controleVenda.AdicionarTroca(r.Item1.ToString(), r.Item2 );
 
-                // RegistrarAdicaoTroco(r.Item1, r.Item2);
-
-                MessageBox.Show($"Troco de {r.Item1:C} adicionado com sucesso.");
+                if(controleVenda.mensagem != "")
+                {
+                    MessageBox.Show(controleVenda.mensagem, "Erro ao Adicionar troco", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    MessageBox.Show($"Troco de {r.Item1:C} adicionado com sucesso.");
+                }
 
             }
 
@@ -897,7 +906,7 @@ namespace StockFlow.Visual
                 // 1. Valida o valor final contado
                 if (!decimal.TryParse(txtValorFinalContado.Text, NumberStyles.Currency, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorFinalContado) || valorFinalContado < 0)
                 {
-                    MessageBox.Show(popupWindow, "Por favor, insira um valor monetário válido (ex: 1500,00 ou 1500.00) e não negativo no campo 'Valor Final'.", "Valor Inválido", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show(popupWindow, "Por favor, insira um valor monetário válido (ex: 1500,00 ou 1500.00) e não negativo no campo 'Valor Final'.", "Valor Inválido", MessageBoxButton.OK, MessageBoxImage.Warning);                   
                     txtValorFinalContado.Focus();
                     return; // Impede o fechamento do popup
                 }
@@ -931,6 +940,8 @@ namespace StockFlow.Visual
                 MessageBox.Show(popupWindow, msgCompleta, tituloMsgBox, MessageBoxButton.OK, iconeMsgBox);
 
                 // 5. Fecha o popup original e sinaliza sucesso (para continuar o processo de fechamento)
+                ControleVenda controleVenda = new ControleVenda();
+                controleVenda.FecharCaixa(valorFinalContado.ToString());
                 popupWindow.DialogResult = true;
                 popupWindow.Close();
             };

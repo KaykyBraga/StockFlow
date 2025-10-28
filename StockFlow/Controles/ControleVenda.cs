@@ -251,7 +251,7 @@ namespace StockFlow.Controles
                 this.mensagem = caixaDao.mensagemErro;
                 return;
             }
-            this.mensagem = "Reforço registrado com sucesso.";
+            this.mensagem = "";
         }
 
         public async Task<List<Venda>> ObterTodasAsVendasAsync()
