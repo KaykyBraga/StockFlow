@@ -138,7 +138,7 @@
                 <DockPanel>
 
                     <Border DockPanel.Dock="Bottom" BorderBrush="#DDDDDD" BorderThickness="0,1,0,0" Padding="10">
-                        <Button x:Name="BtnSair" Style="{StaticResource ExitButtonStyle}">
+                        <Button x:Name="BtnSair" Style="{StaticResource ExitButtonStyle}" Click="BtnSair_Click">
                             <StackPanel Orientation="Horizontal">
                                 <Path x:Name="ExitIcon" Fill="{StaticResource ExitRedColorBrush}" Width="20" Height="20" Margin="0,0,10,0" Data="M13 1.01L13 0H3C2.448 0 2 0.448 2 1v14c0 0.552 0.448 1 1 1h10c0.552 0 1-0.448 1-1V9.99h-1V15H3V1h10v0.01zM11 8H5V7h6V8zM14 7L11 4v2H5v1h6v2L14 7z"/>
                                 <TextBlock x:Name="ExitText" Text="Sair" Foreground="{StaticResource ExitRedColorBrush}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>

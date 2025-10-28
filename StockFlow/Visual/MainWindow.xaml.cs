@@ -103,5 +103,12 @@ namespace StockFlow
         {
             ContentFrame.Navigate(new Caixa());
         }
+
+        private void BtnSair_Click(object sender, RoutedEventArgs e)
+        {
+            Tela_Login login = new Tela_Login();
+            login.Show();
+            Window.GetWindow(this).Close();
+        }
     }
 }

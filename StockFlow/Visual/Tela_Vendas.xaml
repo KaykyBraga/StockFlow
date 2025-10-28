@@ -6,14 +6,14 @@
         MinHeight="720"
         MinWidth="1280"
         WindowState="Maximized"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Closing="Tela_Vendas_Closing">
     <Window.Resources>
         <Style x:Key="HeaderStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="48"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-
         <Style x:Key="SectionTitleStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="28"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -35,6 +35,34 @@
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Color x:Key="ColorExitRed" >#D32F2F</Color>
+        <Color x:Key="ColorExitWhite" >White</Color>
+        <SolidColorBrush x:Key="ExitRedColorBrush" Color="{StaticResource ColorExitRed}"/>
+        <SolidColorBrush x:Key="ExitNormalBackground" Color="Transparent"/>
+
+        <Style x:Key="ExitButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource ExitNormalBackground}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Height" Value="Auto"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource ExitRedColorBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -62,6 +90,14 @@
                     <TextBlock Text="Vendas" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center"
                                VerticalAlignment="Top" Margin="0,6,0,0"/>
 
+                    <Image Source="/Imagens/Caixa.png" 
+                           Stretch="Uniform" 
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Center"
+                           Margin="20,83,20,0"
+                           MaxWidth="180" 
+                           MaxHeight="180"/>
+
                     <StackPanel VerticalAlignment="Bottom" Margin="20">
                         <Button
                                 Style="{StaticResource ButtonStyle}"
@@ -86,13 +122,33 @@
                                 BorderBrush="#F57C00" Margin="0,0,0,15"
                                 Click="BtnFecharCaixa_Click" Height="37" Visibility="Collapsed"/>
 
-                        <Button x:Name="BtnSair" Content="Sair" Background="#E74C3C" 
-                                Foreground="White" Style="{StaticResource ButtonStyle}"
-                                BorderBrush="#C0392B" Height="37" Click="BtnSair_Click"/>
+                        <Button x:Name="BtnSair" 
+                                Style="{StaticResource ExitButtonStyle}" 
+                                Click="BtnSair_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <Path x:Name="ExitIcon" Fill="{StaticResource ExitRedColorBrush}" Width="20" Height="20" Margin="0,0,10,0" Data="M13 1.01L13 0H3C2.448 0 2 0.448 2 1v14c0 0.552 0.448 1 1 1h10c0.552 0 1-0.448 1-1V9.99h-1V15H3V1h10v0.01zM11 8H5V7h6V8zM14 7L11 4v2H5v1h6v2L14 7z"/>
+                                <TextBlock x:Name="ExitText" Text="Sair" Foreground="{StaticResource ExitRedColorBrush}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="ExitText" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="{StaticResource ColorExitWhite}" Duration="0:0:0.1"/>
+                                            <ColorAnimation Storyboard.TargetName="ExitIcon" Storyboard.TargetProperty="(Path.Fill).(SolidColorBrush.Color)" To="{StaticResource ColorExitWhite}" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetName="ExitText" Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)" To="{StaticResource ColorExitRed}" Duration="0:0:0.1"/>
+                                            <ColorAnimation Storyboard.TargetName="ExitIcon" Storyboard.TargetProperty="(Path.Fill).(SolidColorBrush.Color)" To="{StaticResource ColorExitRed}" Duration="0:0:0.1"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                        </Button>
                     </StackPanel>
-                    <Grid>
-                    <Image Source="/Imagens/Caixa.png" Margin="35,83,35,281" Stretch="Uniform"/>
-                    </Grid>
                 </Grid>
             </Border>
 
@@ -103,7 +159,7 @@
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="Nova Venda" Style="{StaticResource SectionTitleStyle}" 
-                               HorizontalAlignment="Center" Grid.Row="0" Margin="0,0,0,20"/>
+                           HorizontalAlignment="Center" Grid.Row="0" Margin="0,0,0,20"/>
 
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
@@ -117,7 +173,6 @@
                         <StackPanel>
                             <TextBlock Text="Buscar Produto" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
                             <TextBlock Text="Digite ou selecione o produto:" FontSize="14" Margin="0,0,0,5"/>
-
                             <ComboBox x:Name="ComboBuscarProduto"
                                       FontSize="14"
                                       Padding="8"
@@ -126,7 +181,6 @@
                                       IsTextSearchEnabled="False"
                                       StaysOpenOnEdit="True"
                                       KeyUp="ComboBuscarProduto_KeyUp"/>
-
                             <Button x:Name="BtnAdicionar" Content="Adicionar"
                                     Background="#5DADE2" Foreground="White"
                                     Style="{StaticResource ButtonStyle}" BorderBrush="#3498DB"
@@ -135,7 +189,7 @@
                     </Border>
 
                     <Border Grid.Column="1" BorderBrush="#CCCCCC" BorderThickness="2" 
-                                CornerRadius="8" Padding="20" Margin="0,0,15,0">
+                            CornerRadius="8" Padding="20" Margin="0,0,15,0">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -150,7 +204,7 @@
                     </Border>
 
                     <Border Grid.Column="2" BorderBrush="#CCCCCC" BorderThickness="2" 
-                                CornerRadius="8" Padding="20">
+                            CornerRadius="8" Padding="20">
                         <StackPanel>
                             <TextBlock Text="Conclusão da Venda" FontSize="18" FontWeight="SemiBold" 
                                        Margin="0,0,0,20" TextWrapping="Wrap"/>
@@ -174,6 +228,6 @@
             </Grid>
         </Grid>
 
-        <Image Source="/Imagens/Armazem.png" Stretch="Fill" Height="80" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" Margin="10,0,0,0"/>
+        <Image Source="/Imagens/Armazem.png" Stretch="Fill" Height="80" VerticalAlignment="Top" HorizontalAlignment="Left" Width="100" Margin="10,10,0,0"/>
     </Grid>
 </Window>

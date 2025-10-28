@@ -1,21 +1,14 @@
 ﻿using StockFlow.Controles;
 using System;
-
 using System.Collections.Generic;
-
 using System.Globalization;
-
 using System.Linq;
-
 using System.Windows;
-
 using System.Windows.Controls;
-
 using System.Windows.Input; // Necessário para KeyEventArgs
-
 using System.Windows.Media;
-
-using System.Windows.Threading; // Necessário para Dispatcher
+using System.Windows.Threading;
+using System.ComponentModel; // Necessário para Dispatcher
 
 
 
@@ -88,7 +81,21 @@ namespace StockFlow.Visual
 
         }
 
+        private void Tela_Vendas_Closing(object sender, CancelEventArgs e)
+        {
+            // Verifica se o caixa está aberto
+            if (isCaixaAberto)
+            {
+                // 1. Mostra a mesma mensagem de aviso do botão "Sair"
+                MessageBox.Show("Você precisa fechar o caixa antes de fechar o sistema.",
+                                "Caixa Aberto",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
 
+                // 2. CANCELA o evento de fechamento da janela
+                e.Cancel = true;
+            }
+        }
 
         #region LÓGICA DE ESTADO DO CAIXA
 
@@ -115,41 +122,24 @@ namespace StockFlow.Visual
             }
 
             else
-
             {
-
                 BtnAbrirCaixa.Visibility = Visibility.Visible;
-
                 BtnFecharCaixa.Visibility = Visibility.Collapsed;
-
                 GridVendaPrincipal.Opacity = 0.5;
-
                 GridVendaPrincipal.IsEnabled = false; // Desabilita a área de venda
-
                 LimparVendaAtual(); // Limpa a venda ao fechar o caixa
-
             }
 
         }
 
-
-
         private bool AlertaCaixaFechado()
-
         {
-
             if (!isCaixaAberto)
-
             {
-
                 MessageBox.Show("É necessário abrir o caixa para utilizar esta função.", "Caixa Fechado", MessageBoxButton.OK, MessageBoxImage.Warning);
-
                 return true;
-
             }
-
             return false;
-
         }
 
 
@@ -221,20 +211,16 @@ namespace StockFlow.Visual
 
 
         private void BtnSair_Click(object sender, RoutedEventArgs e)
-
         {
-
             if (isCaixaAberto)
-
             {
-
                 MessageBox.Show("Você precisa fechar o caixa antes de sair.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
-
                 return;
-
             }
 
-            this.Close();
+            Tela_Login login = new Tela_Login();
+            login.Show();
+            Window.GetWindow(this).Close();
 
         }
 
