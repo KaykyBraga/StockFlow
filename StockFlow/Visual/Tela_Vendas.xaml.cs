@@ -169,8 +169,10 @@ namespace StockFlow.Visual
 
                 isCaixaAberto = true;
                 AtualizarEstadoVisualCaixa(true);
+                ControleVenda controleVenda = new ControleVenda();
+                controleVenda.AbrirCaixa(valorAberturaAtual.ToString());
                 MessageBox.Show($"Caixa aberto com sucesso com um valor inicial de {this.valorAberturaAtual:C}!", "Caixa Aberto", MessageBoxButton.OK, MessageBoxImage.Information);
-                // ... (sua chamada ao ControleVenda.AbrirCaixa) ...
+                
             }
         }
 
@@ -687,9 +689,9 @@ namespace StockFlow.Visual
 
                 // ... (sua chamada ao ControleVenda.SangriaCaixa e MessageBox) ...
                 MessageBox.Show($"Sangria de {r.Item1:C} registrada com sucesso."); // Movido para fora do else
-                                                                                    // ControleVenda controleVenda = new ControleVenda();
-                                                                                    // controleVenda.SangriaCaixa(r.Item1.ToString(), r.Item2);
-                                                                                    // if (controleVenda.mensagem != "") { /*...*/ }
+                ControleVenda controleVenda = new ControleVenda();
+                controleVenda.SangriaCaixa(r.Item1.ToString(), r.Item2);
+                // if (controleVenda.mensagem != "") { /*...*/ }
             }
         }
 
@@ -707,9 +709,9 @@ namespace StockFlow.Visual
 
                 // ... (sua chamada ao ControleVenda.AdicionarTroca e MessageBox) ...
                 MessageBox.Show($"Troco de {r.Item1:C} adicionado com sucesso."); // Movido para fora do else
-                                                                                  // ControleVenda controleVenda = new ControleVenda();
-                                                                                  // controleVenda.AdicionarTroca(r.Item1.ToString(), r.Item2 );
-                                                                                  // if(controleVenda.mensagem != "") { /*...*/ }
+                ControleVenda controleVenda = new ControleVenda();
+                controleVenda.AdicionarTroca(r.Item1.ToString(), r.Item2);
+                // if(controleVenda.mensagem != "") { /*...*/ }
             }
         }
 

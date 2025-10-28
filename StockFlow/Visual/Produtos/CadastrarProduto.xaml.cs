@@ -283,9 +283,24 @@ namespace StockFlow.Visual.Produtos
             }
             else
             {
-                // Se tudo estiver certo (simulação):
-                // 1. Salve os dados no banco.
-                // 2. Mostre o pop-up de sucesso.
+                List<string> listaDados = new List<string>();
+                
+
+                listaDados.Add(txtSku.Text);
+                listaDados.Add(txtEan.Text);
+                listaDados.Add(txtNomeProduto.Text);
+                listaDados.Add(txtPrecodeVenda.Text);
+                listaDados.Add(txtPrecodeCusto.Text);
+                listaDados.Add(txtEstoqueInicial.Text);
+                listaDados.Add(txtEstoqueMinimo.Text);
+                
+
+
+
+
+
+
+
                 ShowSuccessPopup("Produto cadastrado com sucesso!");
             }
         }
