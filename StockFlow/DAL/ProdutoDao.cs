@@ -168,9 +168,9 @@ namespace StockFlow.DAL
                 _context.Produtos.Update(produto);
                 _context.SaveChanges();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                this.mensagem = "Erro ao editar o produto!";
+                this.mensagem = "Erro ao editar o produto! causa:" + ex;
                 return;
             }
         }

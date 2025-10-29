@@ -365,7 +365,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="Salvar" Style="{StaticResource BlueActionButtonStyle}" Margin="0,10,5,0" Click="SalvarButton_Click"/>
+                        <Button Grid.Column="0" Content="Salvar" Style="{StaticResource BlueActionButtonStyle}" Margin="0,10,5,0" Click="BtnSalvarEdicao_Click"/>
                         <Button Grid.Column="1" Content="Cancelar" Style="{StaticResource PopupCancelButtonStyle}" Margin="5,10,0,0" Click="btnCancelarEdicao_Click"/>
                     </Grid>
                 </StackPanel>

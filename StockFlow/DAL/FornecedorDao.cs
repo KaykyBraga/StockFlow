@@ -111,7 +111,7 @@ namespace StockFlow.DAL
                this.mensagem = "Erro ao editar o usuário!";
                 return;
             }
-            this.mensagem = "Fornecedor editado com sucesso!";
+            this.mensagem = "";
         }
 
         public async Task<List<Fornecedor>> ObterTodosOsFornecedoresAsync()

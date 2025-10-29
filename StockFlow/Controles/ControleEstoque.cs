@@ -182,7 +182,7 @@ namespace StockFlow.Controles
 
         }
 
-        public void DestativarCategoria(Categoria categoria)
+        public void DesativarCategoria(Categoria categoria)
         {
             this.mensagem = "";
             CategoriaDao categoriaDao = new CategoriaDao();
@@ -280,7 +280,19 @@ namespace StockFlow.Controles
             DataHoraCorreta dataHoraCorreta = new DataHoraCorreta();
 
 
+            dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
+            {
+                if (horaAtual.HasValue)
+                {
+                    movimentacao.Data = horaAtual.Value;
+                }
+                else
+                {
+                    this.mensagem = "Não foi possível obter a hora correta. Fornecedor não cadastrado.";
+                    return;
+                }
 
+            });
 
             produto.ProdutoId = validacao.CoverterParaInt(listaProduto[0]);
             produto.Sku = listaProduto[1];
@@ -297,6 +309,7 @@ namespace StockFlow.Controles
             produto.MarcaId = validacao.CoverterParaInt(listaProduto[9]);
             produto.CategoriaId = validacao.CoverterParaInt(listaProduto[10]);
             produto.FornecedorId = validacao.CoverterParaInt(listaProduto[11]);
+            produto.LocalizacaoEstoque = listaProduto[12];
             if (validacao.mensagem != "")
             {
                 this.mensagem = validacao.mensagem;
@@ -304,23 +317,11 @@ namespace StockFlow.Controles
             }
 
 
-            dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
-            {
-                if (horaAtual.HasValue)
-                {
-                    movimentacao.Data = horaAtual.Value;
-                }
-                else
-                {
-                    this.mensagem = "Não foi possível obter a hora correta. Fornecedor não cadastrado.";
-                    return;
-                }
-
-            });
+            
             movimentacao.Quantidade = 0;
             movimentacao.TipoMovimentacao = "Edição de Produto";
             movimentacao.UsuarioId = SessaoUsuario.UsuarioId;
-            movimentacao.Observacao = listaProduto[12];
+            movimentacao.Observacao = "Edição de produto";
             movimentacao.ProdutoId = produto.ProdutoId;
 
             produtoDao.EditarProduto(produto);
@@ -338,7 +339,7 @@ namespace StockFlow.Controles
                 return;
             }
 
-            this.mensagem = "Produto editado com sucesso.";
+            this.mensagem = "";
             return;
         }
 
