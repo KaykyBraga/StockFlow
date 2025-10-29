@@ -38,8 +38,12 @@ namespace StockFlow.DAL
             }
             catch (Exception ex)
             {
-                // ... (seu tratamento de erro continua o mesmo)
-                this.mensagem = "Erro ao cadastrar o produto. Causa: " + ex.Message;
+                Exception innerEx = ex;
+                while (innerEx.InnerException != null)
+                {
+                    innerEx = innerEx.InnerException;
+                }
+                this.mensagem = "Erro ao cadastrar o produto. Causa: " + innerEx.Message;
                 return false;
             }
             return true;
@@ -78,6 +82,29 @@ namespace StockFlow.DAL
                 {
                     this.mensagem = "Produto não encontrado.";
                 }
+                return produto;
+            }
+            catch (Exception ex)
+            {
+                this.mensagem = "Erro ao buscar produto: " + ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<Produto> BuscarProdutoPorIdAsync(int produtoId)
+        {
+            this.mensagem = "";
+            try
+            {
+                
+                var produto = await _context.Produtos.FindAsync(produtoId);
+
+                if (produto == null)
+                {
+                    this.mensagem = "Produto não encontrado.";
+                }
+
+               
                 return produto;
             }
             catch (Exception ex)

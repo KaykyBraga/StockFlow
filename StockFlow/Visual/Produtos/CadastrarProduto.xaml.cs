@@ -284,8 +284,9 @@ namespace StockFlow.Visual.Produtos
             else
             {
                 List<string> listaDados = new List<string>();
-                
-
+                var m = marcas.FirstOrDefault(m => m.NomeMarca == cmbMarca.Text);
+                var f = fornecedores.FirstOrDefault(f => f.NomeFantasia == cmbFornecedor.Text);
+                var c = categorias.FirstOrDefault(c => c.NomeCategoria == cmbCategoria.Text);
                 listaDados.Add(txtSku.Text);
                 listaDados.Add(txtEan.Text);
                 listaDados.Add(txtNomeProduto.Text);
@@ -293,15 +294,22 @@ namespace StockFlow.Visual.Produtos
                 listaDados.Add(txtPrecodeCusto.Text);
                 listaDados.Add(txtEstoqueInicial.Text);
                 listaDados.Add(txtEstoqueMinimo.Text);
-                
+                listaDados.Add(m.MarcaId.ToString());
+                listaDados.Add(f.FornecedorId.ToString());
+                listaDados.Add(c.CategoriaId.ToString());
+                listaDados.Add(txtLocalizacao.Text);
 
-
-
-
-
-
-
-                ShowSuccessPopup("Produto cadastrado com sucesso!");
+                ControleEstoque controleEstoque = new ControleEstoque();
+                controleEstoque.CadastrarProduto(listaDados);
+                if(controleEstoque.mensagem != "")
+                {
+                    MessageBox.Show(controleEstoque.mensagem, "Erro ao Cadastrar Produto", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                else
+                {
+                    ShowSuccessPopup("Produto cadastrado com sucesso!");
+                }
             }
         }
 

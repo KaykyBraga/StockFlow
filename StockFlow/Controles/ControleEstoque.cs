@@ -14,7 +14,7 @@ namespace StockFlow.Controles
         public string mensagem = "";
         public void AdicionarMarca(string nome)
         {
-           this.mensagem = "";
+            this.mensagem = "";
             MarcaDao marcaDao = new MarcaDao();
             Marca marca = new Marca();
             marca.NomeMarca = nome;
@@ -61,7 +61,7 @@ namespace StockFlow.Controles
             fornecedor.EmailPrincipal = ListaDados[3];
             fornecedor.TelefonePrincipal = ListaDados[4];
             fornecedor.Ativo = true;
-               
+
             fornecedorDao.CadastrarFornecedor(fornecedor);
             this.mensagem = fornecedorDao.mensagem;
         }
@@ -96,7 +96,7 @@ namespace StockFlow.Controles
                 }
             });
 
-            
+
 
             produto.Sku = listaDados[0];
             produto.Ean = listaDados[1];
@@ -135,7 +135,7 @@ namespace StockFlow.Controles
         {
             this.mensagem = "";
             var context = new AppDbContext();
-            ProdutoDao produtoDao = new ProdutoDao(context);           
+            ProdutoDao produtoDao = new ProdutoDao(context);
             MovimentacaoDao movimentacaoDao = new MovimentacaoDao();
             Movimentacao movimentacao = new Movimentacao();
             DataHoraCorreta dataHoraCorreta = new DataHoraCorreta();
@@ -162,7 +162,7 @@ namespace StockFlow.Controles
             movimentacao.UsuarioId = SessaoUsuario.UsuarioId;
             movimentacao.Observacao = "Adicionando mais produtos ao estoque";
             movimentacao.ProdutoId = id;
-            
+
             produtoDao.AdicionarEstoque(id, quantidadeAdicionar);
 
             if (produtoDao.mensagem != "")
@@ -177,7 +177,7 @@ namespace StockFlow.Controles
                 this.mensagem = movimentacaoDao.mensagem;
                 return;
             }
-            
+
             this.mensagem = "Produtos adicionados ao estoque com sucesso.";
 
         }
@@ -351,6 +351,15 @@ namespace StockFlow.Controles
             return produtos;
         }
 
+        public async Task<Produto> BuscarProdutoPorId(string produtoId)
+        {
+            var context =new AppDbContext();
+            ValidacaoEstoque validacaoEstoque = new ValidacaoEstoque();
+            ProdutoDao produtoDao = new ProdutoDao(context);
+            var produto = await produtoDao.BuscarProdutoPorIdAsync(validacaoEstoque.CoverterParaInt(produtoId));
+            return produto;
+        }
+
         public async Task<List<Produto>> ObterTodosOsProdutosAsync()
         {
             var context = new AppDbContext();
@@ -362,7 +371,7 @@ namespace StockFlow.Controles
 
         public async Task<List<Fornecedor>> ObterTodosOsFornecedoresAsync()
         {
-            FornecedorDao fornecedorDao = new FornecedorDao();          
+            FornecedorDao fornecedorDao = new FornecedorDao();
             var listaFornecedores = await fornecedorDao.ObterTodosOsFornecedoresAsync();
             return listaFornecedores;
         }

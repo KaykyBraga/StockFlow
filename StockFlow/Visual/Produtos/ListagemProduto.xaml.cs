@@ -37,8 +37,8 @@ namespace StockFlow.Visual.Produtos
 
         public ListagemProduto()
         {
-            InitializeComponent();
             CarregarProduto();
+            InitializeComponent();
         }
 
         private async void CarregarProduto()
