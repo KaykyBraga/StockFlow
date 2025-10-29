@@ -12,9 +12,12 @@ namespace StockFlow.Visual.Produtos
     public partial class EditarProduto : Page
     {
         private string produtoId;
+        string fornecedorId;
         List<StockFlow.Modelo.Marca> marcas;
         List<StockFlow.Modelo.Fornecedor> fornecedores;
         List<StockFlow.Modelo.Categoria> categorias;
+        DateTime? dataCadastro;
+        DateTime? dataCadastroFor;
 
         public EditarProduto(string idProduto)
         {
@@ -36,6 +39,10 @@ namespace StockFlow.Visual.Produtos
             txtSku.Text = produto.Sku;
             txtEan.Text = produto.Ean;
             txtPrecoCusto.Text = produto.PrecoCusto.ToString();
+            txtEstoqueMinimo.Text = produto.EstoqueMinimo.ToString();
+            txtPrecoVenda.Text = produto.PrecoVenda.ToString();
+            txtLocalizacao.Text = produto.LocalizacaoEstoque;
+            dataCadastro = produto.DataCadastro;
 
 
 
@@ -43,7 +50,7 @@ namespace StockFlow.Visual.Produtos
             List<string> listaMarcas = new List<string>();
             marcas = await controleEstoque.ObterTodasAsMarcasAsync();
             var nomeMarca = marcas.FirstOrDefault(m => m.MarcaId == produto.MarcaId);
-            foreach ( var item in marcas)
+            foreach (var item in marcas)
             {
                 listaMarcas.Add(item.NomeMarca);
             }
@@ -53,7 +60,7 @@ namespace StockFlow.Visual.Produtos
             List<string> listaCategorias = new List<string>();
             categorias = await controleEstoque.ObterTodasAsCategoriasAsync();
             var nomeCategorias = categorias.FirstOrDefault(c => c.CategoriaId == produto.CategoriaId);
-            foreach( var item in categorias)
+            foreach (var item in categorias)
             {
                 listaCategorias.Add(item.NomeCategoria);
             }
@@ -63,7 +70,7 @@ namespace StockFlow.Visual.Produtos
             List<string> listaFornecedores = new List<string>();
             fornecedores = await controleEstoque.ObterTodosOsFornecedoresAsync();
             var nomeFantasia = fornecedores.FirstOrDefault(f => f.FornecedorId == produto.FornecedorId);
-            foreach ( var item in fornecedores)
+            foreach (var item in fornecedores)
             {
                 listaFornecedores.Add(item.NomeFantasia);
             }
@@ -148,20 +155,57 @@ namespace StockFlow.Visual.Produtos
 
         private void btnExcluirMarca_Click(object sender, RoutedEventArgs e)
         {
-            PopupOverlay.Visibility = Visibility.Visible;
-            PopupEditarMarca.Visibility = Visibility.Visible;
+            MessageBoxResult resultado = MessageBox.Show($"Tem certeza que deseja remover a Marca? '{cmbMarca.Text}'?", "Confirmar Remoção", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (resultado == MessageBoxResult.Yes)
+            {
+                var m = marcas.FirstOrDefault(m => m.NomeMarca == cmbMarca.Text);
+                ControleEstoque controleEstoque = new ControleEstoque();
+                controleEstoque.DesatiarMarca(m);
+                if (controleEstoque.mensagem != "")
+                {
+                    MessageBox.Show(controleEstoque.mensagem);
+                }
+                else
+                {
+                    MessageBox.Show("Marca deletada com sucesso!");
+                }
+            }
+
+
         }
 
         private void btnEditarFornecedor_Click(object sender, RoutedEventArgs e)
         {
+            var f = fornecedores.FirstOrDefault(f => f.NomeFantasia == cmbFornecedor.Text);
+            txtPopupFornecedorNomeFantasia.Text = f.NomeFantasia;
+                txtPopupFornecedorRazaoSocial.Text = f.RazaoSocial;
+                txtPopupFornecedorTelefone.Text = f.TelefonePrincipal;
+            txtPopupFornecedorEmail.Text = f.EmailPrincipal;
+            txtPopupFornecedorCnpj.Text = f.Cnpj;
+            fornecedorId = f.FornecedorId.ToString();
+            dataCadastroFor = f.DataCadastro;
+
             PopupOverlay.Visibility = Visibility.Visible;
             PopupEditarFornecedor.Visibility = Visibility.Visible;
         }
 
         private void btnExcluirCategoria_Click(object sender, RoutedEventArgs e)
         {
-            PopupOverlay.Visibility = Visibility.Visible;
-            PopupEditarCategoria.Visibility = Visibility.Visible;
+            MessageBoxResult resultado = MessageBox.Show($"Tem certeza que deseja remover a Categoria? '{cmbCategoria.Text}'?", "Confirmar Remoção", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (resultado == MessageBoxResult.Yes)
+            {
+                var c = categorias.FirstOrDefault(c => c.NomeCategoria == cmbCategoria.Text);
+                ControleEstoque controleEstoque = new ControleEstoque();
+                controleEstoque.DesativarCategoria(c);
+                if (controleEstoque.mensagem != "")
+                {
+                    MessageBox.Show(controleEstoque.mensagem);
+                }
+                else
+                {
+                    MessageBox.Show("Categoria deletada com sucesso!");
+                }
+            }
         }
 
         private void btnCancelarEdicao_Click(object sender, RoutedEventArgs e)
@@ -191,8 +235,62 @@ namespace StockFlow.Visual.Produtos
         // 1. O botão Salvar APENAS abre o pop-up de confirmação
         private void SalvarButton_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtNomeProduto.Text) ||
+                string.IsNullOrWhiteSpace(txtSku.Text) ||
+                string.IsNullOrWhiteSpace(txtPrecoCusto.Text) ||
+                string.IsNullOrWhiteSpace(txtPrecoVenda.Text) ||
+                string.IsNullOrWhiteSpace(txtEstoqueAtual.Text) ||
+                string.IsNullOrWhiteSpace(txtEan.Text) ||
+                string.IsNullOrWhiteSpace(txtEstoqueMinimo.Text) ||
+                string.IsNullOrWhiteSpace(txtLocalizacao.Text))
+            {
+                MessageBox.Show("Preencha todos os campos corretamente", "Erro campos nao preenchidos", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             PopupOverlay.Visibility = Visibility.Visible;
             PopupConfirmacao.Visibility = Visibility.Visible;
+
+        }
+
+        private void BtnSalvarEdicao_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtPopupFornecedorNomeFantasia.Text) ||
+                string.IsNullOrWhiteSpace(txtPopupFornecedorRazaoSocial.Text) ||
+                string.IsNullOrWhiteSpace(txtPopupFornecedorTelefone.Text) ||
+                string.IsNullOrWhiteSpace(txtPopupFornecedorEmail.Text) ||
+                string.IsNullOrWhiteSpace(txtPopupFornecedorCnpj.Text))
+            {
+                    MessageBox.Show("Preencha todos os campos!!");
+
+            }
+            else
+            {
+                string textoComMascara = txtPopupFornecedorCnpj.Text;
+                string soNumeros = new string(textoComMascara.Where(char.IsDigit).ToArray());
+                ControleEstoque controleEstoque = new ControleEstoque();
+                List<string> listaDados = new List<string>
+                {
+                    fornecedorId,
+                    txtPopupFornecedorNomeFantasia.Text,
+                    txtPopupFornecedorRazaoSocial.Text,
+                    soNumeros,
+                    txtPopupFornecedorEmail.Text,
+                    txtPopupFornecedorTelefone.Text,
+                    dataCadastroFor.ToString(),
+
+                };
+                controleEstoque.EditarFornecedor(listaDados);
+                if (controleEstoque.mensagem != "")
+                {
+                    MessageBox.Show(controleEstoque.mensagem);
+                    return;
+                }
+                else
+                {
+                    ShowSuccessPopup("Fornecedor atualizado com sucesso!");
+                    CarregarDadosDoProduto();
+                }
+            }
         }
 
         // 2. O botão "Sim, Salvar" dentro do pop-up executa a lógica
@@ -200,10 +298,55 @@ namespace StockFlow.Visual.Produtos
         {
             PopupConfirmacao.Visibility = Visibility.Collapsed;
 
-            // --- AQUI VAI A SUA LÓGICA DE VALIDAÇÃO E EDIÇÃO ---
-            if (string.IsNullOrWhiteSpace(txtNomeProduto.Text))
+
+
+            List<string> listaDados = new List<string>();
+            var m = marcas.FirstOrDefault(m => m.NomeMarca == cmbMarca.Text);
+            if (m.Ativo == false)
             {
-                ShowErrorPopup("O campo 'Nome Produto' não pode estar vazio.");
+                MessageBox.Show("coloque uma marca que esteja ativa");
+                PopupOverlay.Visibility = Visibility.Collapsed;
+                PopupConfirmacao.Visibility = Visibility.Collapsed;
+                return;
+            }
+            var f = fornecedores.FirstOrDefault(f => f.NomeFantasia == cmbFornecedor.Text);
+            if (f.Ativo == false)
+            {
+                MessageBox.Show("coloque um fornecedor que esteja ativa");
+                PopupOverlay.Visibility = Visibility.Collapsed;
+                PopupConfirmacao.Visibility = Visibility.Collapsed;
+                return;
+            }
+            var c = categorias.FirstOrDefault(c => c.NomeCategoria == cmbCategoria.Text);
+            if (c.Ativo == false)
+            {
+                MessageBox.Show("coloque uma categoria que esteja ativa");
+                PopupOverlay.Visibility = Visibility.Collapsed;
+                PopupConfirmacao.Visibility = Visibility.Collapsed;
+                return;
+            }
+            listaDados.Add(this.produtoId);
+            listaDados.Add(txtSku.Text);
+            listaDados.Add(txtEan.Text);
+            listaDados.Add(txtNomeProduto.Text);
+            listaDados.Add(txtPrecoVenda.Text);
+            listaDados.Add(txtPrecoCusto.Text);
+            listaDados.Add(txtEstoqueAtual.Text);
+            listaDados.Add(txtEstoqueMinimo.Text);
+            listaDados.Add(dataCadastro.ToString());
+            listaDados.Add(m.MarcaId.ToString());
+            listaDados.Add(c.CategoriaId.ToString());
+            listaDados.Add(f.FornecedorId.ToString());
+            listaDados.Add(txtLocalizacao.Text);
+
+            ControleEstoque controleEstoque = new ControleEstoque();
+            controleEstoque.EditarProduto(listaDados);
+            if (controleEstoque.mensagem != "")
+            {
+                MessageBox.Show(controleEstoque.mensagem);
+                PopupOverlay.Visibility = Visibility.Collapsed;
+                PopupConfirmacao.Visibility = Visibility.Collapsed;
+                return;
             }
             else
             {
