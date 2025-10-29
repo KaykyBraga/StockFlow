@@ -1,6 +1,7 @@
 ﻿using StockFlow.Controles;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel; // Necessário para Dispatcher
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -8,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input; // Necessário para KeyEventArgs
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.ComponentModel; // Necessário para Dispatcher
+using System.Text.RegularExpressions;
 
 
 
@@ -782,97 +783,177 @@ namespace StockFlow.Visual
 
 
 
-        private bool? CriarPopupFechamentoCaixa(decimal valorEsperadoCaixa) // <--- Parâmetro renomeado
+        private bool? CriarPopupFechamentoCaixa(decimal valorEsperadoCaixa)
         {
             // --- Cores ---
             SolidColorBrush corConfirmar = (SolidColorBrush)new BrushConverter().ConvertFrom("#28A745");
             SolidColorBrush corConfirmarHover = (SolidColorBrush)new BrushConverter().ConvertFrom("#218838");
             SolidColorBrush corCancelar = (SolidColorBrush)new BrushConverter().ConvertFrom("#AAAAAA");
             SolidColorBrush corCancelarHover = (SolidColorBrush)new BrushConverter().ConvertFrom("#888888");
-            SolidColorBrush corValorDisplay = Brushes.Gray; // Cor para o valor esperado
+            SolidColorBrush corValorDisplay = Brushes.Gray;
 
-            // --- Janela Popup ---
-            var popupWindow = new Window { /* ... configurações da janela ... */ Owner = Window.GetWindow(this) };
+            // --- Janela Popup (COM TAMANHO DEFINIDO) ---
+            var popupWindow = new Window
+            {
+                Title = "Fechamento de Caixa",
+                SizeToContent = SizeToContent.Height, // Ajusta a altura ao conteúdo
+                Width = 450, // Define uma LARGURA FIXA
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = Window.GetWindow(this),
+                ResizeMode = ResizeMode.NoResize,
+                WindowStyle = WindowStyle.ToolWindow
+            };
+
+            // --- Layout ---
             var mainGrid = new Grid { Margin = new Thickness(25) };
-            var contentStack = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
+            var contentStack = new StackPanel
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Stretch // Deixa o StackPanel preencher o Grid
+            };
 
-            // Título e Ícone
-            var titleText = new TextBlock { Text = "Fechamento de Caixa", FontSize = 22, /*...*/ };
-            var iconText = new TextBlock { Text = "💰", FontSize = 48, /*...*/ };
+            // Título (Centralizado)
+            var titleText = new TextBlock
+            {
+                Text = "Fechamento de Caixa",
+                FontSize = 22,
+                FontWeight = FontWeights.Bold,
+                HorizontalAlignment = HorizontalAlignment.Center, // <-- Centraliza
+                Margin = new Thickness(0, 0, 0, 10)
+            };
 
-            // Valor ESPERADO (Display ReadOnly) <--- ALTERADO AQUI
-            var labelValorEsperado = new TextBlock { Text = "Valor Esperado (Calculado):", FontSize = 12, Foreground = Brushes.Gray, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 10, 0, 2) };
+            // Ícone (Centralizado)
+            var iconText = new TextBlock
+            {
+                Text = "💰",
+                FontSize = 48,
+                HorizontalAlignment = HorizontalAlignment.Center, // <-- Centraliza
+                Margin = new Thickness(0, 0, 0, 15)
+            };
+
+            // Valor ESPERADO (Centralizado)
+            var labelValorEsperado = new TextBlock
+            {
+                Text = "Valor Esperado (Calculado):",
+                FontSize = 12,
+                Foreground = Brushes.Gray,
+                HorizontalAlignment = HorizontalAlignment.Center, // <-- Centraliza
+                Margin = new Thickness(0, 10, 0, 2)
+            };
+
             var txtValorEsperadoDisplay = new TextBox
             {
-                Text = valorEsperadoCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR")), // <--- Usa o parâmetro
+                Text = valorEsperadoCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR")),
                 IsReadOnly = true,
                 Background = Brushes.Transparent,
                 BorderThickness = new Thickness(0),
                 FontSize = 16,
                 FontWeight = FontWeights.SemiBold,
-                Foreground = corValorDisplay, // <--- Cor ajustada
-                TextAlignment = TextAlignment.Center,
+                Foreground = corValorDisplay,
+                TextAlignment = TextAlignment.Center, // <-- Centraliza o texto
                 Margin = new Thickness(0, 0, 0, 15)
             };
 
-            // Valor Final (Entrada do Usuário)
-            var labelValorFinal = new TextBlock { Text = "Digite o Valor Final Contado em Caixa (R$):", /*...*/ };
-            var txtValorFinalContado = new TextBox { Name = "txtValorFinalContado", /*...*/ };
-            txtValorFinalContado.PreviewTextInput += (s, args) => { /*...*/ };
+            // Valor Final (Alinhado à Esquerda)
+            var labelValorFinal = new TextBlock
+            {
+                Text = "Digite o Valor Final Contado em Caixa (R$):",
+                FontWeight = FontWeights.SemiBold,
+                HorizontalAlignment = HorizontalAlignment.Left, // <-- Alinha à esquerda
+                Margin = new Thickness(0, 0, 0, 5)
+            };
 
-            // Adiciona elementos (ordem ajustada para melhor leitura)
+            var txtValorFinalContado = new TextBox
+            {
+                Name = "txtValorFinalContado",
+                Height = 35,
+                FontSize = 16,
+                Padding = new Thickness(5),
+                Margin = new Thickness(0, 0, 0, 25),
+                HorizontalAlignment = HorizontalAlignment.Stretch // <-- Estica (comportamento padrão)
+            };
+            txtValorFinalContado.PreviewTextInput += (s, args) => { args.Handled = !new Regex(@"^[0-9]*(,|\.)?[0-9]*$").IsMatch(args.Text); };
+
+            // Adiciona elementos
             contentStack.Children.Add(titleText);
-            contentStack.Children.Add(iconText); // Ícone depois do título
+            contentStack.Children.Add(iconText);
             contentStack.Children.Add(labelValorEsperado);
             contentStack.Children.Add(txtValorEsperadoDisplay);
             contentStack.Children.Add(labelValorFinal);
             contentStack.Children.Add(txtValorFinalContado);
 
-            // --- Painel de Botões ---
-            var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
+            // --- Painel de Botões (Alinhado à Direita) ---
+            var buttonPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Right // <-- Alinha os botões à direita
+            };
 
             // --- Botão Cancelar ---
-            var btnCancelar = new Button { /*...*/ };
+            var btnCancelar = new Button
+            {
+                Content = "Cancelar",
+                Width = 120,
+                Height = 40,
+                Margin = new Thickness(0, 0, 10, 0),
+                Background = corCancelar,
+                Foreground = Brushes.White,
+                IsCancel = true,
+                Padding = new Thickness(5),
+                Cursor = Cursors.Hand
+            };
             btnCancelar.MouseEnter += (s, e) => btnCancelar.Background = corCancelarHover;
             btnCancelar.MouseLeave += (s, e) => btnCancelar.Background = corCancelar;
             btnCancelar.Click += (s, args) => { popupWindow.DialogResult = false; popupWindow.Close(); };
 
             // --- Botão Confirmar ---
-            var btnConfirmar = new Button { /*...*/ };
+            var btnConfirmar = new Button
+            {
+                Content = "Confirmar Fechamento",
+                Width = 180,
+                Height = 40,
+                FontWeight = FontWeights.Bold,
+                Background = corConfirmar,
+                Foreground = Brushes.White,
+                IsDefault = true,
+                Padding = new Thickness(5),
+                Cursor = Cursors.Hand
+            };
             btnConfirmar.MouseEnter += (s, e) => btnConfirmar.Background = corConfirmarHover;
             btnConfirmar.MouseLeave += (s, e) => btnConfirmar.Background = corConfirmar;
             btnConfirmar.Click += (s, args) =>
             {
+                // ... (Sua lógica de clique para validar, calcular diferença e mostrar MessageBox) ...
+                // (A lógica interna do clique não precisa mudar)
                 if (!decimal.TryParse(txtValorFinalContado.Text, NumberStyles.Currency, CultureInfo.GetCultureInfo("pt-BR"), out decimal valorFinalContado) || valorFinalContado < 0)
-                { /*...*/ return; }
+                { MessageBox.Show(popupWindow, "Por favor, insira um valor monetário válido...", "Valor Inválido", MessageBoxButton.OK, MessageBoxImage.Warning); txtValorFinalContado.Focus(); return; }
 
-                // CALCULA A DIFERENÇA USANDO O VALOR ESPERADO
-                decimal diferenca = valorFinalContado - valorEsperadoCaixa; // <--- Usa o parâmetro aqui
-
-                // Monta a mensagem (Sobra/Falta/Exato)
+                decimal diferenca = valorFinalContado - valorEsperadoCaixa;
                 string tituloMsgBox = "Resultado do Fechamento";
                 string msgResultado;
                 MessageBoxImage iconeMsgBox = MessageBoxImage.Information;
-                // ... (lógica if/else if/else para msgResultado - sem alterações) ...
+
                 if (diferenca == 0) { msgResultado = "O caixa fechou sem diferença."; }
                 else if (diferenca > 0) { msgResultado = $"SOBRA: O caixa fechou com {diferenca:C} a mais."; iconeMsgBox = MessageBoxImage.Warning; }
                 else { msgResultado = $"FALTA: O caixa fechou com {(-diferenca):C} a menos."; iconeMsgBox = MessageBoxImage.Warning; }
 
-
-                // MOSTRA A MENSAGEM COM OS VALORES E A DIFERENÇA
-                string msgCompleta = $"{msgResultado}\n\nValor Esperado: {valorEsperadoCaixa.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))}\nValor Contado: {valorFinalContado.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))}"; // <--- Usa o parâmetro aqui
+                string msgCompleta = $"{msgResultado}\n\nValor Esperado: {valorEsperadoCaixa:C}\nValor Contado: {valorFinalContado:C}";
                 MessageBox.Show(popupWindow, msgCompleta, tituloMsgBox, MessageBoxButton.OK, iconeMsgBox);
 
-                // FECHA O POPUP e retorna TRUE para o BtnFecharCaixa_Click
                 ControleVenda controleVenda = new ControleVenda();
-                controleVenda.FecharCaixa(valorFinalContado.ToString()); // Mantém o registro do valor CONTADO
+                controleVenda.FecharCaixa(valorFinalContado.ToString());
                 popupWindow.DialogResult = true;
                 popupWindow.Close();
             };
 
+            // Adiciona os botões ao painel de botões
             buttonPanel.Children.Add(btnCancelar);
             buttonPanel.Children.Add(btnConfirmar);
+
+            // Adiciona o painel de botões ao StackPanel principal
             contentStack.Children.Add(buttonPanel);
+
+            // Adiciona o StackPanel ao Grid
             mainGrid.Children.Add(contentStack);
             popupWindow.Content = mainGrid;
 
