@@ -106,9 +106,14 @@ namespace StockFlow
 
         private void BtnSair_Click(object sender, RoutedEventArgs e)
         {
-            Tela_Login login = new Tela_Login();
-            login.Show();
-            Window.GetWindow(this).Close();
+            MessageBoxResult resultado = MessageBox.Show("Tem certeza que deseja sair?", "Confirmação", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (resultado == MessageBoxResult.Yes)
+            {
+                Tela_Login login = new Tela_Login();
+                login.Show();
+                Window.GetWindow(this).Close();
+            }
         }
     }
 }

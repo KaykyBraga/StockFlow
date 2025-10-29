@@ -218,11 +218,16 @@ namespace StockFlow.Visual
                 MessageBox.Show("Você precisa fechar o caixa antes de sair.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
-            Tela_Login login = new Tela_Login();
-            login.Show();
-            Window.GetWindow(this).Close();
-
+            
+            MessageBoxResult resultado = MessageBox.Show("Tem certeza que deseja sair?", "Confirmação", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            
+            if (resultado == MessageBoxResult.Yes)
+            {         
+                Tela_Login login = new Tela_Login();
+                login.Show();
+                Window.GetWindow(this).Close();
+            }
+        
         }
 
         #endregion
