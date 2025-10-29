@@ -38,8 +38,12 @@ namespace StockFlow.DAL
             }
             catch (Exception ex)
             {
-                // ... (seu tratamento de erro continua o mesmo)
-                this.mensagem = "Erro ao cadastrar o produto. Causa: " + ex.Message;
+                Exception innerEx = ex;
+                while (innerEx.InnerException != null)
+                {
+                    innerEx = innerEx.InnerException;
+                }
+                this.mensagem = "Erro ao cadastrar o produto. Causa: " + innerEx.Message;
                 return false;
             }
             return true;
