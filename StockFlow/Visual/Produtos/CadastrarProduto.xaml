@@ -259,11 +259,11 @@
 
                     <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Nome Produto" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtNomeProduto" Style="{StaticResource FormTextBoxStyle}"/>
+                        <TextBox x:Name="txtNomeProduto" Style="{StaticResource FormTextBoxStyle}" ToolTip="Nome Completo do Produto"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1" Margin="15,0,0,10">
                         <TextBlock Text="Estoque Inicial" />
-                        <TextBox x:Name="txtEstoqueInicial" Style="{StaticResource FormTextBoxStyle}"/>
+                        <TextBox x:Name="txtEstoqueInicial" Style="{StaticResource FormTextBoxStyle}" ToolTip="Ex.: 50"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,15,10">
@@ -272,25 +272,25 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" Margin="15,0,0,10">
                         <TextBlock Text="EAN (Código de Barras)"/>
-                        <TextBox x:Name="txtEan" Style="{StaticResource FormTextBoxStyle}" ToolTip="Número Global do Item Comercial (código de barras)"/>
+                        <TextBox x:Name="txtEan" Style="{StaticResource FormTextBoxStyle}" ToolTip="Código de 13 digitos. Ex.: 1111111111111"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Preço de Custo" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtPrecodeCusto" Style="{StaticResource FormTextBoxStyle}"/>
+                        <TextBox x:Name="txtPrecodeCusto" Style="{StaticResource FormTextBoxStyle}" ToolTip="Ex.: R$ 10,00"/>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" Margin="15,0,0,10">
                         <TextBlock Text="Estoque Mínimo"/>
-                        <TextBox x:Name="txtEstoqueMinimo" Style="{StaticResource FormTextBoxStyle}"/>
+                        <TextBox x:Name="txtEstoqueMinimo" Style="{StaticResource FormTextBoxStyle}" ToolTip="Ex.: 10"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="Preço de Venda" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtPrecodeVenda" Style="{StaticResource FormTextBoxStyle}"/>
+                        <TextBox x:Name="txtPrecodeVenda" Style="{StaticResource FormTextBoxStyle}" ToolTip="Ex.: R$ 50,00"/>
                     </StackPanel>
                     <StackPanel Grid.Row="3" Grid.Column="1" Margin="15,0,0,10">
                         <TextBlock Text="Localização no Estoque"/>
-                        <TextBox x:Name="txtLocalizacao" Style="{StaticResource FormTextBoxStyle}" ToolTip="Ex: Corredor A, Prateleira 3"/>
+                        <TextBox x:Name="txtLocalizacao" Style="{StaticResource FormTextBoxStyle}" ToolTip="Ex: Prateleira 1, Corredor 1, Andar 1."/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,10,0,10">
