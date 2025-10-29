@@ -5,38 +5,72 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using System.Linq;
+using StockFlow.Controles;
 
 namespace StockFlow.Visual.Produtos
 {
     public partial class EditarProduto : Page
     {
         private string produtoId;
+        List<StockFlow.Modelo.Marca> marcas;
+        List<StockFlow.Modelo.Fornecedor> fornecedores;
+        List<StockFlow.Modelo.Categoria> categorias;
 
         public EditarProduto(string idProduto)
         {
-            InitializeComponent();
             this.produtoId = idProduto;
+            CarregarDadosDoProduto();
+            InitializeComponent();
 
             // 2. Chama um método para carregar os dados do produto nos campos
-            CarregarDadosDoProduto();
         }
 
-        private void CarregarDadosDoProduto()
+        private async void CarregarDadosDoProduto()
         {
-            // É AQUI QUE VOCÊ DEVE BUSCAR NO BANCO DE DADOS:
-            // 1. Use 'this.produtoId' para buscar o produto completo no banco.
-            //    Ex: Produto produto = MeuBanco.GetProdutoPorId(this.produtoId);
+            ControleEstoque controleEstoque = new ControleEstoque();
+            var produto = await controleEstoque.BuscarProdutoPorId(this.produtoId);
 
-            // 2. Preencha os campos (TextBoxes, ComboBoxes, etc.) da sua
-            //    tela 'EditarProduto.xaml' com os dados encontrados.
-            //    Ex: txtNomeProduto.Text = produto.Nome;
-            //        txtPrecoVenda.Text = produto.Preco.ToString();
-            //        cmbCategoria.SelectedValue = produto.CategoriaId;
 
-            // Apenas como exemplo, vamos supor que você tem um TextBlock
-            // chamado 'txtTitulo' e vamos exibir o ID nele:
+            txtNomeProduto.Text = produto.NomeCompleto;
+            txtEstoqueAtual.Text = produto.EstoqueAtual.ToString();
+            txtSku.Text = produto.Sku;
+            txtEan.Text = produto.Ean;
+            txtPrecoCusto.Text = produto.PrecoCusto.ToString();
 
-            // Ex: txtTitulo.Text = $"Editando Produto ID: {this.produtoId}";
+
+
+
+            List<string> listaMarcas = new List<string>();
+            marcas = await controleEstoque.ObterTodasAsMarcasAsync();
+            var nomeMarca = marcas.FirstOrDefault(m => m.MarcaId == produto.MarcaId);
+            foreach ( var item in marcas)
+            {
+                listaMarcas.Add(item.NomeMarca);
+            }
+            cmbMarca.ItemsSource = listaMarcas;
+            cmbMarca.Text = nomeMarca.NomeMarca;
+
+            List<string> listaCategorias = new List<string>();
+            categorias = await controleEstoque.ObterTodasAsCategoriasAsync();
+            var nomeCategorias = categorias.FirstOrDefault(c => c.CategoriaId == produto.CategoriaId);
+            foreach( var item in categorias)
+            {
+                listaCategorias.Add(item.NomeCategoria);
+            }
+            cmbCategoria.ItemsSource = listaCategorias;
+            cmbCategoria.Text = nomeCategorias.NomeCategoria;
+
+            List<string> listaFornecedores = new List<string>();
+            fornecedores = await controleEstoque.ObterTodosOsFornecedoresAsync();
+            var nomeFantasia = fornecedores.FirstOrDefault(f => f.FornecedorId == produto.FornecedorId);
+            foreach ( var item in fornecedores)
+            {
+                listaFornecedores.Add(item.NomeFantasia);
+            }
+            cmbFornecedor.ItemsSource = listaFornecedores;
+            cmbFornecedor.Text = nomeFantasia.NomeFantasia;
+
+
         }
 
 

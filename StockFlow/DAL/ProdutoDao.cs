@@ -91,6 +91,29 @@ namespace StockFlow.DAL
             }
         }
 
+        public async Task<Produto> BuscarProdutoPorIdAsync(int produtoId)
+        {
+            this.mensagem = "";
+            try
+            {
+                
+                var produto = await _context.Produtos.FindAsync(produtoId);
+
+                if (produto == null)
+                {
+                    this.mensagem = "Produto não encontrado.";
+                }
+
+               
+                return produto;
+            }
+            catch (Exception ex)
+            {
+                this.mensagem = "Erro ao buscar produto: " + ex.Message;
+                return null;
+            }
+        }
+
         public void AdicionarEstoque(int produtoId, int quantidade)
         {
             this.mensagem = "";
