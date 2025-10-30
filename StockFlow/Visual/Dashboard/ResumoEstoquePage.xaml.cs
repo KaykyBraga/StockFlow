@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockFlow.Controles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,40 +23,27 @@ namespace StockFlow.Visual
 
     public class ProdutoResumo
     {
-        public required string Produto { get; set; } // Resolvido o aviso CS8618
+        public string Produto { get; set; } // Resolvido o aviso CS8618
         public int Quantidade { get; set; }
-        public required string Status { get; set; }      // Resolvido o aviso CS8618
+        public string? Localizacao { get; set; }
+        public string Status { get; set; }      // Resolvido o aviso CS8618
     }
 
     public partial class ResumoEstoquePage : Page
     {
         public ResumoEstoquePage()
         {
+            Carregar();
             InitializeComponent();
+           
+        }
 
-            // Carrega os dados simulados no DataGrid
-            List<ProdutoResumo> produtos = new List<ProdutoResumo>
-            {
-                // Os dados agora são inicializados corretamente com as propriedades 'required'
-                new ProdutoResumo { Produto = "Monitor Gamer 27'", Quantidade = 50, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Teclado Mecânico RGB", Quantidade = 120, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Mouse Sem Fio Ultra", Quantidade = 15, Status = "Baixo Estoque" },
-                new ProdutoResumo { Produto = "Webcam Full HD", Quantidade = 5, Status = "Crítico" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" },
-                new ProdutoResumo { Produto = "Fone de Ouvido BT", Quantidade = 80, Status = "Em Estoque" }
-            };
+        private async void Carregar()
+        {
+            ControleEstoque controleEstoque = new ControleEstoque();
+            var produtos = await controleEstoque.ObterTodosOsProdutosParaOGridAtivos2Async();
             DgEstoque.ItemsSource = produtos;
+
         }
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {

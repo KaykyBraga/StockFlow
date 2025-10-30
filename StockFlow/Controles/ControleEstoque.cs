@@ -512,6 +512,36 @@ namespace StockFlow.Controles
 
                 return listaFinalParaGrid;
             }
+
+
+        }
+
+        public async Task<List<StockFlow.Visual.ProdutoResumo>> ObterTodosOsProdutosParaOGridAtivos2Async()
+        {
+            var context = new AppDbContext();
+            ProdutoDao produtoDao = new ProdutoDao(context);
+            List<Produto> listaProdutos = new List<Produto>();
+            listaProdutos = await produtoDao.ObterProdutosAtivosAsync();
+            decimal margemDeAtencao = 1.20m;
+            var listaFinalParaGrid = listaProdutos.Select(produto => new StockFlow.Visual.ProdutoResumo
+            {
+                Produto = produto.NomeCompleto,
+                Quantidade = produto.EstoqueAtual,
+                Localizacao = produto.LocalizacaoEstoque,
+                Status =
+                // Primeira pergunta: O estoque está crítico?
+                produto.EstoqueAtual <= produto.EstoqueMinimo
+                    ? "Reposição Urgente" // Se SIM, o status é este.
+
+                // Se NÃO, fazemos a segunda pergunta: O estoque está na margem de atenção?
+                : produto.EstoqueAtual <= (produto.EstoqueMinimo * margemDeAtencao)
+                    ? "Estoque Baixo (Atenção)" // Se SIM, o status é este.
+
+                // Se NENHUMA das anteriores for verdade, o estoque está OK.
+                : "Estoque OK"
+
+            }).ToList();
+            return listaFinalParaGrid;
         }
     }
 }
