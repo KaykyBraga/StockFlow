@@ -482,7 +482,7 @@ namespace StockFlow.Controles
         }
 
 
-        public async Task<List<StockFlow.Visual.Alertagrid>> ObterTodosOsProdutosParaGridAlertaAsync()
+        public async Task<List<StockFlow.Visual.Alertagrid>> ObterTodosOsProdutosParaGridAlertaAtencaoAsync()
         {
             await using (var context = new AppDbContext())
             {
@@ -490,30 +490,48 @@ namespace StockFlow.Controles
                 List<Produto> listaProdutos = await produtoDao.ObterProdutosAtivosAsync();
                 decimal margemDeAtencao = 1.20m; // 20%
 
-                var listaFinalParaGrid = listaProdutos
+                var listaDeAtencao = listaProdutos
                     
                     .Where(p =>
-                        p.EstoqueAtual <= (p.EstoqueMinimo * margemDeAtencao)
+                        p.EstoqueAtual <= (p.EstoqueMinimo * margemDeAtencao) &&
+                        p.EstoqueAtual > p.EstoqueMinimo
                     )
                     
                     .Select(produto => new StockFlow.Visual.Alertagrid
                     {
-                        
-                        EstadoDeAtencao = (produto.EstoqueAtual > produto.EstoqueMinimo)
-                                          ? produto.NomeCompleto
-                                          : "",
-
-                        
-                        PrecisaDeReposicao = (produto.EstoqueAtual <= produto.EstoqueMinimo)
-                                             ? produto.NomeCompleto
-                                             : ""
+                        EstadoDeAtencao = produto.NomeCompleto,
+                        PrecisaDeReposicao = "" 
                     })
                     .ToList();
+               
+                var listaFinalParaGrid = listaDeAtencao;
 
                 return listaFinalParaGrid;
             }
+        }
 
+        public async Task<List<StockFlow.Visual.Alertagrid>> ObterTodosOsProdutosParaGridAlertaReposicaoAsync()
+        {
+            await using (var context = new AppDbContext())
+            {
+                var produtoDao = new ProdutoDao(context);
+                List<Produto> listaProdutos = await produtoDao.ObterProdutosAtivosAsync();
+  
+                var listaDeReposicao = listaProdutos
 
+                    .Where(p => p.EstoqueAtual <= p.EstoqueMinimo)
+
+                    .Select(produto => new StockFlow.Visual.Alertagrid
+                    {
+                        EstadoDeAtencao = "", // Temporariamente vazio
+                        PrecisaDeReposicao = produto.NomeCompleto
+                    })
+                    .ToList(); // Materializa a segunda lista
+
+                var listaFinalParaGrid = listaDeReposicao;
+
+                return listaFinalParaGrid;
+            }
         }
 
         public async Task<List<StockFlow.Visual.ProdutoResumo>> ObterTodosOsProdutosParaOGridAtivos2Async()

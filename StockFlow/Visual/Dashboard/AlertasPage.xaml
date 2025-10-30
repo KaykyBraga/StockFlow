@@ -52,7 +52,7 @@
                               AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
                               FontSize="14" ColumnWidth="*" Height="350">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Produto" Binding="{Binding NomeProduto}" Width="*"/>
+                            <DataGridTextColumn Header="Produto" Binding="{Binding EstadoDeAtencao}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>
@@ -75,7 +75,7 @@
                               AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
                               FontSize="14" ColumnWidth="*" Height="350">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Produto" Binding="{Binding NomeProduto}" Width="*"/>
+                            <DataGridTextColumn Header="Produto" Binding="{Binding PrecisaDeReposicao}" Width="*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>
