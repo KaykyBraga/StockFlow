@@ -2,7 +2,7 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:d="http://schemas.expression/blend/2008" 
       xmlns:local="clr-namespace:StockFlow"
       mc:Ignorable="d"
       d:DesignHeight="600" d:DesignWidth="1000"
@@ -15,13 +15,11 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Grid.Row="0" VerticalAlignment="Center" Margin="0,0,0,20">
-
             <Button Style="{StaticResource BackButtonStyle}" Click="BackButton_Click">
                 <ContentControl>
                     <Path Data="M10 0 L0 10 L10 20 Z" Fill="#555" Width="10" Height="20" Stretch="Fill"/>
                 </ContentControl>
             </Button>
-
             <TextBlock Text="Alertas!!" 
                        FontSize="28" 
                        FontWeight="Bold" 
@@ -29,16 +27,60 @@
                        VerticalAlignment="Center"
                        Margin="15,0,0,0"/>
         </StackPanel>
-        <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" Padding="0">
-            <DataGrid x:Name="DgEstoque" 
-        AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
-        FontSize="14" ColumnWidth="*" Margin="0,0,-2,472">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Estado de Atenção" Binding="{Binding EstadoAtencao}" Width="*"/>
-                    <DataGridTextColumn Header="Precisa de Reposição" Binding="{Binding ReposicaoNecessaria}" Width="*"/>
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
-        
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Estado de Atenção" 
+                           FontWeight="Bold" 
+                           FontSize="18" 
+                           Foreground="#D39E00" 
+                           Margin="0,0,0,10"/>
+
+                <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" BorderBrush="#DDDDDD" VerticalAlignment="Top">
+                    <DataGrid x:Name="DgAtencao" 
+                              AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                              FontSize="14" ColumnWidth="*" Height="350">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Produto" Binding="{Binding NomeProduto}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Precisa de Reposição Urgente" 
+                           FontWeight="Bold" 
+                           FontSize="18" 
+                           Foreground="#D9534F" 
+                           Margin="0,0,0,10"/>
+
+                <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" BorderBrush="#DDDDDD" VerticalAlignment="Top">
+                    <DataGrid x:Name="DgReposicao" 
+                              AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                              FontSize="14" ColumnWidth="*" Height="350">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Produto" Binding="{Binding NomeProduto}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+
+        </Grid>
     </Grid>
 </Page>

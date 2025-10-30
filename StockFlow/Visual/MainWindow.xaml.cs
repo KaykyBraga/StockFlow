@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using StockFlow.Visual;
 
 namespace StockFlow
 {
@@ -22,6 +23,8 @@ namespace StockFlow
         public MainWindow(string tipoFuncionario)
         {
             InitializeComponent();
+
+            ContentFrame.Navigate(new BoasVindasPage());
 
             // 1. Armazena o cargo na variável da classe
             this.cargoDoUsuarioLogado = tipoFuncionario;
