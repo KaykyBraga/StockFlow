@@ -38,7 +38,7 @@ namespace StockFlow.Visual
         {
             ControleEstoque controleEstoque = new ControleEstoque();
             var lista = await controleEstoque.ObterTodosOsProdutosParaGridAlertaAsync();
-            DgEstoque.ItemsSource = lista;
+            //DgEstoque.ItemsSource = lista;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
