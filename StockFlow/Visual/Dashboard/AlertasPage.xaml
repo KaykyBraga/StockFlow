@@ -34,8 +34,8 @@
         AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
         FontSize="14" ColumnWidth="*" Margin="0,0,-2,472">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Estado de Atenção" Binding="{Binding EstadoAtencao}" Width="*"/>
-                    <DataGridTextColumn Header="Precisa de Reposição" Binding="{Binding ReposicaoNecessaria}" Width="*"/>
+                    <DataGridTextColumn Header="Estado de Atenção" Binding="{Binding EstadoDeAtencao}" Width="*"/>
+                    <DataGridTextColumn Header="Precisa de Reposição" Binding="{Binding PrecisaDeReposicao}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Border>

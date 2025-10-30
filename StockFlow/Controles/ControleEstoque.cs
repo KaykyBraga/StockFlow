@@ -317,7 +317,7 @@ namespace StockFlow.Controles
             }
 
 
-            
+
             movimentacao.Quantidade = 0;
             movimentacao.TipoMovimentacao = "Edição de Produto";
             movimentacao.UsuarioId = SessaoUsuario.UsuarioId;
@@ -354,7 +354,7 @@ namespace StockFlow.Controles
 
         public async Task<Produto> BuscarProdutoPorId(string produtoId)
         {
-            var context =new AppDbContext();
+            var context = new AppDbContext();
             ValidacaoEstoque validacaoEstoque = new ValidacaoEstoque();
             ProdutoDao produtoDao = new ProdutoDao(context);
             var produto = await produtoDao.BuscarProdutoPorIdAsync(validacaoEstoque.CoverterParaInt(produtoId));
@@ -480,19 +480,37 @@ namespace StockFlow.Controles
             return listaCategorias;
         }
 
-        // revissar o que vai aqui quando o andre chegar
+
         public async Task<List<StockFlow.Visual.Alertagrid>> ObterTodosOsProdutosParaGridAlertaAsync()
         {
-            var context = new AppDbContext();
-            ProdutoDao produtoDao = new ProdutoDao(context);
-            List<Produto> listaProdutos = new List<Produto>();
-            listaProdutos = await produtoDao.ObterProdutosAtivosAsync();
-            var listaFinalParaGrid = listaProdutos.Select(produto => new StockFlow.Visual.Alertagrid
+            await using (var context = new AppDbContext())
             {
-                EstadoDeAtencao = produto.EstoqueAtual <= produto.EstoqueMinimo ? produto.NomeCompleto : null,
-                PrecisaDeReposicao = produto.EstoqueAtual <= produto.EstoqueMinimo ? "Sim" : "Não"
-            }).ToList();
-            return listaFinalParaGrid;
+                var produtoDao = new ProdutoDao(context);
+                List<Produto> listaProdutos = await produtoDao.ObterProdutosAtivosAsync();
+                decimal margemDeAtencao = 1.20m; // 20%
+
+                var listaFinalParaGrid = listaProdutos
+                    
+                    .Where(p =>
+                        p.EstoqueAtual <= (p.EstoqueMinimo * margemDeAtencao)
+                    )
+                    
+                    .Select(produto => new StockFlow.Visual.Alertagrid
+                    {
+                        
+                        EstadoDeAtencao = (produto.EstoqueAtual > produto.EstoqueMinimo)
+                                          ? produto.NomeCompleto
+                                          : "",
+
+                        
+                        PrecisaDeReposicao = (produto.EstoqueAtual <= produto.EstoqueMinimo)
+                                             ? produto.NomeCompleto
+                                             : ""
+                    })
+                    .ToList();
+
+                return listaFinalParaGrid;
+            }
         }
     }
 }
