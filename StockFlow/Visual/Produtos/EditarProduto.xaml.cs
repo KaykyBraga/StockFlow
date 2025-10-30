@@ -21,11 +21,22 @@ namespace StockFlow.Visual.Produtos
 
         public EditarProduto(string idProduto)
         {
+            InitializeComponent(); // Esta linha DEVE vir primeiro
+
             this.produtoId = idProduto;
             CarregarDadosDoProduto();
-            InitializeComponent();
 
-            // 2. Chama um método para carregar os dados do produto nos campos
+            // ADICIONE ESTAS 4 LINHAS:
+            txtPrecoCusto.GotFocus += TxtPrice_GotFocus;
+            txtPrecoCusto.LostFocus += TxtPrice_LostFocus;
+
+            txtPrecoVenda.GotFocus += TxtPrice_GotFocus;
+            txtPrecoVenda.LostFocus += TxtPrice_LostFocus;
+
+            txtEan.MaxLength = 13;            
+            txtEan.PreviewTextInput += NumberValidationTextBox;
+
+            
         }
 
         private async void CarregarDadosDoProduto()
@@ -38,9 +49,9 @@ namespace StockFlow.Visual.Produtos
             txtEstoqueAtual.Text = produto.EstoqueAtual.ToString();
             txtSku.Text = produto.Sku;
             txtEan.Text = produto.Ean;
-            txtPrecoCusto.Text = produto.PrecoCusto.ToString();
+            txtPrecoCusto.Text = $"R$: {produto.PrecoCusto:F2}";
             txtEstoqueMinimo.Text = produto.EstoqueMinimo.ToString();
-            txtPrecoVenda.Text = produto.PrecoVenda.ToString();
+            txtPrecoVenda.Text = $"R$: {produto.PrecoVenda:F2}";
             txtLocalizacao.Text = produto.LocalizacaoEstoque;
             dataCadastro = produto.DataCadastro;
 
@@ -90,6 +101,83 @@ namespace StockFlow.Visual.Produtos
         }
 
         #region Controle de Pop-ups de Edição (Marca, Fornecedor, Categoria)
+
+        private void PriceValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            string text = textBox.Text.Insert(textBox.CaretIndex, e.Text);
+
+            // Se o texto não for um dígito
+            if (!char.IsDigit(e.Text, 0))
+            {
+                // Permite UM ponto ou UMA vírgula
+                if ((e.Text == "," || e.Text == ".") &&
+                    !textBox.Text.Contains(",") &&
+                    !textBox.Text.Contains("."))
+                {
+                    // Substitui ponto por vírgula para padronizar
+                    e.Handled = true;
+                    textBox.Text = textBox.Text.Insert(textBox.CaretIndex, ",");
+                    textBox.CaretIndex = textBox.Text.Length;
+                }
+                else
+                {
+                    // Rejeita qualquer outro caractere
+                    e.Handled = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// FORMATAÇÃO (Ao Sair): Formata o texto para "R$: 123,45" quando o usuário sai do campo.
+        /// </summary>
+        private void TxtPrice_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox == null) return;
+
+            // Padroniza o separador para vírgula (caso o usuário digite ponto)
+            string text = textBox.Text.Replace('.', ',');
+
+            if (decimal.TryParse(text, out decimal price))
+            {
+                // Formata como R$: 123,45 (Formato "F2" usa vírgula)
+                textBox.Text = $"R$: {price:F2}";
+            }
+            else
+            {
+                textBox.Text = "R$: 0,00";
+            }
+        }
+
+        /// <summary>
+        /// MÉTODO 2: Ao ENTRAR no campo (GotFocus)
+        /// Remove o "R$:" para facilitar a digitação
+        /// </summary>
+        private void TxtPrice_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox == null) return;
+
+            // 1. Limpa o "R$:"
+            string cleanText = textBox.Text.Replace("R$:", "").Trim();
+
+            // 2. Padroniza para vírgula
+            string text = cleanText.Replace('.', ',');
+
+            if (decimal.TryParse(text, out decimal price))
+            {
+                // 3. Mostra SÓ o número formatado com vírgula (Ex: "123,45")
+                textBox.Text = price.ToString("F2");
+            }
+            else
+            {
+                textBox.Text = "0,00";
+            }
+
+            // 4. Seleciona tudo para o usuário digitar por cima
+            textBox.SelectAll();
+        }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
@@ -230,6 +318,9 @@ namespace StockFlow.Visual.Produtos
             txtPrecoCusto.Text = string.Empty;
             txtPrecoVenda.Text = string.Empty;
             txtEstoqueMinimo.Text = string.Empty;
+            txtSku.Text = string.Empty;
+            txtEan.Text = string.Empty;
+            txtLocalizacao.Text = string.Empty;
         }
 
         // 1. O botão Salvar APENAS abre o pop-up de confirmação
@@ -298,6 +389,8 @@ namespace StockFlow.Visual.Produtos
         {
             PopupConfirmacao.Visibility = Visibility.Collapsed;
 
+            string precoVendaLimpo = txtPrecoVenda.Text.Replace("R$:", "").Trim().Replace(',', '.');
+            string precoCustoLimpo = txtPrecoCusto.Text.Replace("R$:", "").Trim().Replace(',', '.');
 
 
             List<string> listaDados = new List<string>();
@@ -329,8 +422,8 @@ namespace StockFlow.Visual.Produtos
             listaDados.Add(txtSku.Text);
             listaDados.Add(txtEan.Text);
             listaDados.Add(txtNomeProduto.Text);
-            listaDados.Add(txtPrecoVenda.Text);
-            listaDados.Add(txtPrecoCusto.Text);
+            listaDados.Add(precoVendaLimpo);
+            listaDados.Add(precoCustoLimpo);
             listaDados.Add(txtEstoqueAtual.Text);
             listaDados.Add(txtEstoqueMinimo.Text);
             listaDados.Add(dataCadastro.ToString());

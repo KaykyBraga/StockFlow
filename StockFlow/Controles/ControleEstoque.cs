@@ -42,19 +42,20 @@ namespace StockFlow.Controles
             ValidacaoUsuario validacaoUsuario = new ValidacaoUsuario();
             FornecedorDao fornecedorDao = new FornecedorDao();
             Fornecedor fornecedor = new Fornecedor();
-            dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
-            {
-                if (horaAtual.HasValue)
-                {
-                    fornecedor.DataCadastro = horaAtual.Value;
-                }
-                else
-                {
-                    this.mensagem = "Não foi possível obter a hora correta. Fornecedor não cadastrado.";
-                    return;
-                }
+            //dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
+            //{
+            //    if (horaAtual.HasValue)
+            //    {
+            //        fornecedor.DataCadastro = horaAtual.Value;
+            //    }
+            //    else
+            //    {
+            //        this.mensagem = "Não foi possível obter a hora correta. Fornecedor não cadastrado.";
+            //        return;
+            //    }
 
-            });
+            //});
+            fornecedor.DataCadastro = DateTime.Now;
             fornecedor.NomeFantasia = ListaDados[0];
             fornecedor.RazaoSocial = ListaDados[1];
             fornecedor.Cnpj = ListaDados[2];

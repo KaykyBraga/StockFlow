@@ -76,11 +76,19 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <PasswordBox x:Name="TxtSenha" Grid.Column="0"/>            
+            <PasswordBox x:Name="TxtSenha" Grid.Column="0"/>
+
+            <TextBox x:Name="TxtSenhaVisivel" 
+                     Grid.Column="0" 
+                     Visibility="Collapsed"/>
         </Grid>
 
-        <CheckBox Content="Mostrar Senha" Grid.Row="5" Margin="0,0,0,30" HorizontalAlignment="Left"/>
-
+        <CheckBox Content="Mostrar Senha" 
+                  Grid.Row="5" 
+                  Margin="0,0,0,30" 
+                  HorizontalAlignment="Left" 
+                  Checked="CheckBox_Checked"
+                  Unchecked="CheckBox_Unchecked"/>
         <Button Grid.Row="7"
                 Content="Entrar" 
                 Style="{StaticResource PrimaryActionButtonStyle}" Click="Button_Click"/>

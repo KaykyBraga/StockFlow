@@ -138,6 +138,32 @@ namespace StockFlow.Visual
 
         }
 
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            // 1. Copia a senha do PasswordBox (escondido) para o TextBox (visível)
+            TxtSenhaVisivel.Text = TxtSenha.Password;
+
+            // 2. Mostra o TextBox
+            TxtSenhaVisivel.Visibility = Visibility.Visible;
+
+            // 3. Esconde o PasswordBox
+            TxtSenha.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// NOVO: Chamado quando o CheckBox é DESMARCADO
+        /// </summary>
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            // 1. Copia a senha do TextBox (visível) de volta para o PasswordBox (escondido)
+            TxtSenha.Password = TxtSenhaVisivel.Text;
+
+            // 2. Esconde o TextBox
+            TxtSenhaVisivel.Visibility = Visibility.Collapsed;
+
+            // 3. Mostra o PasswordBox
+            TxtSenha.Visibility = Visibility.Visible;
+        }
     }
 
 }

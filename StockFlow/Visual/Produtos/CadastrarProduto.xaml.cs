@@ -16,9 +16,24 @@ namespace StockFlow.Visual.Produtos
 
         public CadastrarProduto()
         {
-            Carregar();
             InitializeComponent();
-            
+
+            // 2. Agora você pode chamar seus métodos e registrar eventos:
+            Carregar();
+
+            txtPrecodeCusto.GotFocus += TxtPrice_GotFocus;
+            txtPrecodeCusto.LostFocus += TxtPrice_LostFocus;
+            txtPrecodeVenda.GotFocus += TxtPrice_GotFocus;
+            txtPrecodeVenda.LostFocus += TxtPrice_LostFocus;
+
+            // ADICIONE ESTAS DUAS LINHAS:
+            txtPrecodeCusto.PreviewTextInput += PriceValidationTextBox;
+            txtPrecodeVenda.PreviewTextInput += PriceValidationTextBox;
+
+            txtEan.MaxLength = 13;
+
+            // 2. Reutiliza seu método que só permite números
+            txtEan.PreviewTextInput += NumberValidationTextBox;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -72,6 +87,79 @@ namespace StockFlow.Visual.Produtos
             cmbCategoria.SelectedIndex = 1;
 
         }
+        private void PriceValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            string text = textBox.Text.Insert(textBox.CaretIndex, e.Text);
+
+            // Se o texto não for um dígito
+            if (!char.IsDigit(e.Text, 0))
+            {
+                // Permite UM ponto ou UMA vírgula
+                if ((e.Text == "," || e.Text == ".") &&
+                    !textBox.Text.Contains(",") &&
+                    !textBox.Text.Contains("."))
+                {
+                    // Substitui ponto por vírgula para padronizar
+                    e.Handled = true;
+                    textBox.Text = textBox.Text.Insert(textBox.CaretIndex, ",");
+                    textBox.CaretIndex = textBox.Text.Length;
+                }
+                else
+                {
+                    // Rejeita qualquer outro caractere
+                    e.Handled = true;
+                }
+            }
+        }
+        private void TxtPrice_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox == null) return;
+
+            // Padroniza o separador para vírgula (caso o usuário digite ponto)
+            string text = textBox.Text.Replace('.', ',');
+
+            if (decimal.TryParse(text, out decimal price))
+            {
+                // Formata como R$: 123,45 (Formato "F2" usa vírgula)
+                textBox.Text = $"R$: {price:F2}";
+            }
+            else
+            {
+                textBox.Text = "R$: 0,00";
+            }
+        }
+
+        /// <summary>
+        /// MÉTODO 2: Ao ENTRAR no campo (GotFocus)
+        /// Remove o "R$:" para facilitar a digitação
+        /// </summary>
+        private void TxtPrice_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox == null) return;
+
+            // 1. Limpa o "R$:"
+            string cleanText = textBox.Text.Replace("R$:", "").Trim();
+
+            // 2. Padroniza para vírgula
+            string text = cleanText.Replace('.', ',');
+
+            if (decimal.TryParse(text, out decimal price))
+            {
+                // 3. Mostra SÓ o número formatado com vírgula (Ex: "123,45")
+                textBox.Text = price.ToString("F2");
+            }
+            else
+            {
+                textBox.Text = "0,00";
+            }
+
+            // 4. Seleciona tudo para o usuário digitar por cima
+            textBox.SelectAll();
+        }
+
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
             Regex regex = new Regex("[^0-9]+");
@@ -268,6 +356,9 @@ namespace StockFlow.Visual.Produtos
         // Exemplo de como usar os pop-ups de sucesso/erro
         private void CadastrarButton_Click(object sender, RoutedEventArgs e)
         {
+            string precoVendaLimpo = txtPrecodeVenda.Text.Replace("R$:", "").Trim().Replace(',', '.');
+            string precoCustoLimpo = txtPrecodeCusto.Text.Replace("R$:", "").Trim().Replace(',', '.');
+
             // --- AQUI VAI A SUA LÓGICA DE VALIDAÇÃO E CADASTRO ---
             // Por exemplo, verificar se o campo nome do produto está preenchido
             if (string.IsNullOrWhiteSpace(txtNomeProduto.Text) || 
@@ -290,8 +381,8 @@ namespace StockFlow.Visual.Produtos
                 listaDados.Add(txtSku.Text);
                 listaDados.Add(txtEan.Text);
                 listaDados.Add(txtNomeProduto.Text);
-                listaDados.Add(txtPrecodeVenda.Text);
-                listaDados.Add(txtPrecodeCusto.Text);
+                listaDados.Add(precoVendaLimpo);
+                listaDados.Add(precoCustoLimpo);
                 listaDados.Add(txtEstoqueInicial.Text);
                 listaDados.Add(txtEstoqueMinimo.Text);
                 listaDados.Add(m.MarcaId.ToString());

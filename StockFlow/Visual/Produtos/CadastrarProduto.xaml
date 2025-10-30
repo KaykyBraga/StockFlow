@@ -268,7 +268,7 @@
 
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,15,10">
                         <TextBlock Text="SKU (Código Interno)" Margin="0,0,0,5"/>
-                        <TextBox x:Name="txtSku" Style="{StaticResource FormTextBoxStyle}" ToolTip="Código único de identificação interna"/>
+                        <TextBox x:Name="txtSku" Style="{StaticResource FormTextBoxStyle}" ToolTip="Ex.: CAM-AZL-P-01"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" Margin="15,0,0,10">
                         <TextBlock Text="EAN (Código de Barras)"/>
