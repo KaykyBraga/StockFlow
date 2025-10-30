@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockFlow.Controles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,15 @@ namespace StockFlow.Visual
     {
         public AlertasPage()
         {
+            Carregar();
             InitializeComponent();
+        }
+
+        private async void Carregar()
+        {
+            ControleEstoque controleEstoque = new ControleEstoque();
+            var lista = await controleEstoque.ObterTodosOsProdutosParaGridAlertaAsync();
+            DgEstoque.ItemsSource = lista;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)

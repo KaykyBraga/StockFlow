@@ -40,7 +40,7 @@ namespace StockFlow.DAL
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Data Source = DESKTOP-92P7O5G\SQLEXPRESS; Initial Catalog = Db_StockFlow; Integrated Security = True; Encrypt = False");
+                optionsBuilder.UseSqlServer(@"Data Source = 100.124.148.100; Initial Catalog = Db_StockFlow; Integrated Security = True; Encrypt = False");
             }            
         }
 
