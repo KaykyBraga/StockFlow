@@ -697,7 +697,7 @@ namespace StockFlow.Visual
                 // ... (sua chamada ao ControleVenda.SangriaCaixa e MessageBox) ...
                 MessageBox.Show($"Sangria de {r.Item1:C} registrada com sucesso."); // Movido para fora do else
                 ControleVenda controleVenda = new ControleVenda();
-                controleVenda.SangriaCaixa(r.Item1.ToString(), r.Item2);
+                controleVenda.SangriaCaixa(r.Item1.ToString().Replace(',', '.'), r.Item2);
                 // if (controleVenda.mensagem != "") { /*...*/ }
             }
         }
@@ -717,7 +717,7 @@ namespace StockFlow.Visual
                 // ... (sua chamada ao ControleVenda.AdicionarTroca e MessageBox) ...
                 MessageBox.Show($"Troco de {r.Item1:C} adicionado com sucesso."); // Movido para fora do else
                 ControleVenda controleVenda = new ControleVenda();
-                controleVenda.AdicionarTroca(r.Item1.ToString(), r.Item2);
+                controleVenda.AdicionarTroca(r.Item1.ToString().Replace(',', '.'), r.Item2);
                 // if(controleVenda.mensagem != "") { /*...*/ }
             }
         }
@@ -760,25 +760,24 @@ namespace StockFlow.Visual
 
             btnConfirmar.Click += (s, args) =>
             {
-
                 if (decimal.TryParse(txtValorInicial.Text, NumberStyles.Currency, CultureInfo.GetCultureInfo("pt-BR"), out decimal valor) && valor >= 0)
-
                 {
                     ControleVenda controleVenda = new ControleVenda();
-                    controleVenda.AbrirCaixa(valor.ToString());
-                    popupWindow.DialogResult = true; popupWindow.Close();
 
+                    // --- ALTERAÇÃO AQUI ---
+                    // Converte o valor para string e força a troca da vírgula por ponto
+                    string valorFormatado = valor.ToString().Replace(',', '.');
 
+                    controleVenda.AbrirCaixa(valorFormatado);
+                    // ----------------------
+
+                    popupWindow.DialogResult = true;
+                    popupWindow.Close();
                 }
-
                 else
-
                 {
-
                     MessageBox.Show("Por favor, insira um valor monetário válido (ex: 50,00).", "Valor Inválido", MessageBoxButton.OK, MessageBoxImage.Error);
-
                 }
-
             };
 
             btnCancelar.Click += (s, args) => { popupWindow.DialogResult = false; popupWindow.Close(); };
@@ -963,7 +962,7 @@ namespace StockFlow.Visual
                 MessageBox.Show(popupWindow, msgCompleta, tituloMsgBox, MessageBoxButton.OK, iconeMsgBox);
 
                 ControleVenda controleVenda = new ControleVenda();
-                controleVenda.FecharCaixa(valorFinalContado.ToString());
+                string valorFormatado = valorFinalContado.ToString().Replace(',', '.');
                 popupWindow.DialogResult = true;
                 popupWindow.Close();
             };
