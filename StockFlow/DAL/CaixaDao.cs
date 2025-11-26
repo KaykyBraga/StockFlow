@@ -69,7 +69,7 @@ namespace StockFlow.DAL
                 caixaAberto.ValorFechamentoCalculado = totalMovimentacoes;
                 caixaAberto.ValorFechamentoInformado = valorInformado;
                 caixaAberto.ValorFechamentoCaixa = valorDoCaixa;
-                caixaAberto.Diferenca = valorDoCaixa - valorInformado;
+                caixaAberto.Diferenca = valorInformado - valorDoCaixa;
                 caixaAberto.Status = "Fechado";
 
                 _context.SaveChanges();

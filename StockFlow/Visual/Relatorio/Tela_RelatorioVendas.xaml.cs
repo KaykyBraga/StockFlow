@@ -29,8 +29,9 @@ namespace StockFlow.Visual
 
         public Tela_RelatorioVendas()
         {
-            InitializeComponent();
             CarregarDadosIniciais();
+
+            InitializeComponent();
         }
 
         private async void CarregarDadosIniciais()

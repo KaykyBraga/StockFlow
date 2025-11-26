@@ -22,8 +22,9 @@ namespace StockFlow.Visual
 
         public Tela_ListarFuncionarios()
         {
-            InitializeComponent();
             CarregarFuncionarios();
+
+            InitializeComponent();
         }
 
         private async void CarregarFuncionarios()

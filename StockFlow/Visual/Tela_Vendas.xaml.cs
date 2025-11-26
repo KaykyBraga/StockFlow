@@ -10,6 +10,7 @@ using System.Windows.Input; // Necessário para KeyEventArgs
 using System.Windows.Media;
 using System.Windows.Threading;
 using System.Text.RegularExpressions;
+using StockFlow.Modelo;
 
 
 
@@ -73,6 +74,8 @@ namespace StockFlow.Visual
         public Tela_Vendas()
         {
             CarregarProdutos(); // Carrega listaDeTodosOsProdutos
+            ControleVenda controleVenda = new ControleVenda();
+            controleVenda.DesativarPromocoesExpiradas(); // Desativa promoções expiradas ao iniciar a tela de vendas
             InitializeComponent();
 
             // Configura o ItemsSource e o que será exibido no ComboBox           
@@ -159,9 +162,7 @@ namespace StockFlow.Visual
                 // ----------------------------------------
 
                 isCaixaAberto = true;
-                AtualizarEstadoVisualCaixa(true);
-                ControleVenda controleVenda = new ControleVenda();
-                controleVenda.AbrirCaixa(valorAberturaAtual.ToString());
+                AtualizarEstadoVisualCaixa(true);              
                 MessageBox.Show($"Caixa aberto com sucesso com um valor inicial de {this.valorAberturaAtual:C}!", "Caixa Aberto", MessageBoxButton.OK, MessageBoxImage.Information);
                 
             }
@@ -195,7 +196,12 @@ namespace StockFlow.Visual
                 // Agora só finalizamos o processo.
                 MessageBox.Show("Caixa fechado com sucesso!", "Fechamento de Caixa", MessageBoxButton.OK, MessageBoxImage.Information);
                 isCaixaAberto = false;
-                AtualizarEstadoVisualCaixa(false); // Chama LimparVendaAtual e reseta variáveis
+                AtualizarEstadoVisualCaixa(false);
+                SessaoUsuario.EncerrarSessao();
+                Tela_Login login = new Tela_Login();
+                login.Show();
+                Window.GetWindow(this).Close();
+                // Chama LimparVendaAtual e reseta variáveis
 
                 // --- Adicione aqui a lógica para registrar o fechamento no banco ---
                 // Você pode querer registrar valorAberturaAtual, valorEsperado,
@@ -222,7 +228,8 @@ namespace StockFlow.Visual
             MessageBoxResult resultado = MessageBox.Show("Tem certeza que deseja sair?", "Confirmação", MessageBoxButton.YesNo, MessageBoxImage.Question);
             
             if (resultado == MessageBoxResult.Yes)
-            {         
+            {                 
+                SessaoUsuario.EncerrarSessao();
                 Tela_Login login = new Tela_Login();
                 login.Show();
                 Window.GetWindow(this).Close();
@@ -602,7 +609,15 @@ namespace StockFlow.Visual
             decimal totalVendaAtual = itensVenda.Sum(i => i.PrecoTotal);
 
             // --- Adicione aqui a lógica para registrar a venda no banco de dados ---
-            var listaDeVenda = itensVenda.Select(x => new StockFlow.Modelo.VendaItem { /*...*/ }).ToList();
+            List<Modelo.VendaItem> listaDeVenda = new List<Modelo.VendaItem>();
+            foreach (var item in itensVenda)
+            {
+                listaDeVenda.Add(new Modelo.VendaItem
+                {
+                    ProdutoId = item.ProdutoId,
+                    Quantidade = item.Quantidade,                   
+                });
+            }
             ControleVenda controleVenda = new ControleVenda();
             controleVenda.RegistrarVenda(listaDeVenda, metodoPagamentoSelecionado);
 
@@ -749,8 +764,10 @@ namespace StockFlow.Visual
                 if (decimal.TryParse(txtValorInicial.Text, NumberStyles.Currency, CultureInfo.GetCultureInfo("pt-BR"), out decimal valor) && valor >= 0)
 
                 {
-
+                    ControleVenda controleVenda = new ControleVenda();
+                    controleVenda.AbrirCaixa(valor.ToString());
                     popupWindow.DialogResult = true; popupWindow.Close();
+
 
                 }
 

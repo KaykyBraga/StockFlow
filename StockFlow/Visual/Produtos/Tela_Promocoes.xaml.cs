@@ -31,8 +31,8 @@ namespace StockFlow.Visual
 
         public Tela_Promocoes()
         {
-            InitializeComponent();
             CarregarPromocoes();
+            InitializeComponent();
         }
 
         private async Task CarregarPromocoes()
@@ -41,7 +41,7 @@ namespace StockFlow.Visual
             listaDePromocoes = new List<Promocao>();
             var listaPromocoes = await controleVenda.ObterTodasAsPromocoesParaDataGridAsync();
             listaDePromocoes = listaPromocoes;           
-
+            controleVenda.DesativarPromocoesExpiradas();
             DgPromocoes.ItemsSource = listaDePromocoes;
         }
 

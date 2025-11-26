@@ -28,35 +28,45 @@ namespace StockFlow.Visual
         // ✅ NOME DO CONSTRUTOR CORRIGIDO
         public VincularProdutos(Promocao promocao)
         {
+            CarregarProdutos();
             InitializeComponent();
             promocaoAlvo = promocao;
             LblNomePromocao.Text = promocao.Nome;
-            CarregarProdutos();
         }
 
         private async void CarregarProdutos()
         {
             ControleEstoque controleEstoque = new ControleEstoque();
-            var listaProdutos = await controleEstoque.ObterTodosOsProdutosAtivosAsync();
-            var todosOsProdutos = new List<Produto>();
-            foreach (var produto in listaProdutos)
+
+            // 1. Busca todos os produtos do banco (com os Includes de PromocaoProdutos e Promocao)
+            var listaDoBanco = await controleEstoque.ObterTodosOsProdutosAtivosAsync();
+
+            // 2. APLICANDO O FILTRO DE VISIBILIDADE
+            var produtosVisiveis = listaDoBanco.Where(p =>
+                // A condição é: NÃO PODE existir nenhum vínculo que seja "Problemático".
+                // O que é um vínculo problemático?
+                !p.PromocaoProdutos.Any(pp =>
+                    pp.Promocao.Ativo == true &&           // A outra promoção está Ativa
+                    pp.PromocaoId != promocaoAlvo.Id       // E NÃO é a promoção que estamos editando agora
+                )
+            ).ToList();
+
+            // 3. Transformando para a lista visual (ProdutoVinculado)
+            // Fiz tudo em um passo só pra ficar mais rápido e limpo que os dois foreachs
+            listaProdutosVinculados = produtosVisiveis.Select(produto => new ProdutoVinculado
             {
-                todosOsProdutos.Add(new Produto
+                // Cria o objeto visual do Produto
+                Produto = new Produto
                 {
                     Id = produto.ProdutoId.ToString(),
                     Nome = produto.NomeCompleto
-                });
-            }
+                },
 
-            listaProdutosVinculados = new List<ProdutoVinculado>();
-            foreach (var produto in todosOsProdutos)
-            {
-                listaProdutosVinculados.Add(new ProdutoVinculado
-                {
-                    Produto = produto,
-                    IsVinculado = promocaoAlvo.ProdutoIds.Contains(produto.Id)
-                });
-            }
+                // Verifica se ele já faz parte DA NOSSA promoção alvo para marcar o checkbox
+                IsVinculado = promocaoAlvo.ProdutoIds.Contains(produto.ProdutoId.ToString())
+
+            }).ToList();
+
             DgProdutos.ItemsSource = listaProdutosVinculados;
         }
 

@@ -16,10 +16,10 @@ namespace StockFlow.Visual.Produtos
 
         public CadastrarProduto()
         {
+            Carregar();
             InitializeComponent();
 
             // 2. Agora você pode chamar seus métodos e registrar eventos:
-            Carregar();
 
             txtPrecodeCusto.GotFocus += TxtPrice_GotFocus;
             txtPrecodeCusto.LostFocus += TxtPrice_LostFocus;

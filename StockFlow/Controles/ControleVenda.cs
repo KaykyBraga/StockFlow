@@ -37,21 +37,22 @@ namespace StockFlow.Controles
                 Valor = valorAbertura,
                 TipoMovimentacao = "Abertura"
             };
-            dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
-            {
+            //dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
+            //{
 
-                if (horaAtual.HasValue)
-                {
-                    novoCaixa.DataHoraAbertura = horaAtual.Value;
-                    movimentacao.DataHora = horaAtual.Value;
-                }
-                else
-                {
-                    this.mensagem = "Não foi possível obter a hora correta. Fornecedor não cadastrado.";
-                    return;
-                }
-            });
-
+            //    if (horaAtual.HasValue)
+            //    {
+            //        novoCaixa.DataHoraAbertura = horaAtual.Value;
+            //        movimentacao.DataHora = horaAtual.Value;
+            //    }
+            //    else
+            //    {
+            //        this.mensagem = "Não foi possível obter a hora correta. Fornecedor não cadastrado.";
+            //        return;
+            //    }
+            //});
+            novoCaixa.DataHoraAbertura = DateTime.Now;
+            movimentacao.DataHora = DateTime.Now;
             novoCaixa.MovimentacaoCaixa.Add(movimentacao);
             var context = new AppDbContext();
             CaixaDao caixaDao = new CaixaDao(context);

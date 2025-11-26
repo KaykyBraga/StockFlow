@@ -83,21 +83,22 @@ namespace StockFlow.Controles
             decimal precoCusto;
             validacao.TentarConverterParaDecimal(listaDados[4], out precoCusto);
 
-            dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
-            {
-                if (horaAtual.HasValue)
-                {
-                    produto.DataCadastro = horaAtual.Value;
-                    movimentacao.Data = horaAtual.Value;
-                }
-                else
-                {
-                    this.mensagem = "Não foi possível obter a hora correta. Produto não cadastrado.";
-                    return;
-                }
-            });
+            //dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
+            //{
+            //    if (horaAtual.HasValue)
+            //    {
+            //        produto.DataCadastro = horaAtual.Value;
+            //        movimentacao.Data = horaAtual.Value;
+            //    }
+            //    else
+            //    {
+            //        this.mensagem = "Não foi possível obter a hora correta. Produto não cadastrado.";
+            //        return;
+            //    }
+            //});
 
-
+            produto.DataCadastro = DateTime.Now;
+            movimentacao.Data = DateTime.Now;
 
             produto.Sku = listaDados[0];
             produto.Ean = listaDados[1];
@@ -145,19 +146,20 @@ namespace StockFlow.Controles
             int id = validacao.CoverterParaInt(listaDados[0]);
             int quantidadeAdicionar = validacao.CoverterParaInt(listaDados[1]);
 
-            dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
-            {
-                if (horaAtual.HasValue)
-                {
-                    movimentacao.Data = horaAtual.Value;
-                }
-                else
-                {
-                    this.mensagem = "Não foi possível obter a hora correta. Fornecedor não cadastrado.";
-                    return;
-                }
+            //dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
+            //{
+            //    if (horaAtual.HasValue)
+            //    {
+            //        movimentacao.Data = horaAtual.Value;
+            //    }
+            //    else
+            //    {
+            //        this.mensagem = "Não foi possível obter a hora correta. Fornecedor não cadastrado.";
+            //        return;
+            //    }
 
-            });
+            //});
+            movimentacao.Data = DateTime.Now;
             movimentacao.Quantidade = quantidadeAdicionar;
             movimentacao.TipoMovimentacao = "Entrada de Produto";
             movimentacao.UsuarioId = SessaoUsuario.UsuarioId;
@@ -281,19 +283,20 @@ namespace StockFlow.Controles
             DataHoraCorreta dataHoraCorreta = new DataHoraCorreta();
 
 
-            dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
-            {
-                if (horaAtual.HasValue)
-                {
-                    movimentacao.Data = horaAtual.Value;
-                }
-                else
-                {
-                    this.mensagem = "Não foi possível obter a hora correta. Fornecedor não cadastrado.";
-                    return;
-                }
+            //dataHoraCorreta.ObterHoraCorretaComCallback(horaAtual =>
+            //{
+            //    if (horaAtual.HasValue)
+            //    {
+            //        movimentacao.Data = horaAtual.Value;
+            //    }
+            //    else
+            //    {
+            //        this.mensagem = "Não foi possível obter a hora correta. Fornecedor não cadastrado.";
+            //        return;
+            //    }
 
-            });
+            //});
+            movimentacao.Data = DateTime.Now;
 
             produto.ProdutoId = validacao.CoverterParaInt(listaProduto[0]);
             produto.Sku = listaProduto[1];
@@ -491,19 +494,19 @@ namespace StockFlow.Controles
                 decimal margemDeAtencao = 1.20m; // 20%
 
                 var listaDeAtencao = listaProdutos
-                    
+
                     .Where(p =>
                         p.EstoqueAtual <= (p.EstoqueMinimo * margemDeAtencao) &&
                         p.EstoqueAtual > p.EstoqueMinimo
                     )
-                    
+
                     .Select(produto => new StockFlow.Visual.Alertagrid
                     {
                         EstadoDeAtencao = produto.NomeCompleto,
-                        PrecisaDeReposicao = "" 
+                        PrecisaDeReposicao = ""
                     })
                     .ToList();
-               
+
                 var listaFinalParaGrid = listaDeAtencao;
 
                 return listaFinalParaGrid;
@@ -516,7 +519,7 @@ namespace StockFlow.Controles
             {
                 var produtoDao = new ProdutoDao(context);
                 List<Produto> listaProdutos = await produtoDao.ObterProdutosAtivosAsync();
-  
+
                 var listaDeReposicao = listaProdutos
 
                     .Where(p => p.EstoqueAtual <= p.EstoqueMinimo)

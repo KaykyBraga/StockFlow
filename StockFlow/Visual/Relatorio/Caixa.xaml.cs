@@ -14,8 +14,8 @@ namespace StockFlow.Visual.Relatorio
         private List<string> nomeFuncionario;
         public Caixa()
         {
-            InitializeComponent();
             CarregarDadosIniciais();
+            InitializeComponent();
         }
 
         /// <summary>

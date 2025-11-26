@@ -25,8 +25,9 @@ namespace StockFlow.Visual
 
         public Tela_RelatorioMovimentacao()
         {
-            InitializeComponent();
             CarregarDadosIniciais();
+
+            InitializeComponent();
         }
 
         private async void CarregarDadosIniciais()

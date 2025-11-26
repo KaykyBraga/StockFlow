@@ -29,23 +29,23 @@ namespace StockFlow.Controles
             usuario1.Email = listaDadosUsuario[3];
             usuario1.PerfilAcesso = listaDadosUsuario[4];
             usuario1.Ativo = true;
-            
-            dataHoraCorreta.ObterHoraCorretaComCallback(horaRecebida =>
-            {
 
-                if (horaRecebida.HasValue)
-                {
-                    // Agora você tem o resultado!
-                    usuario1.DataCadastro = horaRecebida.Value;
-                }
-                else
-                {
-                    this.mensagem = "Falha ao obter a hora. O salvamento foi cancelado.";
-                    return;
-                }
-            });
+            //dataHoraCorreta.ObterHoraCorretaComCallback(horaRecebida =>
+            //{
 
+            //    if (horaRecebida.HasValue)
+            //    {
+            //        // Agora você tem o resultado!
+            //        usuario1.DataCadastro = horaRecebida.Value;
+            //    }
+            //    else
+            //    {
+            //        this.mensagem = "Falha ao obter a hora. O salvamento foi cancelado.";
+            //        return;
+            //    }
+            //});
 
+            usuario1.DataCadastro = DateTime.Now;
 
 
             // Valida se o email é valido
