@@ -13,13 +13,14 @@ namespace StockFlow.Visual
         private string funcionarioTipo;
         public Tela_EditarFuncionario(string idFuncionario, string funcionarioName, string funcionarioEmail, string funcionarioTipo)
         {
-            CarregarDadosFuncionario();
-
             InitializeComponent();
             this.funcionarioId = idFuncionario;
             this.funcionarioName = funcionarioName;
             this.funcionarioEmail = funcionarioEmail;
             this.funcionarioTipo = funcionarioTipo;
+            CarregarDadosFuncionario();
+
+            
         }
 
         private void CarregarDadosFuncionario()

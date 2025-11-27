@@ -361,7 +361,8 @@ namespace StockFlow.Controles
             var context = new AppDbContext();
             ValidacaoEstoque validacaoEstoque = new ValidacaoEstoque();
             ProdutoDao produtoDao = new ProdutoDao(context);
-            var produto = await produtoDao.BuscarProdutoPorIdAsync(validacaoEstoque.CoverterParaInt(produtoId));
+            int Id = validacaoEstoque.CoverterParaInt(produtoId);
+            var produto = await produtoDao.BuscarProdutoPorIdAsync(Id);
             return produto;
         }
 

@@ -64,6 +64,11 @@ namespace StockFlow.Visual
                 // Lógica para salvar no banco de dados...
                 ControleUsuario controleUsuario = new ControleUsuario();
                 controleUsuario.CadastrarUsuario(new System.Collections.Generic.List<string> { nome, senha, id, email, tipoFun  });
+                if(controleUsuario.mensagem != "")
+                {
+                    MessageBox.Show(controleUsuario.mensagem, "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 // Pop-up de sucesso
                 MessageBox.Show($"Funcionário '{nome}' adicionado com sucesso!", "Sucesso", MessageBoxButton.OK, MessageBoxImage.Information);
 

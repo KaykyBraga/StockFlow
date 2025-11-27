@@ -290,12 +290,12 @@ namespace StockFlow.Visual.Produtos
                 MessageBox.Show("Os campos 'Nome do Fornecedor' e 'CNPJ' são obrigatórios.", "Erro", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
+            string cnpjLimpo = new string(txtCnpj.Text.Where(char.IsDigit).ToArray());
             controleEstoque.AdicionarFornecedor(new List<string>
             {
                 txtNomeFantasia.Text,
                 txtRazaoSocial.Text,             
-                txtCnpj.Text,
+                cnpjLimpo,
                 txtEmail.Text,
                 txtTelefonePrincipal.Text              
             });

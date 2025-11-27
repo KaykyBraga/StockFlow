@@ -1,16 +1,17 @@
 ﻿using StockFlow.Controles;
+using StockFlow.Modelo;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel; // Necessário para Dispatcher
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input; // Necessário para KeyEventArgs
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.Text.RegularExpressions;
-using StockFlow.Modelo;
 
 
 
@@ -951,6 +952,7 @@ namespace StockFlow.Visual
 
                 decimal diferenca = valorFinalContado - valorEsperadoCaixa;
                 string tituloMsgBox = "Resultado do Fechamento";
+               
                 string msgResultado;
                 MessageBoxImage iconeMsgBox = MessageBoxImage.Information;
 
@@ -963,6 +965,8 @@ namespace StockFlow.Visual
 
                 ControleVenda controleVenda = new ControleVenda();
                 string valorFormatado = valorFinalContado.ToString().Replace(',', '.');
+                controleVenda.FecharCaixa(valorFormatado);
+
                 popupWindow.DialogResult = true;
                 popupWindow.Close();
             };

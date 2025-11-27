@@ -21,10 +21,10 @@ namespace StockFlow.Visual.Produtos
 
         public EditarProduto(string idProduto)
         {
+            this.produtoId = idProduto;
             CarregarDadosDoProduto();
             InitializeComponent(); // Esta linha DEVE vir primeiro
 
-            this.produtoId = idProduto;
 
             // ADICIONE ESTAS 4 LINHAS:
             txtPrecoCusto.GotFocus += TxtPrice_GotFocus;

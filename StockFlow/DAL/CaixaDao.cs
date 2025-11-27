@@ -57,6 +57,20 @@ namespace StockFlow.DAL
                 var movimentacoesDoCaixa = _context.MovimentacaoCaixas
                     .Where(m => m.CaixaId == caixaAberto.CaixaId);
 
+                decimal entradasEmDinheiro = movimentacoesDoCaixa
+            .Where(m =>
+                m.TipoMovimentacao == "Abertura" ||
+                m.TipoMovimentacao == "Reforco" ||
+                (m.TipoMovimentacao == "Venda" && m.MetodoDePagamento == "Dinheiro"))
+            .Sum(m => m.Valor);
+
+                decimal saidasEmDinheiro = movimentacoesDoCaixa
+                    .Where(m => m.TipoMovimentacao == "Sangria") // Sangria é saída
+                    .Sum(m => m.Valor);
+
+                // O valor que o sistema acha que tem na gaveta
+                decimal valorEsperadoNoCaixa = entradasEmDinheiro - saidasEmDinheiro;
+
                 decimal totalMovimentacoes = movimentacoesDoCaixa
                     .Sum(m => m.TipoMovimentacao == "Sangria" ? -m.Valor : m.Valor);
 
@@ -68,8 +82,8 @@ namespace StockFlow.DAL
                 caixaAberto.DataHoraFechamento = DateTime.Now;
                 caixaAberto.ValorFechamentoCalculado = totalMovimentacoes;
                 caixaAberto.ValorFechamentoInformado = valorInformado;
-                caixaAberto.ValorFechamentoCaixa = valorDoCaixa;
-                caixaAberto.Diferenca = valorInformado - valorDoCaixa;
+                caixaAberto.ValorFechamentoCaixa = valorEsperadoNoCaixa;
+                caixaAberto.Diferenca = valorInformado - valorEsperadoNoCaixa;
                 caixaAberto.Status = "Fechado";
 
                 _context.SaveChanges();

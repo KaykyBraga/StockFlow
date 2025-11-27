@@ -27,7 +27,7 @@ namespace StockFlow.DAL
             {
                 _context.Usuarios.Add(usuario);
                 _context.SaveChanges();
-                this.mensagem = "Usuário adicionado com sucesso!";
+                this.mensagem = "";
             }
             catch (Exception ex)
             {
