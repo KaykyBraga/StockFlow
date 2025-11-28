@@ -40,7 +40,7 @@ namespace StockFlow.DAL
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Data Source = KAYKY; Initial Catalog = Db_StockFlow; Integrated Security = True; Encrypt = False");
+                optionsBuilder.UseSqlServer(@"Data Source = DESKTOP-Q7AFUI2; Initial Catalog = Db_StockFlow; Integrated Security = True; Encrypt = False");
             }            
         }
 
